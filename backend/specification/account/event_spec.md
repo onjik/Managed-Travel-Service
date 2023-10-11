@@ -12,13 +12,13 @@
 {
     "user_key" : "{USER_KEY}",
     "ip_address" : "{IP_ADDRESS}",
-    "user-agent" : "{USER_AGENT}", 
+    "account-agent" : "{USER_AGENT}", 
     "auth_method" : "{AUTH_METHOD}", 
     "auth_provider" : "{AUTH_PROVIDER}" 
 }
 ```
 - IP_ADDRESS : 로그인을 시도한 ip
-- USER_AGENT : optional, http 헤더의 user-agent 값을 그대로 전달
+- USER_AGENT : optional, http 헤더의 account-agent 값을 그대로 전달
 - ROLE : ROLE_{} : 부여된 역할을 나타냄
 - AUTH_METHOD : 현재는 auth2.0 밖에 없지만 password 같은거 추가 가능
 - AUTH_PROVIDER : auth2.0일 경우만 표시, ex) google, facebook
@@ -28,14 +28,14 @@
 {
     "user_key" : "{USER_KEY}",
     "ip_address" : "{IP_ADDRESS}",
-    "user-agent" : "{USER_AGENT}", 
+    "account-agent" : "{USER_AGENT}", 
     "auth_method" : "{AUTH_METHOD}", 
     "auth_provider" : "{AUTH_PROVIDER}" ,
     "reason" : "{REASON}"
 }
 ```
 - IP_ADDRESS : 로그인을 시도한 ip
-- USER_AGENT : optional, http 헤더의 user-agent 값을 그대로 전달
+- USER_AGENT : optional, http 헤더의 account-agent 값을 그대로 전달
 - AUTH_METHOD : 현재는 auth2.0 밖에 없지만 password 같은거 추가 가능
 - AUTH_PROVIDER : auth2.0일 경우만 표시, ex) google, facebook
 - REASON : 로그인이 실패한 이유
@@ -62,22 +62,22 @@
 {
     "user_key" : "{USER_KEY}",
     "ip_address" : "{IP_ADDRESS}",
-    "user-agent" : "{USER_AGENT}"
+    "account-agent" : "{USER_AGENT}"
 }
 ```
 - IP_ADDRESS : 로그인을 시도한 ip
-- USER_AGENT : optional, http 헤더의 user-agent 값을 그대로 전달
+- USER_AGENT : optional, http 헤더의 account-agent 값을 그대로 전달
 
 #### account.activation-fail-tracking-{version}
 ```json
 {
     "user_key" : "{USER_KEY}",
     "ip_address" : "{IP_ADDRESS}",
-    "user-agent" : "{USER_AGENT}"
+    "account-agent" : "{USER_AGENT}"
 }
 ```
 - IP_ADDRESS : 로그인을 시도한 ip
-- USER_AGENT : optional, http 헤더의 user-agent 값을 그대로 전달
+- USER_AGENT : optional, http 헤더의 account-agent 값을 그대로 전달
 
 ### security.issue
 #### security.issue-resoleved-tracking-{version}
@@ -131,8 +131,8 @@
 ```
 
 ## changing
-### account.user
-#### account.user-update-changing-{version}
+### account.account
+#### account.account-update-changing-{version}
 ```json
 {
     "user_key" : "{USER_KEY}",
@@ -143,7 +143,7 @@
 }
 ```
 
-#### account.user-delete-changing-{version}
+#### account.account-delete-changing-{version}
 ```json
 {
     "user_key" : "{USER_KEY}"
