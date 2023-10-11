@@ -19,24 +19,5 @@ spring:
       region:
         static: ap-northeast-2
   config:
-    import: file:${HOME}/Project/managed_travel/application-test.yml
-# spring:
-#  datasource:
-#    url:
-#    username:
-#    password:
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id:
-#            client-secret:
-#  cloud:
-#    aws:
-#      credentials:
-#        access-key:
-#        secret-key:
-#      s3:
-#        region:
-#        profile-img-bucket:
+    import: file:${HOME}/github/Managed-Travel-Service/secret/backend/modular/application-test.yml
+    #from submodule which set to private access. see {@file .gitmodules} on project root directory

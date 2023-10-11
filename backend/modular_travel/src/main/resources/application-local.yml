@@ -13,4 +13,5 @@ spring:
       flush-mode: on_save
       namespace: spring:session
   config:
-    import: optional:file:${HOME}/Project/managed_travel/application-local.yml
+    import: file:${HOME}/github/Managed-Travel-Service/secret/backend/modular/application-local.yml
+    #from submodule which set to private access. see {@file .gitmodules} on project root directory
