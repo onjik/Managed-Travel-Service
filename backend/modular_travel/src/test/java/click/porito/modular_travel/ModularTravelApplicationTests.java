@@ -1,0 +1,15 @@
+package click.porito.modular_travel;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+@ActiveProfiles("test")
+@SpringBootTest
+class ModularTravelApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
