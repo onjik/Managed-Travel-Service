@@ -1,0 +1,16 @@
+server:
+  servlet:
+    session:
+      timeout: 60m
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+  config:
+    import: optional:file:${HOME}/Project/managed_travel/application-local.yml
