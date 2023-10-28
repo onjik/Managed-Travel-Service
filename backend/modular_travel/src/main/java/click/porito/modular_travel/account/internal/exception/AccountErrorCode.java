@@ -4,7 +4,7 @@ import org.springframework.lang.Nullable;
 import click.porito.modular_travel.global.ErrorCode;
 
 public enum AccountErrorCode implements ErrorCode {
-    INVALID_OIDC_USER_DETECTED("INVALID_OIDC_USER_DETECTED", "detect invalid OidcUser Object Detected");
+    UNEXPECTED_OIDC_AUTHENTICATION_EXCEPTION("UNEXPECTED_OIDC_AUTHENTICATION_EXCEPTION", "unexpected Oidc Authentication Exception");
 
     private static final String DOMAIN_NAME = "ACCOUNT";
 

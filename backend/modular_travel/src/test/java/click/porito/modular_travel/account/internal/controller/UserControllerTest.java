@@ -1,5 +1,6 @@
 package click.porito.modular_travel.account.internal.controller;
 
+import click.porito.modular_travel.account.internal.dto.view.SimpleProfile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -11,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import click.porito.modular_travel.account.internal.dto.ProfileResponse;
 import click.porito.modular_travel.account.internal.entity.Account;
 import click.porito.modular_travel.account.internal.exception.UserNotFoundException;
 import click.porito.modular_travel.account.internal.service.UserService;
@@ -53,10 +53,10 @@ class UserControllerTest {
         @DisplayName("존재하는 회원을 조회하면, 회원 정보를 반환한다.")
         public void getProfile() throws Exception {
             //given
-            ProfileResponse response = new ProfileResponse(1L, "testname", "uri");
+            SimpleProfile response = new SimpleProfile(1L, "testname", "uri");
             when(userService.getProfile(any())).thenReturn(response);
             //when
-            mvc.perform(get("/users/1/profile").with(oidcLogin().authorities(Account.Role.ROLE_USER)))
+            mvc.perform(get("/users/1/profile").with(oidcLogin().authorities(Account.Role.USER)))
             //then
                     .andExpect(status().isOk())
                     .andExpect(content().contentType("application/json"))
@@ -69,7 +69,7 @@ class UserControllerTest {
             //given
             when(userService.getProfile(any())).thenThrow(new UserNotFoundException());
             //when
-            mvc.perform(get("/users/1/profile").with(oidcLogin().authorities(Account.Role.ROLE_USER)))
+            mvc.perform(get("/users/1/profile").with(oidcLogin().authorities(Account.Role.USER)))
             //then
                     .andExpect(status().isNotFound());
         }

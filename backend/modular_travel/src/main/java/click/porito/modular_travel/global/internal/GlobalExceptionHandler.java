@@ -3,11 +3,14 @@ package click.porito.modular_travel.global.internal;
 import click.porito.modular_travel.global.AbstractBusinessException;
 import click.porito.modular_travel.global.AbstractUnexpectedServerException;
 import click.porito.modular_travel.global.ErrorCode;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.*;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -24,12 +27,35 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE)
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "{\"message\":\"Internal Server Error\"}";
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+        log.debug("ConstraintViolationException", e);
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+        List<String> invalidFields = constraintViolations.stream()
+                .map(ConstraintViolation::getPropertyPath)
+                .map(Object::toString)
+                .toList();
+        Map<String, List<String>> body = Map.of("invalidFields", invalidFields);
+        return ResponseEntity.badRequest().body(body);
+    }
+
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Object> handleObjectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException e) {
+        log.error("Unhandled ObjectOptimisticLockingFailureException", e);
+        Map<String, String> body = Map.of(
+                "message", "Temporary Server Error : Conflict"
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
 
     @ExceptionHandler(AbstractBusinessException.class)
     public ResponseEntity<Void> handleBusinessException(AbstractBusinessException e) {

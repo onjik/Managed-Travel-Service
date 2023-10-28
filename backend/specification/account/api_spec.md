@@ -4,9 +4,9 @@
 인증, 인가, 회원 정보에 대한 포괄적인 관리를 포함하는 도메인 입니다.
 
 # 📍 role (역할)
-- `ROLE_ADMIN` : 관리자 권한을 상징합니다
-- `ROLE_USER` : 일반적인 사용자를 상징합니다.
-- `ROLE_ANNONYMOUS` : 로그인 되지 않은 사용자를 의미합니다.(일반적인 경우 외부로 보일 일이 없음)
+- `ADMIN` : 관리자 권한을 상징합니다
+- `USER` : 일반적인 사용자를 상징합니다.
+- `ANNONYMOUS` : 로그인 되지 않은 사용자를 의미합니다.(일반적인 경우 외부로 보일 일이 없음)
 
 # 📍 서브 도메인
 
@@ -78,7 +78,7 @@ API 호출에서 필드의 제한사항을 준수하지 않았을 경우 발생�
   "name": "{name}",
   "email": "{email}",
   "roles": [
-    "ROLE_USER"
+    "USER"
   ],
   "createdAt": "2023-10-08T03:59:55.536658Z",
   "gender": "MALE|FEMALE", 
@@ -167,35 +167,49 @@ Auth2.0 인증 제공자에서 리다이렉트 시킬 api
 ### Request
 `GET /login/oauth2/code/{registrationId}`
 ### Response
-가능한 응답 상황
-- 기존에 해당 이메일로 가입한 적이 있는 경우
-  - newAccount : false
-  - 기존의 계정으로 로그인
-- 새로운 계정의 경우
-  - newAccount : true
-  - 자동으로 회원가입하고, 로그인
-  - 이 경우, 클라이언트 측은 추가 정보를 유도해야함
-  - 이름의 경우, 랜덤으로 의미있는 이름을 부여하고, 프로필 이미지는, 인증 제공자에서 제공한 기본 이미지로 우선 등록됨
-#### 200 : 성공적으로 로그인이 되었습니다.
+#### 200 : 성공적으로 인증이 완료되었습니다.
 ```json
 {
-  "newAccount" : "{boolean}",
   "userId" : "{long}",
   "name" : "{string}",
   "profileImageUri" : "{uri}",
-  "roles" : ["ROLE_{}", "ROLE_{}","ROLE_{}"]
+  "roles" : ["{}", "{}","{}"]
 }
 ```
-예시
+#### 412(PRECONDITION_FAILED) : 새로운 회원이면서 회원 가입 정보 부족
 ```json
 {
-  "newAccount": true,
-  "userId": 7,
-  "name": "환한 라마",
-  "profileImageUri": "https://****",
-  "roles": [
-    "ROLE_USER"
-  ]
+  "message" : "insufficient user info",
+  "invalidFields" : ["{}", "{}"]
+}
+```
+Invalid Fields
+- name : string(2~50)
+- email : email form
+- gender : MALE | FEMALE
+- birthDate : yyyy-MM-dd
+
+## 회원가입 추가정보 보충 API
+### Request
+`POST /account/register`
+```json
+{
+  "{invalidField}" : "{value}",
+  "{invalidField}" : "{value}"
+}
+```
+
+### Response
+#### 200 : 성공적으로 보충되고, 회원가입 되고, 로그인 되었습니다.
+```json
+{
+  "message" : "successfully registered and logged in"
+}
+```
+#### 400 : 잘못된 요청
+```json
+{
+  "message" : "insufficient user info"
 }
 ```
 

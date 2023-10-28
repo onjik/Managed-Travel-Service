@@ -1,66 +1,49 @@
 package click.porito.modular_travel.account.internal.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import click.porito.modular_travel.account.internal.dto.AccountPatchRequest;
-import click.porito.modular_travel.account.internal.dto.AccountPrincipal;
-import click.porito.modular_travel.account.internal.dto.ProfileResponse;
+import click.porito.modular_travel.account.internal.dto.AccountRegisterForm;
+import click.porito.modular_travel.account.internal.dto.view.AccountPatchRequest;
+import click.porito.modular_travel.account.internal.dto.view.DetailedProfile;
+import click.porito.modular_travel.account.internal.dto.view.SimpleProfile;
 import click.porito.modular_travel.account.internal.entity.Account;
 import click.porito.modular_travel.account.internal.exception.InvalidAuthenticationException;
-import click.porito.modular_travel.account.internal.reposiotry.AccountRepository;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 /**
- * Account (여기서는 특별히, 현재 로그인 한 사용자를 가르킴) 에 대한 비즈니스 로직을 처리하는 서비스
+ * 현재 로그인한 Account 에 대한 서비스
  */
-@Slf4j
-@Service
-@RequiredArgsConstructor
-public class AccountService {
-    private final AccountRepository accountRepository;
+public interface AccountService {
+    /**
+     * 현재 로그인 한 사용자의 상세 프로필을 가져옴
+     * @return 현재 로그인 한 사용자의 상세 프로필
+     * @throws InvalidAuthenticationException 현재 로그인 한 사용자가 조회되지 않을 때 발생
+     */
+    DetailedProfile getDetailedProfile() throws InvalidAuthenticationException;
 
-    public Account getAccountDetailInfo(AccountPrincipal principal) {
-        Assert.notNull(principal, "principal must not be null");
-        Long userId = principal.getUserId();
-        log.debug("getAccountDetailInfo: userId={}", userId);
-        return accountRepository.findById(userId).orElseThrow(() -> new InvalidAuthenticationException());
-    }
+    /**
+     * 현재 로그인 한 사용자의 간단한 프로필을 가져옴
+     * @return 현재 로그인 한 사용자의 간단한 프로필
+     * @throws InvalidAuthenticationException 현재 로그인 한 사용자가 조회되지 않을 때 발생
+     */
+    SimpleProfile getSimpleProfile()  throws InvalidAuthenticationException;
 
-    public ProfileResponse getSimpleProfile(AccountPrincipal principal) {
-        Assert.notNull(principal, "principal must not be null");
-        Long userId = principal.getUserId();
-        log.debug("getSimpleProfile: userId={}", userId);
-        return accountRepository.findById(userId)
-                .map(ProfileResponse::from)
-                .orElseThrow(InvalidAuthenticationException::new);
-    }
+    /**
+     * 현재 로그인 한 사용자의 계정을 삭제함
+     * @throws InvalidAuthenticationException 현재 로그인 한 사용자가 조회되지 않을 때 발생
+     */
+    void deleteAccount()  throws InvalidAuthenticationException;
 
+    /**
+     * 현재 로그인 한 사용자의 프로필을 수정함
+     * @param body 수정할 프로필
+     * @throws ObjectOptimisticLockingFailureException : 동시에 같은 계정에 대한 수정이 일어났을 때 발생
+     * @throws InvalidAuthenticationException 현재 로그인 한 사용자가 조회되지 않을 때 발생
+     */
+    void patchProfileInfo(AccountPatchRequest body) throws ObjectOptimisticLockingFailureException ,InvalidAuthenticationException;
 
-    public void deleteAccount(AccountPrincipal principal) {
-        Assert.notNull(principal, "principal must not be null");
-        Long userId = principal.getUserId();
-        log.debug("deleteAccount: userId={}", userId);
-        accountRepository.deleteById(userId);
-        SecurityContextHolder.clearContext();
-    }
-
-    public void patchProfileInfo(AccountPrincipal principal, AccountPatchRequest body) {
-        Assert.notNull(principal, "principal must not be null");
-        Assert.notNull(body, "body must not be null");
-        Long userId = principal.getUserId();
-        log.debug("patchProfileInfo: userId={}", userId);
-        Account account = accountRepository.findById(userId).orElseThrow(InvalidAuthenticationException::new);
-        if (body.getName() != null) {
-            account.setName(body.getName());
-        }
-        if (body.getGender() != null) {
-            account.setGender(body.getGender());
-        }
-        if (body.getBirthDate() != null) {
-            account.setBirthDate(body.getBirthDate());
-        }
-        accountRepository.save(account);
-    }
+    /**
+     * @throws ObjectOptimisticLockingFailureException : 동시에 같은 계정에 대한 수정이 일어났을 때 발생
+     */
+    Account registerAccount(@Valid AccountRegisterForm dto) throws ConstraintViolationException;
 }

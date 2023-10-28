@@ -1,4 +1,4 @@
-package click.porito.modular_travel.account.internal.dto;
+package click.porito.modular_travel.account.internal.dto.view;
 
 import jakarta.validation.constraints.Past;
 import lombok.Getter;

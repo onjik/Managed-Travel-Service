@@ -11,12 +11,16 @@ import lombok.Setter;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.util.Assert;
-import click.porito.modular_travel.account.internal.util.KoreanNameGenerator;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +32,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_key",updatable = false)
+    @Column(name = "account_id",updatable = false)
     private Long userId;
 
     //NotNull Columns
@@ -42,11 +46,11 @@ public class Account {
             value = ListArrayType.class,
             parameters = @Parameter(
                     name = AbstractArrayType.SQL_ARRAY_TYPE,
-                    value = "granted_role"
+                    value = "text"
             )
     )
     @Column(name = "roles",
-            columnDefinition = "granted_role[]"
+            columnDefinition = "text[]"
     )
     private List<Role> roles;
 
@@ -56,43 +60,27 @@ public class Account {
     //Optional Columns
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType.class)
-    @Column(name = "gender", nullable = true)
+    @Column(name = "gender")
     private Gender gender;
 
-    @Column(name = "birth_date", nullable = true)
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "picture_uri", nullable = true)
+    @Column(name = "picture_uri")
     private String profileImgUri;
 
-    @Column(name = "email_verified",nullable = true)
-    private Boolean emailVerified;
+    @Version
+    private Long version;
 
-    protected Account(String name, String email, List<Role> roles, Gender gender, LocalDate birthDate, String profileImgUri, Boolean emailVerified) {
+    protected Account(String name, String email, List<Role> roles, Gender gender, LocalDate birthDate, String profileImgUri) {
         this.name = name;
         this.email = email;
         this.roles = roles;
         this.gender = gender;
         this.birthDate = birthDate;
         this.profileImgUri = profileImgUri;
-        this.emailVerified = emailVerified;
     }
 
-    public static Account from(OidcUser oidcUser, Role role){
-        return from(oidcUser, List.of(role));
-    }
-    public static Account from(OidcUser oidcUser, List<Role> roles){
-        Assert.notNull(oidcUser, "oidcUser must not be null");
-        Assert.notNull(oidcUser.getEmail(), "oidcUser.getEmail() must not be null");
-        Assert.notNull(roles, "roles must not be null");
-        Assert.isTrue(roles.size() > 0, "roles must not be empty");
-        return new Builder(oidcUser.getEmail(), roles)
-                .name(KoreanNameGenerator.generate())
-                .gender(oidcUser.getGender() != null ? Gender.valueOf(oidcUser.getGender().toUpperCase()) : null)
-                .pictureUri(oidcUser.getPicture())
-                .emailVerified(oidcUser.getEmailVerified())
-                .build();
-    }
 
     public static Builder builder(String email, List<Role> roles){
         return new Builder(email, roles);
@@ -106,17 +94,33 @@ public class Account {
         this.createdAt = Instant.now();
     }
 
+    public OidcUser toOidcUser(final OidcIdToken idToken){
+        Assert.notEmpty(idToken.getClaims(), "claims must not be empty");
+
+        //idToken 의 sub(Subject) 을 account 의 userId 로 변경 하여 다시 생성
+        HashMap<String, Object> map = new HashMap<>(idToken.getClaims());
+        map.put(IdTokenClaimNames.SUB, this.getUserId());
+        OidcIdToken token = new OidcIdToken(
+                idToken.getTokenValue(),
+                idToken.getIssuedAt(),
+                idToken.getExpiresAt(),
+                Collections.unmodifiableMap(map)
+        );
+        return new DefaultOidcUser(this.getRoles(), token);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return getEmail().equals(account.getEmail());
+        return Objects.equals(getUserId(), account.getUserId()) && Objects.equals(getEmail(), account.getEmail());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getEmail());
+        return Objects.hash(getUserId(), getEmail());
     }
 
     public static class Builder {
@@ -126,7 +130,6 @@ public class Account {
         private Gender gender;
         private LocalDate birthDate;
         private String pictureUri;
-        private Boolean emailVerified;
 
         public Builder(String email, List<Role> roles) {
             this.email = email;
@@ -153,15 +156,9 @@ public class Account {
             return this;
         }
 
-        public Builder emailVerified(Boolean emailVerified){
-            this.emailVerified = emailVerified;
-            return this;
-        }
-
         public Account build(){
-            return new Account(name, email, roles, gender, birthDate, pictureUri, emailVerified);
+            return new Account(name, email, roles, gender, birthDate, pictureUri);
         }
-
 
     }
 
@@ -175,11 +172,15 @@ public class Account {
     }
 
     public enum Role implements GrantedAuthority {
-        ROLE_ADMIN, ROLE_USER;
+        ADMIN, USER;
+        private String authority;
+        Role() {
+            this.authority = "ROLE_" + this.name();
+        }
 
         @Override
         public String getAuthority() {
-            return this.name();
+            return this.authority;
         }
     }
 }

@@ -1,18 +1,15 @@
 package click.porito.modular_travel.account.internal.controller;
 
+import click.porito.modular_travel.account.internal.dto.view.AccountPatchRequest;
+import click.porito.modular_travel.account.internal.dto.view.DetailedProfile;
+import click.porito.modular_travel.account.internal.dto.view.SimpleProfile;
+import click.porito.modular_travel.account.internal.service.AccountService;
+import click.porito.modular_travel.account.internal.service.ImageObjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
-import click.porito.modular_travel.account.internal.dto.AccountPatchRequest;
-import click.porito.modular_travel.account.internal.dto.AccountPrincipal;
-import click.porito.modular_travel.account.internal.dto.ProfileResponse;
-import click.porito.modular_travel.account.internal.entity.Account;
-import click.porito.modular_travel.account.internal.service.AccountService;
-import click.porito.modular_travel.account.internal.service.ImageObjectService;
 
 @Slf4j
 @RestController
@@ -20,47 +17,39 @@ import click.porito.modular_travel.account.internal.service.ImageObjectService;
 public class AccountController {
     private final AccountService accountService;
     private final ImageObjectService imageService;
-
+    
     @GetMapping("/account")
-    public Account getAccountDetailInfo(@AuthenticationPrincipal OidcUser oidcUser) {
-        var principal = AccountPrincipal.from(oidcUser);
-        return accountService.getAccountDetailInfo(principal);
+    public DetailedProfile getAccountDetailInfo() {
+        return accountService.getDetailedProfile();
     }
 
     @GetMapping("/account/profile")
-    public ProfileResponse getSimpleProfile(@AuthenticationPrincipal OidcUser oidcUser) {
-        var principal = AccountPrincipal.from(oidcUser);
-        return accountService.getSimpleProfile(principal);
+    public SimpleProfile getSimpleProfile() {
+        return accountService.getSimpleProfile();
     }
 
     @GetMapping("/account/profile/image/signed-put-url")
     public String getSignedPutUrl(
-            @AuthenticationPrincipal OidcUser oidcUser,
             @RequestParam(name = "filename", required = true) String filename) {
-        var principal = AccountPrincipal.from(oidcUser);
-        return imageService.getSignedProfilePutUrl(principal,filename).toString();
+        return imageService.createAccountImgPutUri(filename).toString();
     }
 
     @PatchMapping("/account/profile")
     public ResponseEntity<Void> patchProfileInfo(
-            @AuthenticationPrincipal OidcUser oidcUser,
             @Valid @RequestBody AccountPatchRequest body) {
-        var principal = AccountPrincipal.from(oidcUser);
-        accountService.patchProfileInfo(principal, body);
+        accountService.patchProfileInfo(body);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/account/profile/image")
-    public ResponseEntity<Void> deleteProfileImage(@AuthenticationPrincipal OidcUser oidcUser) {
-        var principal = AccountPrincipal.from(oidcUser);
-        imageService.deleteProfileImage(principal);
+    public ResponseEntity<Void> deleteProfileImage() {
+        imageService.deleteAccountImg();
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/account")
-    public ResponseEntity<Void> deleteAccount(@AuthenticationPrincipal OidcUser oidcUser) {
-        var principal = AccountPrincipal.from(oidcUser);
-        accountService.deleteAccount(principal);
+    public ResponseEntity<Void> deleteAccount() {
+        accountService.deleteAccount();
         return ResponseEntity.noContent().build();
     }
 

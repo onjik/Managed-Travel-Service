@@ -1,11 +1,11 @@
 package click.porito.modular_travel.account.internal.service;
 
+import click.porito.modular_travel.account.internal.util.PrincipalUtil;
 import io.awspring.cloud.s3.S3Template;
 import jakarta.activation.MimetypesFileTypeMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import click.porito.modular_travel.account.internal.dto.AccountPrincipal;
 import click.porito.modular_travel.account.internal.exception.ImageTypeNotSupportedException;
 import click.porito.modular_travel.account.internal.exception.InvalidAuthenticationException;
 import click.porito.modular_travel.account.internal.reposiotry.AccountRepository;
@@ -33,17 +33,18 @@ public class S3ImageService implements ImageObjectService{
      * @throws InvalidAuthenticationException if the user id is not valid
      */
     @Override
-    public URL getSignedProfilePutUrl(AccountPrincipal principal, String filename) {
-        Long userId = principal.getUserId();
+    public URL createAccountImgPutUri(String filename) {
+        Long userId = PrincipalUtil.getAccountId();
         String mimeType = KeyManager.getMimeType(filename);
         String key = KeyManager.getProfileUploadKey(userId, mimeType);
         return s3Template.createSignedPutURL(BUCKET_NAME, key, expiration, null, mimeType);
     }
 
     @Override
-    public void deleteProfileImage(AccountPrincipal principal) {
-        Long userId = principal.getUserId();
+    public void deleteAccountImg() {
+        Long userId = PrincipalUtil.getAccountId();
         String key = KeyManager.getProfileImageKey(userId);
+        //if key exists, delete it
         s3Template.deleteObject(BUCKET_NAME, key);
     }
 

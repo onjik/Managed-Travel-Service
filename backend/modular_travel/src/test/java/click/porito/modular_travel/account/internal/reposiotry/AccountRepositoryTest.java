@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import click.porito.modular_travel.account.internal.entity.Account;
 import click.porito.modular_travel.account.internal.util.KoreanNameGenerator;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @ActiveProfiles("test")
@@ -22,8 +23,10 @@ class AccountRepositoryTest {
     @Test
     void save() {
         //given
-        Account account = Account.builder(UUID.randomUUID().toString() + "@test.com", Account.Role.ROLE_USER)
+        Account account = Account.builder(UUID.randomUUID().toString() + "@test.com", Account.Role.USER)
                 .name(KoreanNameGenerator.generate())
+                .gender(Account.Gender.MALE)
+                .birthDate(LocalDate.now())
                 .build();
         //when
         Account save = accountRepository.save(account);
