@@ -19,13 +19,9 @@ import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.stereotype.Component;
-import click.porito.modular_travel.session.internal.event.NetworkContextAware;
-import click.porito.modular_travel.session.internal.event.InvalidSessionEvent;
-import click.porito.modular_travel.session.internal.event.SessionExpiredEvent;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 
 @Slf4j
 @Component
@@ -98,8 +94,7 @@ public class HttpSecuritySessionPolicyAdapter implements BeanPostProcessor {
         }
 
         void publishEvent(HttpServletRequest request){
-            NetworkContextAware.Context networkContext = NetworkContextAware.Context.from(request);
-            eventPublisher.publishEvent(new InvalidSessionEvent(request, networkContext));
+            //TODO: 이벤트 발생
         }
     }
 
@@ -125,10 +120,8 @@ public class HttpSecuritySessionPolicyAdapter implements BeanPostProcessor {
         }
 
         void publishEvent(SessionInformation information){
-            String sessionId = information.getSessionId();
-            Date lastRequest = information.getLastRequest();
-            SessionExpiredEvent expiredEvent = new SessionExpiredEvent(this, sessionId, lastRequest);
-            eventPublisher.publishEvent(expiredEvent);
+            //TODO: 이벤트 발생
+
         }
     }
 }

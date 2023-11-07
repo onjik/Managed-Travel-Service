@@ -1,6 +1,6 @@
 package click.porito.modular_travel.learning_test;
 
-import click.porito.modular_travel.account.internal.dto.AccountRegisterForm;
+import click.porito.modular_travel.account.AccountRegisterDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Assertions;
@@ -20,9 +20,9 @@ public class ValidateTest {
     private Validator validator;
     @Test
     void test() {
-        AccountRegisterForm form = AccountRegisterForm.builder()
+        AccountRegisterDTO form = AccountRegisterDTO.builder()
                 .build();
-        Set<ConstraintViolation<AccountRegisterForm>> validate = validator.validate(form);
+        Set<ConstraintViolation<AccountRegisterDTO>> validate = validator.validate(form);
 
         Assertions.assertEquals(3, validate.size());
     }
