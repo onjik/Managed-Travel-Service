@@ -1,0 +1,14 @@
+
+type TravelPlan {
+    id: ID!
+    days: [DayPlan!]
+    daysCount: NonNegativeInt!
+    startDate: DateTime
+    endDate: DateTime
+}
+
+type DayPlan {
+    id: ID!
+    date: DateTime!
+    places: [Place!] # 순서가 의미가 있음
+}
