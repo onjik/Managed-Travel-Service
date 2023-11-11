@@ -1,0 +1,7 @@
+scalar CountryCode @specifiedBy(url:"https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2")
+scalar Locale @specifiedBy(url:"https://tools.ietf.org/html/bcp47")
+scalar Currency @specifiedBy(url:"https://en.wikipedia.org/wiki/ISO_4217")
+scalar LocalTime # HH:mm:ss.SSS or hh:mm:ss (ISO 8601)
+scalar DateTime @specifiedBy(url:"https://scalars.graphql.org/andimarek/date-time.html")
+scalar NonNegativeInt
+scalar NonNegativeFloat

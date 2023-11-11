@@ -1,0 +1,34 @@
+type Article {
+    id: ID!
+    place: Place!
+    content: String!
+    includedPhotos: [Photo!]
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Review {
+    id: ID!
+    place: Place!
+    rating: NonNegativeFloat!
+    content: String!
+    author: User!
+    photos: [Photo]
+    comments: [Comment!]
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    likeCount: NonNegativeInt!
+}
+
+
+
+# Comment : 리뷰에 달리는 댓글
+type Comment {
+    id: ID!
+    commentOn: Review!
+    content: String!
+    author: User!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    likeCount: NonNegativeInt!
+}

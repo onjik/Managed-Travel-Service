@@ -1,0 +1,230 @@
+
+
+# Interface for Place
+interface Place {
+    id: ID!
+    title: String!
+    localTitle: String
+    editorialSummary: String
+    location: Location!
+    content: Article
+    phoneNumber: String
+    websiteUri: String
+    businessStatus: BusinessStatus!
+    directions: String # 오시는 길
+    tips: [String!]
+    openingHours: [Period!]
+    tags: [String!] # 검색에 활용됨
+    thumbnail: Photo
+    photos: [Photo!]
+    # 쿼리형 필드
+    availablePaymentMethods: [PaymentMethod!] # 결제 수단
+    userLikeCount: NonNegativeInt!
+    userRatingCount: NonNegativeInt!
+    averageRating: NonNegativeFloat # 0.0 ~ 5.0
+    reviews: [Review!]!
+    relatedPlace: [Place!] # GDB
+    nearPlaces: [Place!] # GDB or es
+}
+
+# TouristAttraction : 관광지
+type TouristAttraction implements Place {
+    id: ID!
+    title: String!
+    localTitle: String
+    editorialSummary: String
+    location: Location!
+    content: Article
+    phoneNumber: String
+    websiteUri: String
+    businessStatus: BusinessStatus!
+    directions: String # 오시는 길
+    tips: [String!]
+    openingHours: [Period!]
+    tags: [String!] # 검색에 활용됨
+    thumbnail: Photo
+    photos: [Photo!]
+    # 쿼리형 필드
+    availablePaymentMethods: [PaymentMethod!] # 결제 수단
+    userLikeCount: NonNegativeInt!
+    userRatingCount: NonNegativeInt!
+    averageRating: NonNegativeFloat # 0.0 ~ 5.0
+    reviews: [Review!]!
+    relatedPlace: [Place!] # GDB
+    nearPlaces: [Place!] # GDB or es
+    # 관광지에만 있는 필드
+    tickets: [Ticket!]
+    nestedPlace: [Place!] # 포함된 장소들 (ex. 놀이공원 안의 놀이기구, 특정 행사장 안의 식당)
+}
+
+# Restaurant : 식당
+type Restaurant implements Place {
+    id: ID!
+    title: String!
+    localTitle: String
+    editorialSummary: String
+    location: Location!
+    content: Article
+    phoneNumber: String
+    websiteUri: String
+    businessStatus: BusinessStatus!
+    directions: String # 오시는 길
+    tips: [String!]
+    openingHours: [Period!]
+    tags: [String!] # 검색에 활용됨
+    thumbnail: Photo
+    photos: [Photo!]
+    # 쿼리형 필드
+    availablePaymentMethods: [PaymentMethod!] # 결제 수단
+    userLikeCount: NonNegativeInt!
+    userRatingCount: NonNegativeInt!
+    averageRating: NonNegativeFloat # 0.0 ~ 5.0
+    reviews: [Review!]!
+    relatedPlace: [Place!] # GDB
+    nearPlaces: [Place!] # GDB or es
+    # 식당에만 있는 필드
+    menus: [Food!] # 메뉴
+    priceLevel: PriceLevel # 가격대
+    cuisineType: [RestaurantType!] # 요리 종류
+}
+
+# Accommodation : 숙박
+type Accommodation implements Place {
+    id: ID!
+    title: String!
+    localTitle: String
+    editorialSummary: String
+    location: Location!
+    content: Article
+    phoneNumber: String
+    websiteUri: String
+    businessStatus: BusinessStatus!
+    directions: String # 오시는 길
+    tips: [String!]
+    openingHours: [Period!]
+    tags: [String!] # 검색에 활용됨
+    thumbnail: Photo
+    photos: [Photo!]
+    # 쿼리형 필드
+    availablePaymentMethods: [PaymentMethod!] # 결제 수단
+    userLikeCount: NonNegativeInt!
+    userRatingCount: NonNegativeInt!
+    averageRating: NonNegativeFloat # 0.0 ~ 5.0
+    reviews: [Review!]!
+    relatedPlace: [Place!] # GDB
+    nearPlaces: [Place!] # GDB or es
+    # 숙박에만 있는 필드
+    rooms: [Room!] # 객실
+    priceLevel: PriceLevel
+    starGrade: NonNegativeInt # 숙박 등급
+    amenities: [Amenity!] # 편의 시설
+}
+
+
+type Location {
+    name: String!
+    coordinates: [Coordinate!]! # 점일 수도 있고, 다각형 영역일 수도 있음
+    address: String!
+    localAddress: String
+    country: Country!
+    city: City!
+    touristArea: TouristArea
+    places: [Place!]
+}
+
+# Country : 국가
+type Country {
+    code: CountryCode! # identifier
+    name: String!
+    cities: [City]
+}
+
+# City : 도시
+type City {
+    id: ID!
+    name: String!
+    country: Country!
+    touristAreas: [TouristArea!]
+    currency: [Currency!]
+    places: [Place!]
+    locale: Locale
+}
+
+# TouristArea : 도시 안의 관광 특화 지역
+type TouristArea {
+    id: ID!
+    name: String!
+    city: City!
+    places: [Place!]
+    coordinates: [Coordinate!]
+}
+
+type Coordinate {
+    longitude: Float!
+    latitude: Float!
+}
+
+type Period {
+    open: InstantPoint!
+    close: InstantPoint!
+}
+
+type InstantPoint {
+    truncated: Boolean!
+    day: DayOfWeek!
+    time: LocalTime!
+}
+
+enum BusinessStatus {
+    BUSINESS_STATUS_UNSPECIFIED
+    OPERATIONAL
+    CLOSED_TEMPORARILY
+    CLOSED_PERMANENTLY
+}
+
+# 결제 수단
+enum PaymentMethod {
+    CASH
+    CARD
+    MOBILE
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+# PriceLevel : 가격대
+enum PriceLevel {
+    CHEAP
+    MODERATE
+    EXPENSIVE
+    VERY_EXPENSIVE
+}
+
+# RestaurantType : 식당 종류
+enum RestaurantType {
+    WESTERN
+    ASIAN
+    STREET_FOOD
+    KOREAN
+    CHINESE
+    JAPANESE
+    INDIAN
+    AMERICAN
+    FRANCHE
+    ITALIAN
+    MEXICAN
+    BAR
+    BAKERY
+    CAFFE
+    FRANCHISE
+    MODERN
+    FUSION
+    BUFFET
+}

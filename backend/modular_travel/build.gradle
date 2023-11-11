@@ -26,6 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
+	implementation 'org.springframework.boot:spring-boot-starter-graphql'
+	implementation 'com.graphql-java-kickstart:playground-spring-boot-starter:5.10.0'
 
 	//SECURITY
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -44,9 +46,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'com.graphql-java:graphql-java-extended-scalars:20.2' exclude(group: 'com.graphql-java', module: 'graphql-java') // spring-graphql 에 포함
 
 	//INFRA
-
 	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
 	//LOG
