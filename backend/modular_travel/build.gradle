@@ -38,7 +38,6 @@ dependencies {
 	implementation 'org.springframework.modulith:spring-modulith-starter-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 	implementation 'io.hypersistence:hypersistence-utils-hibernate-62:3.5.2'
-	implementation 'io.hypersistence:hypersistence-utils-hibernate-55:3.5.2'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.session:spring-session-data-redis'
 
@@ -47,10 +46,11 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'com.graphql-java:graphql-java-extended-scalars:20.2' exclude(group: 'com.graphql-java', module: 'graphql-java') // spring-graphql 에 포함
-
+	implementation 'com.google.code.gson:gson:2.10.1'
 	//INFRA
 	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+
 	//LOG
 //	implementation 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
 //	implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
