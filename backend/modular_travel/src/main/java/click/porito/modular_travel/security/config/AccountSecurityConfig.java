@@ -47,7 +47,8 @@ public class AccountSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/test").permitAll()
-                .anyRequest().authenticated()
+//                .requestMatchers("/playground").permitAll()
+                .anyRequest().permitAll()
         );
         //프론트와 분리된 API 서버 이므로, request cache 를 사용하지 않는다.
         http.requestCache(RequestCacheConfigurer::disable);

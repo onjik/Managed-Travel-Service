@@ -1,178 +1,115 @@
+input PlaceTypesInput {
+    automotive: [Automotive!]
+    business: [Business!]
+    culture: [Culture!]
+    education: [Education!]
+    entertainmentAndRecreation: [EntertainmentAndRecreation!]
+    finance: [Finance!]
+    foodAndDrink: [FoodAndDrink!]
+    geographicalArea: [GeographicalArea!]
+    government: [Government!]
+    healthAndWellness: [HealthAndWellness!]
+    lodging: [Lodging!]
+    placesOfWorship: [PlacesOfWorship!]
+    services: [Services!]
+    shopping: [Shopping!]
+    sports: [Sports!]
+    transportation: [Transportation!]
+}
 
+input CoordinateInput {
+    latitude: Float!
+    longitude: Float!
+}
+
+input CircleInput {
+    center: CoordinateInput!
+    radiusMeters: NonNegativeInt!
+}
+input LocationAreaInput {
+    circle: CircleInput
+}
+
+input PlaceNearBySearchInput {
+    locationRestriction: LocationAreaInput
+    maxResultCount: NonNegativeInt # 1~20
+    rankPreference: NearSearchRankPreference
+    includeTypes: PlaceTypesInput
+    excludeTypes: PlaceTypesInput
+}
+
+input PlaceTextSearchInput {
+    query: String!
+    includeTypes: PlaceTypesInput
+    locationBias: LocationAreaInput
+    locationRestriction: LocationAreaInput
+    maxResultCount: NonNegativeInt # 1~20
+    minRating: Float # 0~5
+    openNow: Boolean
+    rankPreference: TextSearchRankPreference
+    strictTypeFiltering: Boolean
+}
+
+
+type Query{
+    place(id: ID!, preferredLanguage:Locale): Place
+    imageUri(photoName:String!,maxWidthPx:NonNegativeInt!,maxHeightPx:NonNegativeInt!): String
+    placesNearBySearch(input: PlaceNearBySearchInput!, preferredLanguage:Locale): [Place!]!
+    placesTextSearch(input: PlaceTextSearchInput!, preferredLanguage:Locale): [Place!]!
+}
 
 # Interface for Place
 interface Place {
     id: ID!
-    title: String!
-    localTitle: String
-    editorialSummary: String
-    location: Location!
-    content: Article
-    phoneNumber: String
-    websiteUri: String
-    businessStatus: BusinessStatus!
-    directions: String # 오시는 길
-    tips: [String!]
-    openingHours: [Period!]
-    tags: [String!] # 검색에 활용됨
-    thumbnail: Photo
+    businessStatus: BusinessStatus
+    displayName: LocalizedString
+    location: Coordinate
+    formattedAddress: String
+    types: [String!]
+    utcOffsetMinutes: Int
     photos: [Photo!]
-    # 쿼리형 필드
-    availablePaymentMethods: [PaymentMethod!] # 결제 수단
-    userLikeCount: NonNegativeInt!
-    userRatingCount: NonNegativeInt!
-    averageRating: NonNegativeFloat # 0.0 ~ 5.0
-    reviews: [Review!]!
-    relatedPlace: [Place!] # GDB
-    nearPlaces: [Place!] # GDB or es
 }
 
-# TouristAttraction : 관광지
-type TouristAttraction implements Place {
+type GooglePlace implements Place {
     id: ID!
-    title: String!
-    localTitle: String
-    editorialSummary: String
-    location: Location!
-    content: Article
-    phoneNumber: String
-    websiteUri: String
-    businessStatus: BusinessStatus!
-    directions: String # 오시는 길
-    tips: [String!]
-    openingHours: [Period!]
-    tags: [String!] # 검색에 활용됨
-    thumbnail: Photo
+    businessStatus: BusinessStatus
+    displayName: LocalizedString
+    location: Coordinate
+    formattedAddress: String
+    types: [String!]
+    utcOffsetMinutes: Int
     photos: [Photo!]
-    # 쿼리형 필드
-    availablePaymentMethods: [PaymentMethod!] # 결제 수단
-    userLikeCount: NonNegativeInt!
-    userRatingCount: NonNegativeInt!
-    averageRating: NonNegativeFloat # 0.0 ~ 5.0
-    reviews: [Review!]!
-    relatedPlace: [Place!] # GDB
-    nearPlaces: [Place!] # GDB or es
-    # 관광지에만 있는 필드
-    tickets: [Ticket!]
-    nestedPlace: [Place!] # 포함된 장소들 (ex. 놀이공원 안의 놀이기구, 특정 행사장 안의 식당)
+    # additional fields
+    primaryType: String
+    primaryTypeDisplayName: LocalizedString
+    shortFormattedAddress: String
+    iconBackgroundColor: String
+    iconMaskBaseUri: String
+    googleMapsUri: String
 }
 
-# Restaurant : 식당
-type Restaurant implements Place {
-    id: ID!
-    title: String!
-    localTitle: String
-    editorialSummary: String
-    location: Location!
-    content: Article
-    phoneNumber: String
-    websiteUri: String
-    businessStatus: BusinessStatus!
-    directions: String # 오시는 길
-    tips: [String!]
-    openingHours: [Period!]
-    tags: [String!] # 검색에 활용됨
-    thumbnail: Photo
-    photos: [Photo!]
-    # 쿼리형 필드
-    availablePaymentMethods: [PaymentMethod!] # 결제 수단
-    userLikeCount: NonNegativeInt!
-    userRatingCount: NonNegativeInt!
-    averageRating: NonNegativeFloat # 0.0 ~ 5.0
-    reviews: [Review!]!
-    relatedPlace: [Place!] # GDB
-    nearPlaces: [Place!] # GDB or es
-    # 식당에만 있는 필드
-    menus: [Food!] # 메뉴
-    priceLevel: PriceLevel # 가격대
-    cuisineType: [RestaurantType!] # 요리 종류
-}
-
-# Accommodation : 숙박
-type Accommodation implements Place {
-    id: ID!
-    title: String!
-    localTitle: String
-    editorialSummary: String
-    location: Location!
-    content: Article
-    phoneNumber: String
-    websiteUri: String
-    businessStatus: BusinessStatus!
-    directions: String # 오시는 길
-    tips: [String!]
-    openingHours: [Period!]
-    tags: [String!] # 검색에 활용됨
-    thumbnail: Photo
-    photos: [Photo!]
-    # 쿼리형 필드
-    availablePaymentMethods: [PaymentMethod!] # 결제 수단
-    userLikeCount: NonNegativeInt!
-    userRatingCount: NonNegativeInt!
-    averageRating: NonNegativeFloat # 0.0 ~ 5.0
-    reviews: [Review!]!
-    relatedPlace: [Place!] # GDB
-    nearPlaces: [Place!] # GDB or es
-    # 숙박에만 있는 필드
-    rooms: [Room!] # 객실
-    priceLevel: PriceLevel
-    starGrade: NonNegativeInt # 숙박 등급
-    amenities: [Amenity!] # 편의 시설
-}
-
-
-type Location {
-    name: String!
-    coordinates: [Coordinate!]! # 점일 수도 있고, 다각형 영역일 수도 있음
-    address: String!
-    localAddress: String
-    country: Country!
-    city: City!
-    touristArea: TouristArea
-    places: [Place!]
-}
-
-# Country : 국가
-type Country {
-    code: CountryCode! # identifier
-    name: String!
-    cities: [City]
-}
-
-# City : 도시
-type City {
-    id: ID!
-    name: String!
-    country: Country!
-    touristAreas: [TouristArea!]
-    currency: [Currency!]
-    places: [Place!]
-    locale: Locale
-}
-
-# TouristArea : 도시 안의 관광 특화 지역
-type TouristArea {
-    id: ID!
-    name: String!
-    city: City!
-    places: [Place!]
-    coordinates: [Coordinate!]
+type LocalizedString {
+    text: String!
+    languageCode: Locale!
 }
 
 type Coordinate {
-    longitude: Float!
     latitude: Float!
+    longitude: Float!
 }
 
-type Period {
-    open: InstantPoint!
-    close: InstantPoint!
+type Photo {
+    name: String!
+    widthPx: NonNegativeInt
+    heightPx: NonNegativeInt
+    authorAttributions: [AuthorAttribution!]
+    photoUri: String! # 외부 API를 호출
 }
 
-type InstantPoint {
-    truncated: Boolean!
-    day: DayOfWeek!
-    time: LocalTime!
+type AuthorAttribution {
+    displayName: String!
+    uri: String
+    photoUri: String
 }
 
 enum BusinessStatus {
@@ -182,49 +119,257 @@ enum BusinessStatus {
     CLOSED_PERMANENTLY
 }
 
-# 결제 수단
-enum PaymentMethod {
-    CASH
-    CARD
-    MOBILE
+
+enum NearSearchRankPreference {
+    POPULARITY
+    DISTANCE
 }
 
-enum DayOfWeek {
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
-    SUNDAY
+enum TextSearchRankPreference {
+    RELEVANCE
+    DISTANCE
 }
 
-# PriceLevel : 가격대
-enum PriceLevel {
-    CHEAP
-    MODERATE
-    EXPENSIVE
-    VERY_EXPENSIVE
+enum Automotive {
+    car_dealer
+    car_rental
+    car_repair
+    car_wash
+    electric_vehicle_charging_station
+    gas_station
+    parking
+    rest_stop
 }
 
-# RestaurantType : 식당 종류
-enum RestaurantType {
-    WESTERN
-    ASIAN
-    STREET_FOOD
-    KOREAN
-    CHINESE
-    JAPANESE
-    INDIAN
-    AMERICAN
-    FRANCHE
-    ITALIAN
-    MEXICAN
-    BAR
-    BAKERY
-    CAFFE
-    FRANCHISE
-    MODERN
-    FUSION
-    BUFFET
+enum Business {
+    farm
+}
+
+enum Culture {
+    art_gallery
+    museum
+    performing_arts_theater
+}
+
+enum Education {
+    library
+    preschool
+    primary_school
+    school
+    secondary_school
+    university
+}
+
+enum EntertainmentAndRecreation {
+    amusement_center
+    amusement_park
+    aquarium
+    banquet_hall
+    bowling_alley
+    casino
+    community_center
+    convention_center
+    cultural_center
+    dog_park
+    event_venue
+    hiking_area
+    historical_landmark
+    marina
+    movie_rental
+    movie_theater
+    national_park
+    night_club
+    park
+    tourist_attraction
+    visitor_center
+    wedding_venue
+    zoo
+}
+
+enum Finance {
+    accounting
+    atm
+    bank
+}
+
+enum FoodAndDrink {
+    american_restaurant
+    bakery
+    bar
+    barbecue_restaurant
+    brazilian_restaurant
+    breakfast_restaurant
+    brunch_restaurant
+    cafe
+    chinese_restaurant
+    coffee_shop
+    fast_food_restaurant
+    french_restaurant
+    greek_restaurant
+    hamburger_restaurant
+    ice_cream_shop
+    indian_restaurant
+    indonesian_restaurant
+    italian_restaurant
+    japanese_restaurant
+    korean_restaurant
+    lebanese_restaurant
+    meal_delivery
+    meal_takeaway
+    mediterranean_restaurant
+    mexican_restaurant
+    middle_eastern_restaurant
+    pizza_restaurant
+    ramen_restaurant
+    restaurant
+    sandwich_shop
+    seafood_restaurant
+    spanish_restaurant
+    steak_house
+    sushi_restaurant
+    thai_restaurant
+    turkish_restaurant
+    vegan_restaurant
+    vegetarian_restaurant
+    vietnamese_restaurant
+}
+
+enum GeographicalArea {
+    administrative_area_level_1
+    administrative_area_level_2
+    country
+    locality
+    postal_code
+    school_district
+}
+
+enum Government {
+    city_hall
+    courthouse
+    embassy
+    fire_station
+    local_government_office
+    police
+    post_office
+}
+
+enum HealthAndWellness {
+    dental_clinic
+    dentist
+    doctor
+    drugstore
+    hospital
+    medical_lab
+    pharmacy
+    physiotherapist
+    spa
+}
+
+enum Lodging {
+    bed_and_breakfast
+    campground
+    camping_cabin
+    cottage
+    extended_stay_hotel
+    farmstay
+    guest_house
+    hostel
+    hotel
+    lodging
+    motel
+    private_guest_room
+    resort_hotel
+    rv_park
+}
+
+enum PlacesOfWorship {
+    church
+    hindu_temple
+    mosque
+    synagogue
+}
+
+enum Services {
+    barber_shop
+    beauty_salon
+    cemetery
+    child_care_agency
+    consultant
+    courier_service
+    electrician
+    florist
+    funeral_home
+    hair_care
+    hair_salon
+    insurance_agency
+    laundry
+    lawyer
+    locksmith
+    moving_company
+    painter
+    plumber
+    real_estate_agency
+    roofing_contractor
+    storage
+    tailor
+    telecommunications_service_provider
+    travel_agency
+    veterinary_care
+}
+
+enum Shopping {
+    auto_parts_store
+    bicycle_store
+    book_store
+    cell_phone_store
+    clothing_store
+    convenience_store
+    department_store
+    discount_store
+    electronics_store
+    furniture_store
+    gift_shop
+    grocery_store
+    hardware_store
+    home_goods_store
+    home_improvement_store
+    jewelry_store
+    liquor_store
+    market
+    pet_store
+    shoe_store
+    shopping_mall
+    sporting_goods_store
+    store
+    supermarket
+    wholesaler
+}
+
+enum Sports {
+    athletic_field
+    fitness_center
+    golf_course
+    gym
+    playground
+    ski_resort
+    sports_club
+    sports_complex
+    stadium
+    swimming_pool
+}
+
+enum Transportation {
+    airport
+    bus_station
+    bus_stop
+    ferry_terminal
+    heliport
+    light_rail_station
+    park_and_ride
+    subway_station
+    taxi_stand
+    train_station
+    transit_depot
+    transit_station
+    truck_stop
 }

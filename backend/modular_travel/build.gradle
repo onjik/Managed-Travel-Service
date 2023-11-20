@@ -47,10 +47,12 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'com.graphql-java:graphql-java-extended-scalars:20.2' exclude(group: 'com.graphql-java', module: 'graphql-java') // spring-graphql 에 포함
-
+	implementation 'com.google.code.gson:gson:2.10.1'
 	//INFRA
 	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+	implementation 'com.google.maps:google-maps-services:2.2.0'
+
 	//LOG
 //	implementation 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
 //	implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
