@@ -37,8 +37,17 @@
 # ✏️ Specification
 
 ## Account Domain
-[Account Domain HTTP API](backend/specification/account/api_spec.md)
+[Account Domain HTTP API](backend/account/specification/api_spec.md)
 
-[Event Spec](backend/specification/account/event_spec.md)
+[Event Spec](backend/account/specification/event_spec.md)
 
-[Database DDL](backend/infrastructure/database/account.sql)
+[Database DDL](backend/account/infrastructure/database/account.sql)
+
+# Major Versions
+- kafka : 3.4.1 (confluent platform 7.4.3)
+- spring boot : 3.1.4
+- java : 17
+- elasticsearch : 8.7.1
+- spring data elasticsearch : 5.1.x
+- postgresql : 16.0 with postgis extension
+- hibernate core : 6.2.9
