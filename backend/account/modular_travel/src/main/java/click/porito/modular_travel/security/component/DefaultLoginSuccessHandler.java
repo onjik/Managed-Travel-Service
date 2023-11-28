@@ -2,7 +2,6 @@ package click.porito.modular_travel.security.component;
 
 import click.porito.modular_travel.account.AccountDTO;
 import click.porito.modular_travel.account.AccountService;
-import click.porito.modular_travel.security.event.AuthenticationMethod;
 import click.porito.modular_travel.security.event.AuthenticationSuccessEvent;
 import click.porito.modular_travel.security.event.SecurityTopics;
 import click.porito.modular_travel.security.exception.OidcUnexpectedServerError;
@@ -19,7 +18,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -33,16 +31,15 @@ public class DefaultLoginSuccessHandler implements AuthenticationSuccessHandler 
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String,Object> kafkaTemplate;
 
-    @Transactional
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String userId = authentication.getName();
-        AuthenticationSuccessEvent successEvent = new AuthenticationSuccessEvent(userId, AuthenticationMethod.OIDC);
-        kafkaTemplate.send(SecurityTopics.AUTHENTICATION_SUCCESS_0,successEvent);
-
-
         //response body
         responseLoginSuccess(response, userId);
+
+        //kafka
+        var event = AuthenticationSuccessEvent.from(userId, request);
+        kafkaTemplate.send(SecurityTopics.AUTHENTICATION_SUCCESS_0,event);
     }
 
 

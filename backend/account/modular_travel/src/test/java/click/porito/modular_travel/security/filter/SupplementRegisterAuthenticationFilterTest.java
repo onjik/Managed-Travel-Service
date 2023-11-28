@@ -3,6 +3,8 @@ package click.porito.modular_travel.security.filter;
 import click.porito.modular_travel.account.AccountRegisterDTO;
 import click.porito.modular_travel.account.AccountService;
 import click.porito.modular_travel.account.Gender;
+import click.porito.modular_travel.account.model.Account;
+import click.porito.modular_travel.account.model.Role;
 import click.porito.modular_travel.security.component.DefaultLoginFailureHandler;
 import click.porito.modular_travel.security.component.DefaultLoginSuccessHandler;
 import click.porito.modular_travel.security.constant.SecurityConstant;
@@ -24,6 +26,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 
 import java.io.IOException;
@@ -41,6 +46,8 @@ class SupplementRegisterAuthenticationFilterTest {
     private AccountService accountService;
     private JwtService jwtService;
     private SupplementRegisterAuthenticationFilter filter;
+    private AuthenticationSuccessHandler successHandler;
+    private AuthenticationFailureHandler failureHandler;
 
     @BeforeAll
     static void beforeAll() {
@@ -58,9 +65,14 @@ class SupplementRegisterAuthenticationFilterTest {
         this.objectMapper = spy(new ObjectMapper());
         this.accountService = mock(AccountService.class);
         this.jwtService = mock(JwtService.class);
-        var success = new DefaultLoginSuccessHandler(accountService, objectMapper);
-        var failure = new DefaultLoginFailureHandler(objectMapper, jwtService);
-        this.filter = spy(new SupplementRegisterAuthenticationFilter(validator, objectMapper, accountService, jwtService, failure, success));
+        this.successHandler = mock(DefaultLoginSuccessHandler.class);
+        this.failureHandler = mock(DefaultLoginFailureHandler.class);
+        this.filter = spy(new SupplementRegisterAuthenticationFilter(validator, objectMapper, accountService, jwtService, failureHandler, successHandler));
+    }
+
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     @Nested
@@ -84,6 +96,7 @@ class SupplementRegisterAuthenticationFilterTest {
             // then
             //TODO 여기부터
             verify(filter, times(1)).attemptAuthentication(request, response);
+            verify(successHandler, times(1)).onAuthenticationSuccess(request, response, authentication);
         }
 
         @ParameterizedTest
@@ -132,11 +145,11 @@ class SupplementRegisterAuthenticationFilterTest {
 
     @Nested
     @DisplayName("attemptAuthentication")
-    class attemptAuthentication{
+    class attemptAuthentication {
 
         @Test
         @DisplayName("필수 정보가 누락되었을 때, InsufficientRegisterInfoException 발생")
-        void insufficientInfo(){
+        void insufficientInfo() {
             // given
             MockHttpServletRequest request = new MockHttpServletRequest();
             MockHttpServletResponse response = new MockHttpServletResponse();
@@ -183,7 +196,7 @@ class SupplementRegisterAuthenticationFilterTest {
 
         @Test
         @DisplayName("추가 정보 요청이 왔는데, 쿠키에 토큰이 담겨있지 않을때, AuthenticationCredentialsNotFoundException 발생")
-        void noCookie(){
+        void noCookie() {
             // given
             MockHttpServletRequest request = new MockHttpServletRequest();
             MockHttpServletResponse response = new MockHttpServletResponse();
@@ -198,6 +211,40 @@ class SupplementRegisterAuthenticationFilterTest {
             // when, then
             Assertions.assertThrows(AuthenticationCredentialsNotFoundException.class,
                     () -> filter.attemptAuthentication(request, response));
+        }
+
+        @Test
+        @DisplayName("쿠키가 유효하고, 추가 정보가 다 제공되고, 아직 가입되지 않은 사용자라면, Authentication을 리턴한다.")
+        void registrationSuccess() throws ServletException, IOException {
+            // given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            var original = AccountRegisterDTO.builder()
+                    .name("name")
+                    .email("email@email.com")
+                    .build();
+            var supplement = AccountRegisterDTO.builder()
+                    .gender(Gender.MALE)
+                    .birthDate(LocalDate.of(2000, 1, 1))
+                    .build();
+            Account account = Account.builder("email@email.com", Role.USER)
+                    .gender(Gender.MALE)
+                    .name("name")
+                    .birthDate(LocalDate.of(2000, 1, 1))
+                    .build();
+            account.setUserId(1L);
+            doReturn(original).when(filter).parseBody(request);
+            doReturn(supplement).when(filter).parseCookie(request);
+            doReturn(account).when(accountService).registerAccount(any());
+
+
+            // when
+            Authentication authentication = filter.attemptAuthentication(request, response);
+
+            //then
+            Assertions.assertNotNull(authentication);
+            Assertions.assertEquals(account.getUserId().toString(), authentication.getName());
+            verify(filter, times(1)).eraseJwtCookie(response);
         }
     }
 

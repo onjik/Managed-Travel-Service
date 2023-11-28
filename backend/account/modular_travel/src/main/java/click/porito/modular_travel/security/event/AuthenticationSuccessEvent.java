@@ -1,7 +1,13 @@
 package click.porito.modular_travel.security.event;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public record AuthenticationSuccessEvent (
         String userId,
-        AuthenticationMethod method
+        String requestIp,
+        String requestUrl
 ){
+    public static AuthenticationSuccessEvent from(String userId, HttpServletRequest request) {
+        return new AuthenticationSuccessEvent(userId, request.getRemoteAddr(), request.getRequestURI());
+    }
 }

@@ -1,21 +1,20 @@
 package click.porito.modular_travel.gateway.router;
 
 import click.porito.modular_travel.account.AccountDTO;
-import click.porito.modular_travel.account.AccountService;
 import click.porito.modular_travel.account.AccountPatchDTO;
+import click.porito.modular_travel.account.AccountService;
 import click.porito.modular_travel.account.AccountSummaryDTO;
+import click.porito.modular_travel.account.exception.InvalidAuthenticationException;
 import click.porito.modular_travel.account.model.Account;
 import click.porito.modular_travel.account.model.Role;
 import click.porito.modular_travel.photo.ImageInternalManagement;
-import click.porito.modular_travel.account.exception.InvalidAuthenticationException;
+import click.porito.modular_travel.security.model.SimpleAuthentication;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -56,6 +56,11 @@ class AccountRouterTest {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+    }
+
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     @Nested
@@ -300,11 +305,12 @@ class AccountRouterTest {
             patchRequest.setBirthDate(LocalDate.now().plusYears(5));
             patchRequest.setName("toLong".repeat(100));
             String json = objectMapper.writeValueAsString(patchRequest);
+            SecurityContextHolder.getContext().setAuthentication(new SimpleAuthentication(List.of("USER"), "1"));
             //when
             MvcResult mvcResult = mvc.perform(patch("/account/profile")
                             .contentType("application/json")
                             .content(json))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isBadRequest())
                     .andReturn();
 
             //then

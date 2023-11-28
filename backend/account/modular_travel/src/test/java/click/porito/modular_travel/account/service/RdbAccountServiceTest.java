@@ -1,6 +1,9 @@
 package click.porito.modular_travel.account.service;
 
 import click.porito.modular_travel.account.*;
+import click.porito.modular_travel.account.event.AccountDeleteEvent;
+import click.porito.modular_travel.account.event.AccountPutEvent;
+import click.porito.modular_travel.account.event.AccountTopics;
 import click.porito.modular_travel.account.exception.InvalidAuthenticationException;
 import click.porito.modular_travel.account.model.Account;
 import click.porito.modular_travel.account.model.Role;
@@ -12,6 +15,7 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +34,7 @@ class RdbAccountServiceTest {
     AccountRepository accountRepository;
     static ValidatorFactory validatorFactory;
     Validator validator;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     @BeforeAll
     static void beforeAll() {
@@ -45,7 +50,8 @@ class RdbAccountServiceTest {
     void setUp() {
         this.accountRepository = mock(AccountRepository.class);
         this.validator = validatorFactory.getValidator();
-        this.accountService = new RdbAccountService(accountRepository, validator);
+        this.kafkaTemplate = mock(KafkaTemplate.class);
+        this.accountService = new RdbAccountService(accountRepository, validator, kafkaTemplate);
     }
 
     private Account createAccount(Long userId) {
@@ -340,6 +346,7 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(InvalidAuthenticationException.class, () -> {
                 accountService.deleteCurrentAccount();
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
@@ -354,10 +361,13 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(InvalidAuthenticationException.class, () -> {
                 accountService.deleteCurrentAccount();
             });
+
+            verify(kafkaTemplate, never()).send(anyString(), any());
+
         }
 
         @Test
-        @DisplayName("현재 로그인 한 사용자가 유효하면, 해당 계정을 삭제하고 SecurityHolder를 비운다.")
+        @DisplayName("현재 로그인 한 사용자가 유효하면, 해당 계정을 삭제하고 SecurityHolder를 비운다. 그리고 계정 삭제 이벤트를 발생시킨다.")
         void deleteCurrentAccount(){
             //given
             Long userId = 123456L;
@@ -371,6 +381,7 @@ class RdbAccountServiceTest {
             //then
             verify(accountRepository, times(1)).delete(account);
             Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
+            verify(kafkaTemplate, times(1)).send(eq(AccountTopics.ACCOUNT_DELETE_0), any(AccountDeleteEvent.class));
         }
     }
 
@@ -390,6 +401,7 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 accountService.patchProfileInfo(null);
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
@@ -398,6 +410,7 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(InvalidAuthenticationException.class, () -> {
                 accountService.patchProfileInfo(createPatchDTO());
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
@@ -412,6 +425,7 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(InvalidAuthenticationException.class, () -> {
                 accountService.patchProfileInfo(new AccountPatchDTO());
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
@@ -428,10 +442,11 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(ObjectOptimisticLockingFailureException.class, () -> {
                 accountService.patchProfileInfo(createPatchDTO());
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
-        @DisplayName("인자로 던저준 DTO에 따라 수정이 일어난다")
+        @DisplayName("인자로 던저준 DTO에 따라 수정이 일어난다. 그리고 이벤트를 발생시킨다.")
         void patchProfileInfo(){
             //given
             Long userId = 123456L;
@@ -440,6 +455,7 @@ class RdbAccountServiceTest {
 
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userId, null));
             AccountPatchDTO patchDTO = createPatchDTO();
+            doAnswer(invocation -> account).when(accountRepository).save(any(Account.class));
             //when
             accountService.patchProfileInfo(patchDTO);
 
@@ -448,6 +464,7 @@ class RdbAccountServiceTest {
             verify(accountRepository, times(1)).save(argThat((Account arg) -> {
                 return arg.getName().equals(patchDTO.getName());
             }));
+            verify(kafkaTemplate, times(1)).send(eq(AccountTopics.ACCOUNT_PUT_0), any(AccountPutEvent.class));
         }
     }
 
@@ -477,6 +494,7 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 accountService.registerAccount(null);
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
@@ -485,6 +503,7 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(ConstraintViolationException.class, () -> {
                 accountService.registerAccount(createInsufficientRegisterDTO());
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
@@ -497,6 +516,7 @@ class RdbAccountServiceTest {
             Assertions.assertThrows(ObjectOptimisticLockingFailureException.class, () -> {
                 accountService.registerAccount(createValidRegisterDTO());
             });
+            verify(kafkaTemplate, never()).send(anyString(), any());
         }
 
         @Test
@@ -504,6 +524,8 @@ class RdbAccountServiceTest {
         void registerAccount(){
             //given
             AccountRegisterDTO dto = createValidRegisterDTO();
+            Account account = createAccount(1L);
+            doReturn(account).when(accountRepository).save(any(Account.class));
             //when
             accountService.registerAccount(dto);
 
@@ -515,6 +537,8 @@ class RdbAccountServiceTest {
                         && arg.getGender().equals(dto.getGender())
                         && arg.getBirthDate().equals(dto.getBirthDate());
             }));
+            verify(kafkaTemplate, times(1)).send(eq(AccountTopics.ACCOUNT_PUT_0), any(AccountPutEvent.class));
+
         }
     }
 }

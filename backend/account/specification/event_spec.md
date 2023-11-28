@@ -13,12 +13,15 @@
     "description" : "유저 아이디",
     "example" : "1234567890"
   },
-  "method" : {
-    "type" : "string enum",
-    "enums" : ["OIDC", "INFO_SUPPLY", "... 추후 추가 가능"],
+  "requestIp" : {
+    "type" : "string",
     "optional" : false,
-    "description" : "인증 방식",
-    "example" : "OIDC"
+    "description" : "요청자 아이피 주소"
+  },
+  "requestUrl" : {
+    "type" : "string",
+    "optional" : false,
+    "description" : "요청한 url"
   }
 }
 ```
@@ -27,25 +30,20 @@
 인증 실패
 ```json
 {
-  "userId" : {
+  "requestIp" : {
     "type" : "string",
     "optional" : false,
-    "description" : "유저 아이디",
-    "example" : "1234567890"
+    "description" : "요청자 아이피 주소"
   },
-  "method" : {
-    "type" : "string enum",
-    "enums" : ["OIDC", "INFO_SUPPLY", "... 추후 추가 가능"],
+  "requestUrl" : {
+    "type" : "string",
     "optional" : false,
-    "description" : "인증 방식",
-    "example" : "OIDC"
+    "description" : "요청한 url"
   },
-  "reason" : {
-    "type" : "string enum",
-    "enums" : ["INVALID_CREDENTIALS", "INVALID_TOKEN", "INVALID_USER", "INVALID_METHOD", "... 추후 추가 가능"],
+  "exceptionName" : {
+    "type" : "string",
     "optional" : false,
-    "description" : "인증 실패 원인",
-    "example" : "INVALID_CREDENTIALS"
+    "description" : "인증 실패 예외 이름"
   },
   "message" : {
     "type" : "string",

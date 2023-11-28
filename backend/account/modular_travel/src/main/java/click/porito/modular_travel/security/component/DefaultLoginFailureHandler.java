@@ -2,6 +2,8 @@ package click.porito.modular_travel.security.component;
 
 import click.porito.modular_travel.account.AccountRegisterDTO;
 import click.porito.modular_travel.security.constant.SecurityConstant;
+import click.porito.modular_travel.security.event.AuthenticationFailEvent;
+import click.porito.modular_travel.security.event.SecurityTopics;
 import click.porito.modular_travel.security.exception.InsufficientRegisterInfoException;
 import click.porito.modular_travel.security.exception.OidcEmailNotVerifiedException;
 import click.porito.modular_travel.security.service.JwtService;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -31,6 +34,7 @@ import java.util.Map;
 public class DefaultLoginFailureHandler implements AuthenticationFailureHandler {
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
 
     @Override
@@ -74,6 +78,9 @@ public class DefaultLoginFailureHandler implements AuthenticationFailureHandler 
             log.error("unexpected authentication exception", exception);
             responseError(response, "{\"message\":\"unexpected error\"}", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+
+        var event = AuthenticationFailEvent.from(request, exception);
+        kafkaTemplate.send(SecurityTopics.AUTHENTICATION_FAILURE_0, event);
     }
 
     private void responseError(HttpServletResponse response, Object body, int status) throws IOException {
