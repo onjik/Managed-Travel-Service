@@ -1,0 +1,9 @@
+type LocalizedString {
+    languageCode: String!
+    text: String!
+}
+
+type Point {
+    longitude: Float!
+    latitude: Float!
+}
