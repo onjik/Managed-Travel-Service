@@ -1,4 +1,4 @@
-package click.porito.travel_plan_service.dto;
+package click.porito.travel_plan_service.travel.dto;
 
 import java.time.LocalDate;
 import java.util.List;

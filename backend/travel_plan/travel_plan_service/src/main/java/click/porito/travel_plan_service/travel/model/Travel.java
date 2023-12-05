@@ -1,6 +1,6 @@
-package click.porito.travel_plan_service.model;
+package click.porito.travel_plan_service.travel.model;
 
-import click.porito.travel_plan_service.dto.Plan;
+import click.porito.travel_plan_service.travel.dto.Plan;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -19,9 +19,8 @@ public class Travel {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id")
-    private User owner;
+    @Column(name = "owner_id")
+    private String ownerId;
 
     @Type(JsonType.class)
     @Column(name = "plan", columnDefinition = "json")
