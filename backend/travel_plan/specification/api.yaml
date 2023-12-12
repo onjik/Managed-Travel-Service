@@ -1,0 +1,411 @@
+openapi: 3.0.3
+info:
+  title: Travel Plan API
+  description: 이 문서는 여행 계획 서비스의 API 명세서입니다.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+    description: Local Server(개발용)
+tags:
+  - name: travel
+    description: 여행 계획 관련 API
+  - name: day
+    description: DayPlan 관련 API
+paths:
+  /v1/travels:
+    post:
+      tags:
+        - travel
+      summary: 여행 계획 생성
+      description: 현재 로그인한 사용자의 신규 여행계획을 생성합니다.
+      operationId: createTravel
+      requestBody:
+        description: 여행 계획 생성에 필요한 정보
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TravelCreateRequest'
+      responses:
+        '201':
+          description: 여행 계획 생성 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TravelInfoSummary'
+        '400':
+          description: 잘못된 요청
+        '401':
+          description: 인증 정보 부재
+        '403':
+          description: 권한 없음
+        '500':
+          description: 서버 에러
+    get:
+      tags:
+        - travel
+      summary: 자신의 여행 계획 목록 조회
+      description: 현재 로그인한 사용자의 여행 계획 목록을 조회합니다.
+      operationId: getTravelList
+      responses:
+        '200':
+          description: 여행 계획 목록 조회 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TravelInfoSummary'
+        '401':
+          description: 인증 정보 부재
+        '403':
+          description: 권한 없음
+        '500':
+          description: 서버 에러
+  /v1/travels/{travelId}/info:
+    get:
+      tags:
+        - travel
+      summary: 여행 계획 정보 조회
+      description: 여행 계획의 정보를 조회합니다.
+      operationId: getTravelInfo
+      parameters:
+        - name: travelId
+          in: path
+          description: 여행 계획 ID
+          required: true
+          schema:
+            type: string
+            example: asd32f1asd3f1a3s5f
+      responses:
+        '200':
+          description: 여행 계획 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TravelInfoSummary'
+        '400':
+          description: 잘못된 요청
+        '404':
+          description: 여행 계획 없음
+        '401':
+          description: 인증 정보 부재
+        '403':
+          description: 권한 없음
+        '500':
+          description: 서버 에러
+    put:
+      tags:
+        - travel
+      summary: 여행 계획 정보 수정
+      description: 여행 계획의 정보를 수정합니다.
+      operationId: updateTravelInfo
+      parameters:
+        - name: travelId
+          in: path
+          description: 여행 계획 ID
+          required: true
+          schema:
+            type: string
+            example: asd32f1asd3f1a3s5f
+      requestBody:
+        description: 여행 계획 수정에 필요한 정보
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TravelUpdateRequest'
+      responses:
+        '200':
+          description: 여행 계획 수정 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TravelInfoSummary'
+        '400':
+          description: 잘못된 요청
+        '404':
+          description: 여행 계획 없음
+        '401':
+          description: 인증 정보 부재
+        '403':
+          description: 권한 없음
+        '500':
+          description: 서버 에러
+  /v1/travels/{travelId}:
+    get:
+      tags:
+        - travel
+      summary: 여행 계획 전체 스키마 조회
+      description: 여행 계획의 전체 스키마를 조회합니다.
+      operationId: getTravel
+      parameters:
+        - name: travelId
+          in: path
+          description: 여행 계획 ID
+          required: true
+          schema:
+            type: string
+            example: asd32f1asd3f1a3s5f
+      responses:
+        '200':
+          description: 여행 계획 전체 스키마 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Travel'
+        '400':
+          description: 잘못된 요청
+        '404':
+          description: 여행 계획 없음
+        '401':
+          description: 인증 정보 부재
+        '403':
+          description: 권한 없음
+        '500':
+          description: 서버 에러
+    delete:
+      tags:
+        - travel
+      summary: 여행 계획 삭제
+      description: 여행 계획을 삭제합니다. 내부의 day와 waypoint도 재귀적으로 삭제됩니다.
+      operationId: deleteTravel
+      parameters:
+        - name: travelId
+          in: path
+          description: 여행 계획 ID
+          required: false
+          schema:
+            type: string
+            example: asd32f1asd3f1a3s5f
+      responses:
+        '204':
+          description: 여행 계획 삭제 성공
+        '400':
+          description: 잘못된 요청
+        '404':
+          description: 여행 계획 없음
+        '401':
+          description: 인증 정보 부재
+        '403':
+          description: 권한 없음
+        '500':
+          description: 서버 에러
+  /v1/travels/{travelId}/days:
+    post:
+      tags:
+        - day
+      summary: DayPlan 생성
+      description: 특정 여행 계획에 DayPlan 추가, 삽입
+      operationId: createDayPlan
+      parameters:
+        - name: travelId
+          in: path
+          description: 여행 계획 ID
+          required: true
+          schema:
+            type: string
+            example: asd32f1asd3f1a3s5f
+      requestBody:
+        description: DayPlan 삽입 전략, body가 없을시, 마지막에 추가
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                strategy:
+                  type: string
+                  description: 삽입 전략
+                  required: true
+                  example: FIRST
+                  enum:
+                    - FIRST
+                    - LAST
+                    - AFTER
+                referenceDayId:
+                  type: string
+                  description: 삽입 전략이 AFTER일 경우, 기준이 되는 DayPlan ID, AFTER인 경우 필수
+                  required: false
+                  example: asd32f1asd3f1a3s5f
+      responses:
+          '201':
+            description: DayPlan 생성 성공
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TravelInfoSummary'
+          '400':
+              description: 잘못된 요청
+          '404':
+              description: 여행 계획 없음
+          '401':
+              description: 인증 정보 부재
+          '403':
+              description: 권한 없음
+          '500':
+              description: 서버 에러
+    delete:
+      tags:
+        - day
+      summary: DayPlan 삭제
+      description: 특정 여행 계획의 DayPlan 삭제
+      operationId: deleteDayPlan
+      parameters:
+        - name: travelId
+          in: path
+          description: 여행 계획 ID
+          required: true
+          schema:
+            type: string
+            example: asd32f1asd3f1a3s5f
+        - name: dayId
+          in: query
+          description: DayPlan ID
+          required: true
+          schema:
+            type: string
+            example: asd32f1asd3f1a3s5f
+      responses:
+          '204':
+            description: DayPlan 삭제 성공
+          '400':
+              description: 잘못된 요청
+          '404':
+              description: 여행 계획 없음
+          '401':
+              description: 인증 정보 부재
+          '403':
+              description: 권한 없음
+          '500':
+              description: 서버 에러
+
+
+
+
+
+
+components:
+  schemas:
+    TravelCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: 여행 제목
+          required: true
+          example: Family Winter Vacation
+        startDate:
+          type: string
+          description: 여행 시작일
+          required: false
+          format: yyyy-MM-dd
+          example: 2020-12-25
+        dayCount:
+          type: integer
+          description: 여행 일수
+          required: true
+          example: 3
+    TravelUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: 여행 제목
+          required: true
+          example: Family Winter Vacation
+        startDate:
+          type: string
+          description: 여행 시작일
+          required: true
+          format: yyyy-MM-dd
+          example: 2020-12-25
+    TravelInfoSummary:
+      type: object
+      properties:
+        travelId:
+          type: string
+          description: 여행 계획 ID
+          nullable: false
+          example: asd32f1asd3f1a3s5f
+        title:
+          type: string
+          description: 여행 제목
+          nullable: false
+          example: Family Winter Vacation
+        startDate:
+          type: string
+          description: 여행 시작일
+          nullable: true
+          example: 2020-12-25
+          format: yyyy-MM-dd
+        days:
+          type: array
+          description: DayPlan ID 목록, 순서가 의미를 가짐
+          items:
+            type: string
+            description: DayPlan ID
+            example: asd32f1asd3f1a3s5f
+    Travel:
+      type: object
+      properties:
+        travelId:
+          type: string
+          description: 여행 계획 ID
+          nullable: false
+          example: asd32f1asd3f1a3s5f
+        title:
+          type: string
+          description: 여행 제목
+          nullable: false
+          example: Family Winter Vacation
+        startDate:
+          type: string
+          description: 여행 시작일
+          nullable: true
+          example: 2020-12-25
+          format: yyyy-MM-dd
+        days:
+          type: array
+          description: DayPlan ID 목록, 순서가 의미를 가짐
+          items:
+            $ref: '#/components/schemas/DayPlan'
+    DayPlan:
+      type: object
+      properties:
+        dayId:
+          type: string
+          description: DayPlan ID
+          nullable: false
+          example: asd32f1asd3f1a3s5f
+        waypoints:
+          type: array
+          description: WayPoint ID 목록, 순서가 의미를 가짐
+          items:
+            $ref: '#/components/schemas/WayPoint'
+    WayPoint:
+      type: object
+      properties:
+        waypointId:
+          type: string
+          description: WayPoint ID
+          nullable: false
+          example: asd32f1asd3f1a3s5f
+        memo:
+          type: string
+          description: 메모
+          nullable: true
+          example: 기념품 구매
+        time:
+          type: string
+          description: LocalTime
+          nullable: true
+          example: 12:00
+          format: HH:mm
+        placeId:
+          type: string
+          description: Place ID
+          nullable: false
+          example: asd32f1asd3f1a3s5f
+
+
