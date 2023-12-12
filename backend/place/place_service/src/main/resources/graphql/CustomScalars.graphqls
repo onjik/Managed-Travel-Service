@@ -1,0 +1,3 @@
+scalar CountryCode @specifiedBy(url:"https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2")
+scalar Locale @specifiedBy(url:"https://tools.ietf.org/html/bcp47")
+scalar NonNegativeInt
