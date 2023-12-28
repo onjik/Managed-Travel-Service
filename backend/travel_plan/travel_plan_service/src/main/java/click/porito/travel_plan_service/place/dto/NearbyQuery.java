@@ -1,15 +1,13 @@
 package click.porito.travel_plan_service.place.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Locale;
 
 @Builder
 @Setter @Getter
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class NearbyQuery {
     private final float latitude;
     private final float longitude;

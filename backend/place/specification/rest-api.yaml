@@ -1,0 +1,299 @@
+openapi: 3.0.3
+info:
+  title: Place Service Api Spec
+  description: Place Service 는 장소 정보, 장소의 게시글, 리뷰, 댓글 등을 관리하는 서비스 입니다.
+  version: 1.0.0
+tags:
+  - name: place-info
+    description: 장소 정보
+  - name: place-photo
+    description: 장소의 사진
+  - name: place-post
+    description: 장소의 게시글
+  - name: place-review
+    description: 장소의 리뷰
+  - name: place-comment
+    description: 장소의 댓글
+paths:
+  /v1/places/{placeId}:
+    get:
+      tags:
+        - place-info
+      summary: 장소 정보 조회
+      description: 장소 정보를 조회합니다.
+      operationId: getPlaceInfo
+      parameters:
+        - name: placeId
+          in: path
+          description: 장소 ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 장소 정보 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceInfo'
+        '422':
+          description: 잘못된 형식의 인자 전달
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidArgumentResponse'
+        '400':
+          description: 장소 정보 조회 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: 에러 메시지
+                    example: 장소 정보 조회 실패
+  /v1/places/searchNearBy:
+    post:
+      tags:
+        - place-info
+      summary: 근처 장소 검색
+      description: 근처 장소를 검색합니다.
+      operationId: searchNearBy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NearBySearchRequestBody'
+      responses:
+        '200':
+          description: 근처 장소 검색 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlaceInfo'
+        '422':
+          description: 잘못된 형식의 인자 전달
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidArgumentResponse'
+        '400':
+          description: 근처 장소 검색 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: 에러 메시지
+                    example: 근처 장소 검색 실패
+  /v1/places/{placeId}/photos/{photoId}:
+    get:
+      tags:
+        - place-photo
+      summary: 장소 사진 조회
+      description: 장소 사진을 조회합니다.
+      operationId: getPhoto
+      parameters:
+        - name: placeId
+          in: path
+          description: 장소 ID
+          required: true
+          schema:
+            type: string
+        - name: photoId
+          in: path
+          description: 사진 ID
+          required: true
+          schema:
+            type: string
+        - name: maxHeightPx
+          in: query
+          description: 사진 최대 높이
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 4800
+            default: 1080
+        - name: maxWidthPx
+          in: query
+          description: 사진 최대 너비
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 4800
+            default: 1920
+      responses:
+        '302':
+          description: 장소 사진 조회 성공
+          headers:
+            Location:
+              description: 사진 URL
+              schema:
+                type: string
+                format: uri
+                example: https://~~~~
+        '422':
+          description: 잘못된 형식의 인자 전달
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidArgumentResponse'
+        '400':
+          description: 장소 사진 조회 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: 에러 메시지
+                    example: 장소 사진 조회 실패
+components:
+  schemas:
+    NearBySearchRequestBody:
+      type: object
+      properties:
+        latitude:
+          type: number
+          required: true
+          description: 위도
+          minimum: -90
+          maximum: 90
+          example: 37.498095
+        longitude:
+          type: number
+          required: true
+          description: 경도
+          minimum: -180
+          maximum: 180
+          example: 127.027610
+        radiusMeters:
+          type: integer
+          required: true
+          description: 반경
+          minimum: 0
+          maximum: 50000
+          example: 1000
+        maxResultCount:
+          type: integer
+          required: false
+          nullable: true
+          description: 최대 결과 개수
+          minimum: 1
+          maximum: 20
+          example: 10
+        placeTypes:
+          type: array
+          required: false
+          nullable: true
+          description: 장소 타입
+          items:
+            type: string
+            enum:
+              - TOURIST_ATTRACTION
+              - RESTAURANT
+              - ACCOMMODATION
+              - SHOPPING
+              - TRANSPORTATION
+    InvalidArgumentResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object # key-value 형태의 오브젝트, key는 잘못된 필드명, value는 에러 메시지
+            properties:
+              field:
+                type: string
+                description: 잘못된 필드명
+                example: 장소 ID
+              message:
+                type: string
+                description: 에러 메시지
+                example: 장소 ID는 필수입니다.
+    AuthorAttribution:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: 작성자 이름
+          example: 작성자 이름
+        uri:
+          type: string
+          description: 작성자 URI
+          example: 작성자 URI
+        photoUri:
+          type: string
+          description: 작성자 사진 URI
+          example: 작성자 사진 URI
+    Photo:
+      type: object
+      properties:
+        photoId:
+          type: string
+          description: 사진 ID
+          example: 사진 ID
+        placeId:
+          type: string
+          description: 장소 ID
+          example: 장소 ID
+        heightPx:
+          type: integer
+          description: 사진 높이
+          example: 100
+        widthPx:
+          type: integer
+          description: 사진 너비
+          example: 100
+        authorAttributions:
+          type: array
+          description: 작성자 정보
+          items:
+            $ref: '#/components/schemas/AuthorAttribution'
+    PlaceInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 장소 ID
+          example: ChIJ94kl9BTnAGARgA4Z1NMnRdQ
+        name:
+          type: string
+          description: 장소 이름
+          example: 장소 이름
+        tags:
+          type: array
+          description: 장소 태그
+          example: [태그1, 태그2]
+          items:
+            type: string
+        address:
+          type: string
+          description: 장소 주소
+          example: 대한민국 서울특별시 강남구 테헤란로
+        latitude:
+          type: number
+          description: 장소 위도
+          example: 37.498095
+        longitude:
+          type: number
+          description: 장소 경도
+          example: 127.027610
+        summary:
+          type: string
+          description: 장소 설명
+          example: 이 곳은 ~ 입니다.
+        photos:
+          type: array
+          description: 장소 사진
+          items:
+            $ref: '#/components/schemas/Photo'
