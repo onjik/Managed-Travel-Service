@@ -39,12 +39,38 @@ paths:
           description: 잘못된 요청
         '500':
           description: 서버 에러
-  /v1/plans/id:
     get:
       tags:
         - plan
-      summary: 자신의 여행 Id 목록 조회
-      description: 자신의 여행 Id 목록을 조회합니다.
+      summary: 여행 Id 목록 조회
+      description: 여행 Id 목록을 조회합니다. 자기 자신의 여행만 조회할 수 있습니다.
+      parameters:
+        - name: ownerId
+          in: query
+          description: 사용자 ID
+          required: true
+          schema:
+            type: string
+            example: 1
+        - name: page
+          in: query
+          description: 페이지 번호
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+            example: 1
+        - name: size
+          in: query
+          description: 페이지 크기
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            minimum: 5
+            default: 10
+            example: 10
       responses:
         '200':
           description: 여행 조회 성공
@@ -57,6 +83,8 @@ paths:
                   type: string
         '400':
           description: 잘못된 요청
+        '403':
+          description: 접근 권한 없음
         '500':
           description: 서버 에러
   /v1/plans/{planId}:
@@ -132,6 +160,13 @@ paths:
           schema:
             type: string
             example: 1
+        - name: If-Match
+          in: header
+          description: 이전에 조회한 ETag 값
+          required: false
+          schema:
+            type: string
+            example: "1dsafadsf"
       requestBody:
         required: true
         content:
@@ -182,7 +217,7 @@ components:
           required: false
           description: 여행 시작 날짜, 오늘이거나 미래
           example: 2021-01-01
-        places:
+        placeIds:
           required: false
           type: array
           description: 장소 ID 목록, 최적 위치로 추가되어서 생성됩니다.
@@ -201,10 +236,6 @@ components:
           format: yyyy-MM-dd
           description: 여행 시작 날짜
           example: 2021-01-01
-        version:
-          type: string
-          description: 수정 버전 식별자
-          example: adflasjdflkajsdf
         route:
           $ref: '#/components/schemas/Route'
     Plan:

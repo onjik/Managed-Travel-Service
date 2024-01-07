@@ -3,6 +3,7 @@ package click.porito.travel_plan_service.service;
 import click.porito.travel_plan_service.dto.PlanCreateForm;
 import click.porito.travel_plan_service.dto.PlanPutForm;
 import click.porito.travel_plan_service.dto.PlanView;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,16 @@ public interface PlanService {
      */
     List<PlanView> getPlansOwnedBy(String userId);
 
+
+    /**
+     * 특정 유저의 여행 계획 목록을 조회한다.
+     * @param userId 조회할 유저의 id
+     * @param page 조회할 페이지 (min = 0)
+     * @param size 한 페이지에 조회할 여행 계획 수 (min = 5, max =100)
+     * @return 조회된 여행 계획 목록, 없으면 empty list
+     */
+    List<String> getPlanIdOwnedBy(String userId, @Nullable Integer page, @Nullable Integer size);
+
     /**
      * 유저의 여행 계획을 삭제한다.
      * @param planId 삭제할 여행 계획의 id
@@ -44,7 +55,7 @@ public interface PlanService {
      * @param planPutForm 수정할 여행 계획 정보
      * @return 수정된 PlanView
      */
-    PlanView putPlanInfo(String planId, PlanPutForm planPutForm);
+    PlanView putPlanInfo(String planId, PlanPutForm planPutForm) throws InvalidUpdateInfoException, PlanOutOfDateException;
 
 
 }
