@@ -1,6 +1,5 @@
-package click.porito.travel_plan_service.security;
+package click.porito.travel_plan_service.security_service;
 
-import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 

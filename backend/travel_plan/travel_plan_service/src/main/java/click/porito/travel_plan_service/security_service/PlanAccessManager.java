@@ -1,4 +1,6 @@
-package click.porito.travel_plan_service.service;
+package click.porito.travel_plan_service.security_service;
+
+import click.porito.travel_plan_service.plan_service.Requester;
 
 import java.util.ArrayList;
 import java.util.List;

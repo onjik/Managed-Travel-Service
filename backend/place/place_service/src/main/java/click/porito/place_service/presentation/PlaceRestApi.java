@@ -49,7 +49,6 @@ public class PlaceRestApi {
                 body.distanceSort()
         );
     }
-    //MethodArgumentNotValidException
 
     @GetMapping("/{placeId}/photos/{photoId}")
     public ResponseEntity<?> getPhoto(@PathVariable String placeId, @PathVariable String photoId,

@@ -1,4 +1,4 @@
-package click.porito.travel_plan_service.security;
+package click.porito.travel_plan_service.security_service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;

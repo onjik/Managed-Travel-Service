@@ -1,9 +1,13 @@
 package click.porito.travel_plan_service.api.rest;
 
+import click.porito.travel_plan_service.security_service.PlanAccessDeniedException;
+import click.porito.travel_plan_service.security_service.PlanAccessManager;
+import click.porito.travel_plan_service.mapper.Mapper;
+import click.porito.travel_plan_service.domain.Plan;
 import click.porito.travel_plan_service.dto.PlanCreateForm;
 import click.porito.travel_plan_service.dto.PlanPutForm;
 import click.porito.travel_plan_service.dto.PlanView;
-import click.porito.travel_plan_service.service.*;
+import click.porito.travel_plan_service.plan_service.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +29,7 @@ public class PlanRestApi {
 
     private final PlanAccessManager planAccessManager;
     private final PlanService planService;
+    private final Mapper<PlanView, Plan> planViewMapper;
     @PostMapping
     public ResponseEntity<PlanView> createPlan(
             @RequestBody PlanPostRequest body,

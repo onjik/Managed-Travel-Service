@@ -1,4 +1,4 @@
-package click.porito.travel_plan_service.service;
+package click.porito.travel_plan_service.security_service;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

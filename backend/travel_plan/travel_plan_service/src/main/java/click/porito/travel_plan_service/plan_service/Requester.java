@@ -1,4 +1,4 @@
-package click.porito.travel_plan_service.service;
+package click.porito.travel_plan_service.plan_service;
 
 public record Requester(
         String id,

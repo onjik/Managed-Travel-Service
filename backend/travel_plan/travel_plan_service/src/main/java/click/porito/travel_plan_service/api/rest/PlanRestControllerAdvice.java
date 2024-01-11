@@ -1,8 +1,9 @@
 package click.porito.travel_plan_service.api.rest;
 
-import click.porito.travel_plan_service.service.PlanAccessDeniedException;
-import click.porito.travel_plan_service.service.PlanOutOfDateException;
+import click.porito.travel_plan_service.security_service.PlanAccessDeniedException;
+import click.porito.travel_plan_service.plan_service.PlanOutOfDateException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -59,6 +60,19 @@ public class PlanRestControllerAdvice extends ResponseEntityExceptionHandler {
                 .exception(e)
                 .path(path)
                 .message("plan version(Etag) is not matched")
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ErrorAttributes handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return ErrorAttributes.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .exception(e)
+                .path(path)
+                .message("invalid request")
+                .addDetail("violations", e.getConstraintViolations())
                 .build();
     }
 

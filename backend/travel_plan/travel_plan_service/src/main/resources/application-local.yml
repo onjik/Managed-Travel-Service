@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: basic-mongo
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      database: mydatabase
+      username: root
+      password: example
