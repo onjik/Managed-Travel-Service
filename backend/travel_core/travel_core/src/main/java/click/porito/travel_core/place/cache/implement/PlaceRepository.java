@@ -1,4 +1,4 @@
-package click.porito.travel_core.place.cache;
+package click.porito.travel_core.place.cache.implement;
 
 import click.porito.travel_core.place.cache.model.Place;
 import org.springframework.data.mongodb.repository.MongoRepository;

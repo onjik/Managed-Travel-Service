@@ -13,60 +13,55 @@ import click.porito.travel_core.place.dao.google_api.model.GooglePlace;
 import click.porito.travel_core.place.dao.google_api.model.PlaceNearByRequestBody;
 import click.porito.travel_core.place.dao.google_api.model.RankPreference;
 import click.porito.travel_core.place.dto.PlaceView;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.dao.DataAccessException;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@Validated
 public class PlacePhotoServiceImpl implements PlaceService, PhotoService {
     private final GooglePlaceRepository googlePlaceRepository;
     private final GooglePlacePhotoRepository googlePlacePhotoRepository;
 
     private final Mapper<GooglePlace, PlaceView> googlePlaceViewMapper;
 
-    private final PlaceCacheService placeCacheService;
+    public PlacePhotoServiceImpl(GooglePlaceRepository googlePlaceRepository, GooglePlacePhotoRepository googlePlacePhotoRepository, Mapper<GooglePlace, PlaceView> googlePlaceViewMapper) {
+        this.googlePlaceRepository = googlePlaceRepository;
+        this.googlePlacePhotoRepository = googlePlacePhotoRepository;
+        this.googlePlaceViewMapper = googlePlaceViewMapper;
+    }
 
     @Override
     public Optional<PlaceView> getPlace(String placeId) {
-        // check cache
-        Optional<PlaceView> cache = placeCacheService.get(placeId);
-        if (cache.isPresent()) {
-            log.debug("Cache Hit - Get Place From Cache : {}", placeId);
-            return cache;
-        }
-        // cache miss
-        // google api
-        log.debug("Cache Miss - Get Place From Google API : {}", placeId);
-
         final Optional<PlaceView> place;
         try {
-            place = googlePlaceRepository.placeDetails(placeId)
+            return googlePlaceRepository.placeDetails(placeId)
                     .map(googlePlaceViewMapper::map);
         } catch (DataAccessException e) {
             throw new PlaceRetrieveFailedException("Place Not Found", e);
         }
-        if (place.isPresent()){
-            // cache
-            log.debug("Cache Put - Put Place To Cache : {}", placeId);
-            placeCacheService.put(place.get());
-        }
-        return place;
     }
 
     @Override
-    public List<PlaceView> getNearbyPlaces(double lat, double lng, int radius, @Nullable Integer maxResultCount, @Nullable PlaceType[] placeTypes, @Nullable Boolean distanceSort) {
+    @Valid
+    public List<PlaceView> getNearbyPlaces(@Range(min = -90, max = 90, message = "lat must be between -90 and 90") double lat,
+                                           @Range(min = -180, max = 180, message = "lng must be between -180 and 180") double lng,
+                                           @Range(min = 0, max = 50000, message = "radiusMeters must be between 0 and 50000") int radius,
+                                           @Nullable Integer maxResultCount,
+                                           @Nullable PlaceType[] placeTypes,
+                                           @Nullable Boolean distanceSort) {
         // validation
-        Assert.isTrue(lat >= -90 && lat <= 90, "lat must be between -90 and 90");
-        Assert.isTrue(lng >= -180 && lng <= 180, "lng must be between -180 and 180");
-        Assert.isTrue(radius >= 0 && radius <= 50000, "radiusMeters must be between 0 and 50000");
         Assert.isTrue(maxResultCount == null || maxResultCount >= 1 && maxResultCount <= 20, "maxResultCount must be between 1 and 20");
         if (placeTypes != null) {
             Assert.noNullElements(placeTypes, "placeTypes must not contain null");
@@ -96,8 +91,6 @@ public class PlacePhotoServiceImpl implements PlaceService, PhotoService {
             throw new PlaceRetrieveFailedException("Place Not Found", e);
         }
 
-        // cache
-        placeCacheService.putAll(results);
         return results;
     }
 

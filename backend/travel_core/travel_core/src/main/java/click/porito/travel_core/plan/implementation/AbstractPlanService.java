@@ -2,7 +2,7 @@ package click.porito.travel_core.plan.implementation;
 
 import click.porito.travel_core.optimization.RouteOptimizeService;
 import click.porito.travel_core.place.PlaceService;
-import click.porito.travel_core.place.cache.PlaceRepository;
+import click.porito.travel_core.place.cache.implement.PlaceRepository;
 import click.porito.travel_core.plan.InvalidUpdateInfoException;
 import click.porito.travel_core.plan.PlanOutOfDateException;
 import click.porito.travel_core.plan.PlanService;

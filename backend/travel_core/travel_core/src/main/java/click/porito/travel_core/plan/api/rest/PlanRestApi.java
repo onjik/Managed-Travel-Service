@@ -29,7 +29,6 @@ public class PlanRestApi {
 
     private final PlanAccessManager planAccessManager;
     private final PlanService planService;
-    private final Mapper<PlanView, Plan> planViewMapper;
     @PostMapping
     public ResponseEntity<PlanView> createPlan(
             @RequestBody PlanPostRequest body,

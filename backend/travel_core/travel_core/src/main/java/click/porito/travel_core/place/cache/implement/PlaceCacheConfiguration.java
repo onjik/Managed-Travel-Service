@@ -1,4 +1,4 @@
-package click.porito.travel_core.place.cache;
+package click.porito.travel_core.place.cache.implement;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

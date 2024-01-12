@@ -1,6 +1,7 @@
-package click.porito.travel_core.place.cache;
+package click.porito.travel_core.place.cache.implement;
 
 import click.porito.travel_core.Mapper;
+import click.porito.travel_core.place.cache.PlaceCacheService;
 import click.porito.travel_core.place.cache.model.Place;
 import click.porito.travel_core.place.dto.PlaceView;
 import lombok.RequiredArgsConstructor;

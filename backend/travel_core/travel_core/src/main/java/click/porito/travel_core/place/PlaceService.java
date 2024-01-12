@@ -1,6 +1,7 @@
 package click.porito.travel_core.place;
 
 import click.porito.travel_core.place.dto.PlaceView;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
@@ -29,5 +30,10 @@ public interface PlaceService {
      * @return 조회된 장소 목록
      * @throws PlaceRetrieveFailedException 외부 API 호출에 실패한 경우
      */
-    List<PlaceView> getNearbyPlaces(double lat, double lng, int radius, @Nullable Integer maxResultCount, @Nullable PlaceType[] placeTypes, @Nullable Boolean distanceSort) ;
+    List<PlaceView> getNearbyPlaces(@Range(min = -90, max = 90, message = "lat must be between -90 and 90") double lat,
+                                    @Range(min = -180, max = 180, message = "lng must be between -180 and 180") double lng,
+                                    @Range(min = 0, max = 50000, message = "radiusMeters must be between 0 and 50000") int radius,
+                                    @Nullable Integer maxResultCount,
+                                    @Nullable PlaceType[] placeTypes,
+                                    @Nullable Boolean distanceSort) ;
 }
