@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,6 +33,14 @@ public class MongoDbCacheServiceImpl implements PlaceCacheService, InitializingB
         Instant updatedAt = Instant.now().minus(cacheDuration);
         return placeRepository.findByIdAndUpdatedAtAfter(placeId, updatedAt)
                 .map(placeMapper::map);
+    }
+
+    @Override
+    public List<PlaceView> getByIdIn(String[] placeIds) {
+        Instant updatedAt = Instant.now().minus(cacheDuration);
+        return placeRepository.findByIdInAndUpdatedAtAfter(List.of(placeIds), updatedAt)
+                .stream().map(placeMapper::map)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

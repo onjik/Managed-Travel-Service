@@ -1,8 +1,10 @@
-package click.porito.travel_core.place.dao;
+package click.porito.travel_core.place.dao.google_api;
 
 import org.springframework.dao.DataAccessException;
 
-public interface GooglePlacePhotoRepository {
+import java.util.Optional;
+
+public interface GooglePlacePhotoApi {
     /**
      * 주어진 이름으로 부터 사진 uri를 반환한다.
      * @param photoName 전달된 레퍼런스 이름
@@ -10,5 +12,5 @@ public interface GooglePlacePhotoRepository {
      * @param maxHeightPx 1~ 4800
      * @return photoUri
      */
-    String photoUri(String photoName, int maxWidthPx, int maxHeightPx) throws DataAccessException;
+    Optional<String> photoUri(String photoName, int maxWidthPx, int maxHeightPx) throws DataAccessException;
 }

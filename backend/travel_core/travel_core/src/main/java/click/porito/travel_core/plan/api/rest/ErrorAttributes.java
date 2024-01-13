@@ -30,33 +30,33 @@ public record ErrorAttributes(
         private Builder() {
         }
 
-        Builder timestamp(ZonedDateTime timestamp) {
+        public Builder timestamp(ZonedDateTime timestamp) {
             this.timestamp = timestamp;
             return this;
         }
 
-        Builder status(HttpStatus status) {
+        public Builder status(HttpStatus status) {
             this.status = status;
             return this;
         }
 
 
-        Builder exception(Throwable exception) {
+        public Builder exception(Throwable exception) {
             this.exception = exception;
             return this;
         }
 
-        Builder message(String message) {
+        public Builder message(String message) {
             this.message = message;
             return this;
         }
 
-        Builder path(String path) {
+        public Builder path(String path) {
             this.path = path;
             return this;
         }
 
-        Builder addDetail(String key, Object value) {
+        public Builder addDetail(String key, Object value) {
             this.details.put(key, value);
             return this;
         }

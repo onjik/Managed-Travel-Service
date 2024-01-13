@@ -1,9 +1,6 @@
 package click.porito.travel_core.place.dao.google_api;
 
-import click.porito.travel_core.place.dao.GooglePlacePhotoRepository;
-import click.porito.travel_core.place.dao.GooglePlaceRepository;
 import click.porito.travel_core.place.dao.UnexpectedExternalApiException;
-import click.porito.travel_core.place.dao.google_api.exception.GoogleResourceNotFoundException;
 import click.porito.travel_core.place.dao.google_api.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,7 +23,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GooglePlaceRepositoryImpl implements GooglePlaceRepository, GooglePlacePhotoRepository {
+public class GooglePlaceApiImpl implements GooglePlaceApi, GooglePlacePhotoApi {
     private final static String PLACE_DETAIL_URL = "https://places.googleapis.com/v1/places/%s";
     private final static String PLACE_NEARBY_SEARCH_URL = "https://places.googleapis.com/v1/places:searchNearby";
     private final static String PLACE_TEXT_SEARCH_URL = "https://places.googleapis.com/v1/places:searchText";
@@ -166,7 +163,7 @@ public class GooglePlaceRepositoryImpl implements GooglePlaceRepository, GoogleP
 
 
     @Override
-    public String photoUri(String photoName, int maxWidthPx, int maxHeightPx) {
+    public Optional<String> photoUri(String photoName, int maxWidthPx, int maxHeightPx) {
         String baseUri = String.format(PLACE_PHOTO_URL, photoName);
         var builder = new DefaultUriBuilderFactory(baseUri).builder();
         builder.queryParam("maxHeightPx", maxHeightPx);
@@ -176,8 +173,7 @@ public class GooglePlaceRepositoryImpl implements GooglePlaceRepository, GoogleP
         URI uri = builder.build();
 
         final var type = new TypeToken<Map<String, String>>() {};
-        Map<String,String> response = exchange(uri.toString(), HttpMethod.GET, null, type)
-                .orElseThrow(GoogleResourceNotFoundException::new);
-        return response.get("photoUri");
+        return exchange(uri.toString(), HttpMethod.GET, null, type)
+                .map(map -> map.get("photoUri"));
     }
 }

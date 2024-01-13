@@ -18,6 +18,15 @@ public interface PlaceService {
      */
     Optional<PlaceView> getPlace(String placeId) throws PlaceRetrieveFailedException;
 
+
+    /**
+     * 여러 장소를 한번에 조회합니다.
+     * @param placeIds 장소 id 목록, not null
+     * @return 조회된 장소 목록, 장소가 존재하지 않을 경우, Empty List
+     * @throws PlaceRetrieveFailedException 장소 조회에 실패한 경우(없는 게 아니라, 조회 실패)
+     */
+    List<PlaceView> getPlaces(String[] placeIds) throws PlaceRetrieveFailedException;
+
     /**
      * 근처 장소를 조회합니다.
      *
@@ -36,4 +45,6 @@ public interface PlaceService {
                                     @Nullable Integer maxResultCount,
                                     @Nullable PlaceType[] placeTypes,
                                     @Nullable Boolean distanceSort) ;
+
+    Optional<String> getPhotoUrl(String placeId, String photoId, Integer maxWidth, Integer maxHeight);
 }

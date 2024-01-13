@@ -1,7 +1,6 @@
 package click.porito.travel_core.place.api;
 
 
-import click.porito.travel_core.place.PhotoService;
 import click.porito.travel_core.place.PlaceService;
 import click.porito.travel_core.place.PlaceType;
 import click.porito.travel_core.place.dto.PlaceView;
@@ -24,7 +23,6 @@ import java.util.Optional;
 public class PlaceRestApi {
 
     private final PlaceService placeService;
-    private final PhotoService photoService;
 
     @GetMapping("/{placeId}")
     public ResponseEntity<PlaceView> getPlace(@PathVariable String placeId) {
@@ -52,7 +50,12 @@ public class PlaceRestApi {
                                    @RequestParam(name = "maxWidthPx",required = false, defaultValue = "1920") @Range(min = 1, max = 4800, message = "1 < maxWidthPx < 4800")
                                           Integer maxWidthPx
     ) {
-        String url = photoService.getPhotoUrl(placeId, photoId, maxWidthPx, maxHeightPx);
+        Optional<String> photoUrl = placeService.getPhotoUrl(placeId, photoId, maxWidthPx, maxHeightPx);
+
+        if (photoUrl.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String url = photoUrl.get();
         //redirect
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create(url));

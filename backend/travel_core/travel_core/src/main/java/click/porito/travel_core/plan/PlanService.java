@@ -1,5 +1,6 @@
 package click.porito.travel_core.plan;
 
+import click.porito.travel_core.plan.domain.Plan;
 import click.porito.travel_core.plan.dto.PlanCreateForm;
 import click.porito.travel_core.plan.dto.PlanPutForm;
 import click.porito.travel_core.plan.dto.PlanView;

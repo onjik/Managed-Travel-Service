@@ -1,5 +1,6 @@
 package click.porito.travel_core.plan.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,8 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Getter @Setter
 @Document(collection = "plan")
 public class Plan {
@@ -26,5 +29,5 @@ public class Plan {
     @Version
     private Long version;
     private String ownerId;
-    private List<RouteComponent> route;
+    private List<RouteComponent> route = new ArrayList<>();
 }

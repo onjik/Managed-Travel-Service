@@ -1,6 +1,5 @@
 package click.porito.travel_core.place.api;
 
-import click.porito.travel_core.place.PhotoService;
 import click.porito.travel_core.place.PlaceRetrieveFailedException;
 import click.porito.travel_core.place.PlaceService;
 import click.porito.travel_core.place.PlaceType;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 public class PlaceGraphqlApi {
-    private final PhotoService photoService;
     private final PlaceService placeService;
 
     @QueryMapping(name = "place")
@@ -54,7 +52,7 @@ public class PlaceGraphqlApi {
         if (maxHeightPx == null) {
             maxHeightPx = 1080;
         }
-        return photoService.getPhotoUrl(placeId, photoId, maxWidthPx, maxHeightPx);
+        return placeService.getPhotoUrl(placeId, photoId, maxWidthPx, maxHeightPx).orElse(null);
     }
     @GraphQlExceptionHandler(PlaceRetrieveFailedException.class)
     public GraphQLError handleExternalApiException(PlaceRetrieveFailedException e) {

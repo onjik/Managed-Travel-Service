@@ -1,6 +1,7 @@
 package click.porito.travel_core.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,8 +52,14 @@ public class XHeaderAuthenticationFilter extends AbstractAuthenticationProcessin
         //TODO 필요한 경우 AuthenticationManager 와 authenticated 처리를 하도록 확장 가능 (여러 인증 수단 추가시)
     }
 
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        super.successfulAuthentication(request, response, chain, authResult);
+        //필터 체인을 계속 진행한다.
+        chain.doFilter(request, response);
+    }
 
-     static class NullSuccessHandler implements AuthenticationSuccessHandler {
+    static class NullSuccessHandler implements AuthenticationSuccessHandler {
          @Override
          public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
              //아무 작업도 하지 않는다.

@@ -6,8 +6,14 @@ import java.util.List;
 
 @Service
 public class MockRouteOptimizeService implements RouteOptimizeService{
+
     @Override
-    public List<PointEntity> optimizeSequenceByLocation(List<PointEntity> pointEntities) {
+    public List<PointEntity> reorderByDistance(List<PointEntity> pointEntities) throws OptimizationProcessingException {
         return pointEntities;
+    }
+
+    @Override
+    public List<List<PointEntity>> reorderByDistanceAndDayCount(List<PointEntity> pointEntities, int dayCount) throws OptimizationProcessingException {
+        return List.of(pointEntities);
     }
 }

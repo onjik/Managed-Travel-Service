@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 
@@ -13,7 +14,6 @@ public record PlanCreateForm(
         @Length(min = 1, max = 100, message = "title length must be between 1 and 100")
         @NotBlank(message = "title must not be blank")
         String title,
-        @NotNull
         @Range(min = 1, max = 100, message = "dayCount must be between 1 and 100")
         Integer dayCount,
         LocalDate startDate,
