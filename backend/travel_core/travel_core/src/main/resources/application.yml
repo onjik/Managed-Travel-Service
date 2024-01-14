@@ -7,3 +7,6 @@ server:
       port-header: X-Forwarded-Port
       protocol-header: X-Forwarded-Proto
       remote-ip-header: X-Forwarded-For
+spring:
+  application:
+    name: travel-core

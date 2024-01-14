@@ -21,10 +21,16 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2022.0.4")
+}
+
 dependencies {
 	//CORE
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
 	//SECURITY
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -48,10 +54,16 @@ dependencies {
 //	implementation 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
 //	implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
 
-	//TEST
+	//TESTs
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 tasks.named('test') {

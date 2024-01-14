@@ -12,24 +12,19 @@ spring:
               - openid
               - profile
               - email
+  config:
+    import: "configserver:${spring.cloud.config.uri}"
   cloud:
+    config: # config server 설정
+      uri: http://localhost:8888
+      profile: test
+      label: main
     aws:
       s3:
         enabled: true
-      region:
-        static: ap-northeast-2
-  config:
-    import: file:${HOME}/github/Managed-Travel-Service/secret/backend/modular/application-test.yml
-    #from submodule which set to private access. see {@file .gitmodules} on project root directory
   kafka:
     bootstrap-servers: ${KAFKA_SERVER}
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: 1
       retries: 3
-google:
-  api:
-    key: ${GOOGLE_API_KEY}
-jwt:
-  secret: ${JWT_SECRET}
-  expirationMin: 60

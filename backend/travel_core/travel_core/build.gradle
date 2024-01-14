@@ -17,6 +17,10 @@ configurations {
     }
 }
 
+ext {
+    set('springCloudVersion', "2022.0.4")
+}
+
 repositories {
     mavenCentral()
 }
@@ -27,6 +31,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     //db
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
@@ -51,6 +57,13 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()

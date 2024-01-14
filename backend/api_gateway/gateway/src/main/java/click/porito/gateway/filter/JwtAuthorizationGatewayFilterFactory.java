@@ -55,12 +55,18 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
                 return onError(response, "No token", HttpStatus.UNAUTHORIZED);
             }
 
-            JwtPayLoad jwtPayLoad = jwtService.decode(token);
+            final JwtPayLoad jwtPayLoad;
+            try {
+                jwtPayLoad = jwtService.decode(token);
+            } catch (Exception e) {
+                return onError(response, "Invalid token", HttpStatus.UNAUTHORIZED);
+            }
             if (!hasRoles(jwtPayLoad, config.allowedRoles)) {
                 return onError(response, "No permission", HttpStatus.FORBIDDEN);
             }
 
             addAuthorizationHeaders(request, jwtPayLoad);
+            removeJwtAuthorizationHeader(request);
             return chain.filter(exchange);
         },ORDER);
     }
@@ -73,6 +79,7 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
         return rawHeaderValue.replace("Bearer", "").trim();
     }
 
+    //TODO : response body에 에러 메시지를 담아서 보내기
     private Mono<Void> onError(ServerHttpResponse response, String message, HttpStatus status) {
         response.setStatusCode(status);
         DataBuffer buffer = response.bufferFactory().wrap(message.getBytes(StandardCharsets.UTF_8));
@@ -99,6 +106,12 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
         request.mutate()
                 .header(X_USER_ID, jwtPayLoad.userId())
                 .header(X_USER_ROLES, rolesJson)
+                .build();
+    }
+
+    private void removeJwtAuthorizationHeader(ServerHttpRequest request) {
+        request.mutate()
+                .headers(httpHeaders -> httpHeaders.remove(HttpHeaders.AUTHORIZATION))
                 .build();
     }
 

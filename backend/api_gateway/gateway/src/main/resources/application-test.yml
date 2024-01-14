@@ -1,15 +1,5 @@
+#현재로서는 테스트 환경 설정이 필요 없으므로 local 설정을 그대로 불러옴
+#TODO 추후에 테스트 환경 설정이 필요하다면 이 파일을 수정하면 됨
 spring:
-  cloud:
-    gateway:
-      routes:
-        - id: account-service
-          uri: http://localhost:8080
-          predicates:
-            - Path=/account/**
-          filters:
-            - name: JwtAuthorization
-              args:
-                allowedRoles:
-                  - ADMIN
-                  - USER
-
+  config:
+    import: "classpath:application-local.yml"

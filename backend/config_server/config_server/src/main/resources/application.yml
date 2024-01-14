@@ -1,0 +1,17 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        accept-empty: false # if there is no configuration file, respond with 404
+        git:
+          uri: git@github.com:onjik/Managed-Travel-Service-Secret.git
+          default-label: main
+          delete-untracked-branches: true # delete local branches that are not in the remote repository
+          ignore-local-ssh-settings: true #ignore local ssh settings
+          search-paths: "backend/{application}"
+  config:
+    import: file:${HOME}/github/Managed-Travel-Service/secret/application-private.yml

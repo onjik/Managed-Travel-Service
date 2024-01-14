@@ -1,5 +1,6 @@
 package click.porito.gateway.service;
 
+import click.porito.gateway.config.JwtConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -11,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtService implements InitializingBean {
     private final static String ROLES = "roles";
-    @Value("${jwt.secret}")
-    private String secret;
+    private final JwtConfig jwtConfig;
 
     private JavaType LIST_OF_STRING;
     private JWTVerifier verifier;
@@ -29,7 +28,10 @@ public class JwtService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Algorithm algorithm = Algorithm.HMAC512(secret);
+        if (jwtConfig.getSecret() == null) {
+            throw new IllegalArgumentException("jwt secret is null");
+        }
+        Algorithm algorithm = Algorithm.HMAC512(jwtConfig.getSecret());
         this.verifier = JWT.require(algorithm).acceptLeeway(5).build();
         this.LIST_OF_STRING = TypeFactory.defaultInstance().constructCollectionLikeType(List.class, String.class);
     }

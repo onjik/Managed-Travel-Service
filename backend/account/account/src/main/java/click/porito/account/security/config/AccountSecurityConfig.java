@@ -36,7 +36,7 @@ import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @Configuration(proxyBeanMethods = true)
 @RequiredArgsConstructor
 public class AccountSecurityConfig {

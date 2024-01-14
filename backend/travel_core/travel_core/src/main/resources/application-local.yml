@@ -1,0 +1,16 @@
+logging:
+  level:
+    root: debug
+spring:
+  graphql:
+    graphiql:
+      enabled: true
+      path: /place/graphiql
+    path: /place/graphql
+  config:
+    import: "configserver:${spring.cloud.config.uri}"
+  cloud:
+    config: # config server 설정
+      uri: http://localhost:8888
+      profile: local
+      label: main

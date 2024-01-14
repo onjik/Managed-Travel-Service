@@ -1,17 +1,35 @@
-server:
-  servlet:
-    session:
-      timeout: 60m
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG
+    root: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans # refresh for cloud config refresh
 spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-  session:
-    store-type: redis
-    redis:
-      flush-mode: on_save
-      namespace: spring:session
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            scope:
+              - openid
+              - profile
+              - email
   config:
-    import: file:${HOME}/github/Managed-Travel-Service/secret/backend/modular/application-local.yml
-    #from submodule which set to private access. see {@file .gitmodules} on project root directory
+    import: "configserver:${spring.cloud.config.uri}"
+  cloud:
+    config: # config server 설정
+      uri: http://localhost:8888
+      profile: local
+      label: main
+    aws:
+      s3:
+        enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+      retries: 3

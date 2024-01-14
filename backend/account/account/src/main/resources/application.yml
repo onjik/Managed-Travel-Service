@@ -1,7 +1,6 @@
 spring:
-  graphql:
-    graphiql:
-      enabled: true
+  application:
+    name: account-service
 server:
   port: 29090
   forward-headers-strategy: framework
@@ -12,5 +11,3 @@ server:
       protocol-header: X-Forwarded-Proto
       remote-ip-header: X-Forwarded-For
     use-relative-redirects: true
-jwt:
-  secret: ${JWT_SECRET}
