@@ -1,7 +1,9 @@
 package click.porito.travel_core.plan.api.rest;
 
 import click.porito.travel_core.AbstractRestExceptionHandler;
-import click.porito.travel_core.plan.PlanOutOfDateException;
+import click.porito.travel_core.plan.InvalidUpdateInfoException;
+import click.porito.travel_core.plan.PlanServerException;
+import click.porito.travel_core.plan.PlanVersionOutOfDateException;
 import click.porito.travel_core.security.PlanAccessDeniedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -16,6 +18,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice(basePackageClasses = PlanRestApi.class)
 public class PlanRestControllerAdvice extends AbstractRestExceptionHandler {
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidUpdateInfoException.class)
+    public ErrorAttributes handleInvalidUpdateInfoException(InvalidUpdateInfoException e, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return ErrorAttributes.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .exception(e)
+                .path(path)
+                .message("invalid update info")
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(PlanServerException.class)
+    public ErrorAttributes handlePlanServerException(PlanServerException e, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return ErrorAttributes.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .exception(e)
+                .path(path)
+                .message("plan server error")
+                .build();
+    }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PlanNotFoundException.class)
@@ -52,8 +78,8 @@ public class PlanRestControllerAdvice extends AbstractRestExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-    @ExceptionHandler(PlanOutOfDateException.class)
-    public ErrorAttributes handlePlanOutOfDateException(PlanOutOfDateException e, HttpServletRequest request) {
+    @ExceptionHandler(PlanVersionOutOfDateException.class)
+    public ErrorAttributes handlePlanOutOfDateException(PlanVersionOutOfDateException e, HttpServletRequest request) {
         String path = request.getRequestURI();
         return ErrorAttributes.builder()
                 .status(HttpStatus.PRECONDITION_FAILED)

@@ -30,4 +30,12 @@ public class Plan {
     private Long version;
     private String ownerId;
     private List<RouteComponent> route = new ArrayList<>();
+
+    @Builder
+    public Plan(String title, LocalDate startDate, String ownerId, List<RouteComponent> route) {
+        this.title = title;
+        this.startDate = startDate;
+        this.ownerId = ownerId;
+        this.route = route;
+    }
 }

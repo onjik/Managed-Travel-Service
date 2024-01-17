@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.ZonedDateTime;
@@ -19,6 +18,18 @@ public abstract class AbstractRestExceptionHandler extends ResponseEntityExcepti
                 .status(HttpStatus.BAD_REQUEST)
                 .path(request.getRequestURI())
                 .message("Illegal Argument")
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.badRequest().body(attributes);
+    }
+
+    @ExceptionHandler(Mapper.MapperException.class)
+    public ResponseEntity<ErrorAttributes> handleMapperException(Mapper.MapperException e, HttpServletRequest request) {
+        ErrorAttributes attributes = ErrorAttributes.builder()
+                .timestamp(ZonedDateTime.now())
+                .status(HttpStatus.BAD_REQUEST)
+                .path(request.getRequestURI())
+                .message("Error occurred while mapping")
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.badRequest().body(attributes);

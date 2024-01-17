@@ -1,5 +1,7 @@
 package click.porito.travel_core;
 
+import org.springframework.core.NestedRuntimeException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +17,11 @@ public abstract class Mapper<S,T> {
         if (source == null) {
             return null;
         }
-        return mapInternal(source);
+        try {
+            return mapInternal(source);
+        } catch (Exception e){
+            throw new MapperException("Error occurred while mapping", e);
+        }
     }
 
     /**
@@ -40,5 +46,16 @@ public abstract class Mapper<S,T> {
      * @throws IllegalArgumentException if source is null
      */
     protected abstract T mapInternal(S source);
+
+    public static class MapperException extends NestedRuntimeException {
+
+        public MapperException(String msg) {
+            super(msg);
+        }
+
+        public MapperException(String msg, Throwable cause) {
+            super(msg, cause);
+        }
+    }
 
 }

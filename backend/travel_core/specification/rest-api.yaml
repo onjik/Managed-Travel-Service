@@ -23,7 +23,7 @@ paths:
       tags:
         - plan
       summary: 여행 생성
-      description: 여행을 생성합니다.
+      description: 여행을 생성합니다. 여행의 id 값은 서버에서 자동으로 생성됩니다.
       requestBody:
         required: true
         content:
@@ -159,7 +159,7 @@ paths:
       tags:
         - plan
       summary: 여행 수정
-      description: 여행을 수정합니다. 컴포넌트가 새롭게 추가되는 경우, id값을 지정하지 않아야하고, id값이 지정되어있는 경우, 해당 id값을 가진 컴포넌트가 수정됩니다. 기존의 컴포넌트를 생략한 경우, 기존의 컴포넌트는 삭제됩니다.
+      description: 여행을 수정합니다. route 의 경우, 완전히 overwrite 합니다.
       parameters:
         - name: planId
           in: path
@@ -349,45 +349,49 @@ components:
       properties:
         title:
           type: string
-          description: 여행 제목
           required: true
           minLength: 1
           maxLength: 100
+          description: 여행 제목
           example: 여행 제목
-        dayCount:
-          type: integer
-          required: false
-          description: 여행 일수
-          minimum: 1
-          maximum: 30
-          example: 3
         startDate:
           type: string
-          format: yyyy-MM-dd
           required: false
+          format: yyyy-MM-dd
           description: 여행 시작 날짜, 오늘이거나 미래
           example: 2021-01-01
-        placeIds:
-          required: false
+        route:
           type: array
-          description: 장소 ID 목록, 최적 위치로 추가되어서 생성됩니다.
+          required: false
+          description: 덮어 쓸 경로 정보, id 값이 비어 있으면, 서버 측에서 부여함
           items:
-            type: string
-            example: "1dsafadsf"
+            oneOf:
+              - $ref: '#/components/schemas/DayCreateForm'
+              - $ref: '#/components/schemas/WayPointCreateForm'
     PlanPutRequest:
       type: object
       properties:
         title:
           type: string
+          required: true
+          minLength: 1
+          maxLength: 100
           description: 여행 제목
           example: 여행 제목
         startDate:
           type: string
+          required: false
           format: yyyy-MM-dd
-          description: 여행 시작 날짜
+          description: 여행 시작 날짜, 오늘이거나 미래
           example: 2021-01-01
         route:
-          $ref: '#/components/schemas/Route'
+          type: array
+          required: false
+          description: 덮어 쓸 경로 정보, id 값이 비어 있으면, 서버 측에서 부여함
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Day'
+              - $ref: '#/components/schemas/WayPoint'
     Plan:
       type: object
       properties:
@@ -397,10 +401,15 @@ components:
           example: 1
         title:
           type: string
+          minLength: 1
+          maxLength: 100
+          nullable: false
+          required: true
           description: 여행 제목
           example: 여행 제목
         startDate:
           type: string
+          required: false
           format: yyyy-MM-dd
           description: 여행 시작 날짜
           example: 2021-01-01
@@ -416,12 +425,15 @@ components:
           example: 2021-01-01T12:00:00.000Z
         version:
           type: string
+          required: false
           description: 수정 버전 식별자
           example: adflasjdflkajsdf
         route:
           $ref: '#/components/schemas/Route'
     Route:
       type: array
+      required: false
+      nullable: true
       description: 여행 경로
       items:
         oneOf:
@@ -438,10 +450,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/WayPoint'
-        _type:
-          type: string
-          description: 컴포넌트 타입
-          example: DAY
     WayPoint:
       type: object
       properties:
@@ -462,10 +470,31 @@ components:
           format: HH:mm
           description: 시간
           example: 12:00
-        _type:
+    DayCreateForm:
+      type: object
+      properties:
+        wayPoints:
+          required: true
+          type: array
+          items:
+            $ref: '#/components/schemas/WayPointCreateForm'
+    WayPointCreateForm:
+      type: object
+      properties:
+        placeId:
+          required: true
           type: string
-          description: 컴포넌트 타입
-          example: WAYPOINT
+          description: 장소 ID
+          example: a1b2c3d4
+        memo:
+          type: string
+          description: 메모
+          example: 메모
+        time:
+          type: string
+          format: HH:mm
+          description: 시간
+          example: 12:00
     NearBySearchRequestBody:
       type: object
       properties:

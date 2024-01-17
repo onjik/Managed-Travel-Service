@@ -2,7 +2,7 @@ package click.porito.travel_core.optimization;
 
 import java.util.List;
 
-public interface RouteOptimizeService {
+public interface RouteOptimizeApi {
 
     /**
      * 위치를 기준으로 최적 경로를 만들어냅니다.

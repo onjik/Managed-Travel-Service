@@ -1,10 +1,7 @@
 package click.porito.travel_core.plan.api.rest;
 
 import click.porito.travel_core.plan.PlanService;
-import click.porito.travel_core.plan.domain.Plan;
-import click.porito.travel_core.plan.dto.PlanCreateForm;
-import click.porito.travel_core.plan.dto.PlanPutForm;
-import click.porito.travel_core.plan.dto.PlanView;
+import click.porito.travel_core.plan.dto.*;
 import click.porito.travel_core.Mapper;
 import click.porito.travel_core.security.PlanAccessDeniedException;
 import click.porito.travel_core.security.PlanAccessManager;
@@ -13,11 +10,17 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Valid
 @RestController
@@ -29,16 +32,37 @@ public class PlanRestApi {
 
     private final PlanAccessManager planAccessManager;
     private final PlanService planService;
+    private final Mapper<RouteComponentRequest, RouteComponentUpdateForm> updateFormMapper;
     @PostMapping
     public ResponseEntity<PlanView> createPlan(
-            @RequestBody PlanPostRequest body,
+            @RequestBody PlanUpdateRequest body,
             @RequestHeader(value = X_USER_ID, required = true) String userId,
             @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
     ) {
         planAccessManager.can(userId, roles)
                 .createPlan();
 
-        PlanCreateForm createForm = body.toPlanCreateForm(userId);
+        // id가 모두 비어 있는지 확인
+        if (body.route() != null) {
+            Optional<RouteComponentRequest> any = body.route().stream()
+                    .filter(Objects::nonNull)
+                    .filter(c -> c.id() != null && !c.id().isEmpty())
+                    .findAny();
+            if (any.isPresent()) {
+                throw new IllegalArgumentException("route component id must be empty");
+            }
+        }
+
+        String title = body.title();
+        LocalDate startDate = body.startDate();
+        List<RouteComponentUpdateForm> route = updateFormMapper.map(body.route());
+
+        PlanUpdateForm createForm = PlanUpdateForm.builder()
+                .title(title)
+                .startDate(startDate)
+                .userId(userId)
+                .route(route)
+                .build();
 
         PlanView plan = planService.createPlan(createForm);
 
@@ -48,21 +72,21 @@ public class PlanRestApi {
                 .body(plan);
     }
     @GetMapping
-    public ResponseEntity<List<String>> getPlanIdOwnedBy(
+    public ResponseEntity<Page<PlanView>> getPlanIdOwnedBy(
             @RequestParam(name = "ownerId") String ownerId,
             @RequestParam(name = "page", defaultValue = "0") @Min(0) Integer page,
             @RequestParam(name = "size", defaultValue = "10") @Range(min = 5, max = 100) Integer size,
             @RequestHeader(value = X_USER_ID, required = true) String userId,
             @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
-
     ) {
         planAccessManager.can(userId, roles)
                 .accessToPlacesOwnedBy(ownerId)
                 .read()
                 .check();
 
-        List<String> planIds = planService.getPlanIdOwnedBy(ownerId, page, size);
-        return ResponseEntity.ok(planIds);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PlanView> plansOwnedBy = planService.getPlansOwnedBy(ownerId, pageable);
+        return ResponseEntity.ok(plansOwnedBy);
     }
 
     @GetMapping("/{planId}")
@@ -94,16 +118,15 @@ public class PlanRestApi {
                 .accessToPlan(planId)
                 .delete()
                 .check();
-        boolean deleted = planService.deletePlan(planId);
-        if (!deleted) {
-            throw new PlanNotFoundException(planId);
-        }
+
+        planService.deletePlan(planId);
+
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{planId}")
     public ResponseEntity<PlanView> updatePlan(@NotBlank String planId,
-                                               @RequestBody PlanPutRequest body,
+                                               @RequestBody PlanUpdateRequest body,
                                                @RequestHeader(value = X_USER_ID, required = true) String userId,
                                                @RequestHeader(value = X_USER_ROLES, required = true) String[] roles,
                                                @RequestHeader(value = "If-Match",required = false) String version
@@ -114,8 +137,18 @@ public class PlanRestApi {
                 .update()
                 .check();
 
-        PlanPutForm planPutForm = body.toPlanPutForm(version);
-        final PlanView planView = planService.putPlanInfo(planId, planPutForm);
+        String title = body.title();
+        LocalDate startDate = body.startDate();
+        List<RouteComponentUpdateForm> route = updateFormMapper.map(body.route());
+
+        PlanUpdateForm planPutForm = PlanUpdateForm.builder()
+                .title(title)
+                .startDate(startDate)
+                .route(route)
+                .version(version)
+                .build();
+
+        final PlanView planView = planService.updatePlan(planId, planPutForm);
 
         String newVersion = planView.version();
         return ResponseEntity.ok()

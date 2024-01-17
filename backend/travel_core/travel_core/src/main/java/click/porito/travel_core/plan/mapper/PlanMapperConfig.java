@@ -1,14 +1,14 @@
 package click.porito.travel_core.plan.mapper;
 
 import click.porito.travel_core.Mapper;
+import click.porito.travel_core.plan.api.rest.DayUpdateRequest;
+import click.porito.travel_core.plan.api.rest.RouteComponentRequest;
+import click.porito.travel_core.plan.api.rest.WayPointUpdateRequest;
 import click.porito.travel_core.plan.domain.Day;
 import click.porito.travel_core.plan.domain.Plan;
 import click.porito.travel_core.plan.domain.RouteComponent;
 import click.porito.travel_core.plan.domain.WayPoint;
-import click.porito.travel_core.plan.dto.DayView;
-import click.porito.travel_core.plan.dto.PlanView;
-import click.porito.travel_core.plan.dto.RouteComponentView;
-import click.porito.travel_core.plan.dto.WayPointView;
+import click.porito.travel_core.plan.dto.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Configuration(proxyBeanMethods = true)
 public class PlanMapperConfig {
@@ -59,7 +60,7 @@ public class PlanMapperConfig {
                 if (source instanceof WayPoint o) {
                     return wayPointViewMapper.map(o);
                 } else if (source instanceof Day o) {
-                    return null;
+                    return dayViewMapper.map(o);
                 } else {
                     throw new IllegalArgumentException("Unknown RouteComponent type: " + source.getClass());
                 }
@@ -102,5 +103,100 @@ public class PlanMapperConfig {
         };
     }
 
+    @Bean
+    public Mapper<RouteComponentRequest, RouteComponentUpdateForm> routeComponentPutFormMapper(
+            final Mapper<DayUpdateRequest, DayUpdateForm> dayMapper,
+            final Mapper<WayPointUpdateRequest, WayPointUpdateForm> wayPointMapper) {
+        return new Mapper<>() {
+            @Override
+            protected RouteComponentUpdateForm mapInternal(RouteComponentRequest source) {
+                if (source instanceof DayUpdateRequest o){
+                    return dayMapper.map(o);
+                } else if (source instanceof WayPointUpdateRequest o){
+                    return wayPointMapper.map(o);
+                } else {
+                    throw new IllegalArgumentException("Unknown RouteComponent type: " + source.getClass());
+                }
+            }
+        };
+    }
+
+    @Bean
+    public Mapper<DayUpdateRequest, DayUpdateForm> dayPutFormMapper(
+            final Mapper<WayPointUpdateRequest, WayPointUpdateForm> wayPointMapper) {
+        return new Mapper<>() {
+            @Override
+            protected DayUpdateForm mapInternal(DayUpdateRequest source) {
+                String dayId = source.dayId();
+                List<WayPointUpdateForm> wayPoints = wayPointMapper.map(source.wayPoints());
+                return new DayUpdateForm(dayId, wayPoints);
+            }
+        };
+    }
+
+    @Bean
+    public Mapper<WayPointUpdateRequest, WayPointUpdateForm> wayPointPutFormMapper() {
+        return new Mapper<>() {
+            @Override
+            protected WayPointUpdateForm mapInternal(WayPointUpdateRequest source) {
+                String wayPointId = source.wayPointId();
+                String placeId = source.placeId();
+                String memo = source.memo();
+                LocalTime time = source.time();
+                return new WayPointUpdateForm(wayPointId, placeId, memo, time);
+            }
+        };
+    }
+
+    @Bean
+    public Mapper<RouteComponentUpdateForm, RouteComponent> routeComponentMapper(
+            final Mapper<DayUpdateForm, Day> dayMapper,
+            final Mapper<WayPointUpdateForm, WayPoint> wayPointMapper) {
+        return new Mapper<>() {
+            @Override
+            protected RouteComponent mapInternal(RouteComponentUpdateForm source) {
+                if (source instanceof DayUpdateForm o){
+                    return dayMapper.map(o);
+                } else if (source instanceof WayPointUpdateForm o){
+                    return wayPointMapper.map(o);
+                } else {
+                    throw new IllegalArgumentException("Unknown RouteComponent type: " + source.getClass());
+                }
+            }
+        };
+    }
+
+    @Bean
+    public Mapper<DayUpdateForm, Day> dayMapper(final Mapper<WayPointUpdateForm, WayPoint> wayPointMapper) {
+        return new Mapper<>() {
+            @Override
+            protected Day mapInternal(DayUpdateForm source) {
+                final String givenDayId = source.dayId();
+                final UUID dayId = givenDayId != null ? UUID.fromString(givenDayId) : UUID.randomUUID();
+                final List<WayPoint> wayPoints = wayPointMapper.map(source.wayPoints());
+                Day day = new Day(dayId);
+                day.setWayPoints(wayPoints);
+                return day;
+            }
+        };
+    }
+
+    @Bean
+    public Mapper<WayPointUpdateForm, WayPoint> wayPointMapper() {
+        return new Mapper<>() {
+            @Override
+            protected WayPoint mapInternal(WayPointUpdateForm source) {
+                final String givenWayPointId = source.wayPointId();
+                final UUID wayPointId = givenWayPointId != null ? UUID.fromString(givenWayPointId) : UUID.randomUUID();
+                final String placeId = source.placeId();
+                final String memo = source.memo();
+                final LocalTime time = source.time();
+                WayPoint wayPoint = new WayPoint(wayPointId, placeId);
+                wayPoint.setMemo(memo);
+                wayPoint.setTime(time);
+                return wayPoint;
+            }
+        };
+    }
 
 }

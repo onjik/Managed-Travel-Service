@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MockRouteOptimizeService implements RouteOptimizeService{
+public class MockRouteOptimizeApi implements RouteOptimizeApi {
 
     @Override
     public List<PointEntity> reorderByDistance(List<PointEntity> pointEntities) throws OptimizationProcessingException {
