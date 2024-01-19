@@ -1,7 +1,7 @@
 package click.porito.travel_core.security;
 
 
-import click.porito.travel_core.plan.implementation.Requester;
+import click.porito.travel_core.Requester;
 
 import java.util.ArrayList;
 import java.util.List;

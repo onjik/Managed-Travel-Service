@@ -360,14 +360,6 @@ components:
           format: yyyy-MM-dd
           description: 여행 시작 날짜, 오늘이거나 미래
           example: 2021-01-01
-        route:
-          type: array
-          required: false
-          description: 덮어 쓸 경로 정보, id 값이 비어 있으면, 서버 측에서 부여함
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/DayCreateForm'
-              - $ref: '#/components/schemas/WayPointCreateForm'
     PlanPutRequest:
       type: object
       properties:
@@ -384,14 +376,6 @@ components:
           format: yyyy-MM-dd
           description: 여행 시작 날짜, 오늘이거나 미래
           example: 2021-01-01
-        route:
-          type: array
-          required: false
-          description: 덮어 쓸 경로 정보, id 값이 비어 있으면, 서버 측에서 부여함
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Day'
-              - $ref: '#/components/schemas/WayPoint'
     Plan:
       type: object
       properties:

@@ -1,16 +1,18 @@
 package click.porito.travel_core.security;
 
-import jakarta.validation.constraints.NotBlank;
+import click.porito.travel_core.global.exception.ErrorCode;
 import lombok.Getter;
-import org.springframework.util.Assert;
 
 @Getter
-public class PlanAccessDeniedException extends RuntimeException{
-    private final PlanAccessManager.AccessType[] deniedOperations;
+public class PlanAccessDeniedException extends SecurityBusinessException{
 
-    public PlanAccessDeniedException(@NotBlank PlanAccessManager.AccessType[] deniedOperations) {
-        Assert.notNull(deniedOperations, "deniedOperations must not be null");
-        this.deniedOperations = deniedOperations;
+    public PlanAccessDeniedException(ErrorCode errorCode, PlanAccessManager.AccessType[] deniedOperations) {
+        super(errorCode);
+        super.addDetail("deniedOperations", deniedOperations);
     }
 
+    public PlanAccessDeniedException(Throwable cause, ErrorCode errorCode, PlanAccessManager.AccessType[] deniedOperations) {
+        super(cause, errorCode);
+        super.addDetail("deniedOperations", deniedOperations);
+    }
 }

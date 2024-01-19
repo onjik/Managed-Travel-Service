@@ -1,11 +1,15 @@
 package click.porito.travel_core.plan;
 
-public class PlanServerException extends AbstractPlanServiceException{
-    public PlanServerException(String msg) {
-        super(msg);
+import click.porito.travel_core.global.constant.Domain;
+import click.porito.travel_core.global.exception.ErrorCode;
+import click.porito.travel_core.global.exception.ServerException;
+
+public class PlanServerException extends ServerException {
+    public PlanServerException(ErrorCode errorCode) {
+        super(Domain.PLAN, errorCode);
     }
 
-    public PlanServerException(String msg, Throwable cause) {
-        super(msg, cause);
+    public PlanServerException(Throwable cause, ErrorCode errorCode) {
+        super(cause, Domain.PLAN, errorCode);
     }
 }

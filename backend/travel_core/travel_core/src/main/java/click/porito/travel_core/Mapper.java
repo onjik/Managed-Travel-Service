@@ -27,11 +27,11 @@ public abstract class Mapper<S,T> {
     /**
      * Map source object to target object
      * @param source source object, nullable
-     * @return transformed object, nullable
+     * @return transformed object, never null, but may be empty
      */
     public ArrayList<T> map(List<S> source) {
         if (source == null) {
-            return null;
+            return new ArrayList<>();
         }
         return source.stream()
                 .map(this::map)
