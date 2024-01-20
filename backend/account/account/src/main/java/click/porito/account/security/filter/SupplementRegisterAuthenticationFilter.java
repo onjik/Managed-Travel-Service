@@ -70,7 +70,7 @@ public class SupplementRegisterAuthenticationFilter extends AbstractAuthenticati
         }
         try {
             AccountDTO account = accountApi.registerAccount(original);
-            return new SimpleAuthentication(account.getRoleNames(), account.getUserId().toString());
+            return new SimpleAuthentication(account.getPrefixedRoleNames(), account.getUserId().toString());
         } catch (DataIntegrityViolationException e) {
             //이미 등록한 유저를 JWT로 다시 등록하려고 할 때 도달 가능
             //JWT의 유효기간이 30분이므로, 30분 이내에 이러한 상황이 발생할 수 있음

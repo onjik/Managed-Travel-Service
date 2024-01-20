@@ -25,7 +25,7 @@ public interface AccountDTO extends AccountSummaryDTO {
 
     String getEmail();
 
-    Collection<String> getRoleNames();
+    Collection<String> getPrefixedRoleNames();
     Instant getCreatedAt();
     Gender getGender();
 
@@ -43,7 +43,7 @@ public interface AccountDTO extends AccountSummaryDTO {
                 idToken.getExpiresAt(),
                 Collections.unmodifiableMap(map)
         );
-        List<SimpleGrantedAuthority> authorities = this.getRoleNames().stream()
+        List<SimpleGrantedAuthority> authorities = this.getPrefixedRoleNames().stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList();
         return new DefaultOidcUser(authorities, token);
@@ -64,7 +64,10 @@ public interface AccountDTO extends AccountSummaryDTO {
         private final LocalDate birthDate;
 
 
-
+        @Override
+        public Collection<String> getPrefixedRoleNames() {
+            return roleNames;
+        }
     }
 
 }

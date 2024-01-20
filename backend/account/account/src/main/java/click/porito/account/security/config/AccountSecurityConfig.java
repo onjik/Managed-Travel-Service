@@ -15,6 +15,8 @@ import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,8 +25,11 @@ import org.springframework.security.config.annotation.web.configurers.RequestCac
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -50,7 +55,9 @@ public class AccountSecurityConfig {
                                                    JwtService jwtService,
                                                    AccountService accountService,
                                                    Validator validator,
-                                                   ObjectMapper objectMapper) throws Exception {
+                                                   ObjectMapper objectMapper,
+                                                   OAuth2AuthorizedClientService authorizedClientService
+                                                   ) throws Exception {
         //csrf
 //        http.csrf(csrf -> {csrf
 //                .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
@@ -105,9 +112,8 @@ public class AccountSecurityConfig {
 
         //oauth2
         http.oauth2Login(oauth2 -> oauth2
-                .authorizedClientRepository(new HttpSessionOAuth2AuthorizedClientRepository())
+                .authorizedClientRepository()
                 .authorizationEndpoint(authorization -> authorization
-//                        .authorizationRequestResolver()
                         .baseUri("/account/login/oauth2/authorization")
                         // 인증 시작할 때 사용하는 endpoint
                         //<a href="/account/login/oauth2/authorization/google">Google</a>
@@ -116,6 +122,14 @@ public class AccountSecurityConfig {
                 .successHandler(successHandler)
         );
         return http.build();
+    }
+
+    @Bean
+    public OAuth2AuthorizedClientService authorizedClientService(
+            JdbcOperations jdbcOperations,
+            ClientRegistrationRepository clientRegistrationRepository // google, facebook, kakao 등의 client 정보를 가지고 있다.
+    ) {
+        return new JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository);
     }
 
 

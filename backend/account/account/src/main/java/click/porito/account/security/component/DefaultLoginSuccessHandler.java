@@ -74,7 +74,7 @@ public class DefaultLoginSuccessHandler implements AuthenticationSuccessHandler 
                     account.getUserId(),
                     account.getName(),
                     account.getProfileImgUri(),
-                    account.getRoleNames());
+                    account.getPrefixedRoleNames());
         }
 
 

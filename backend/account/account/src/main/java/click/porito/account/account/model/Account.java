@@ -107,10 +107,10 @@ public class Account implements AccountDTO {
     }
 
     @Override
-    public Collection<String> getRoleNames() {
+    public Collection<String> getPrefixedRoleNames() {
         if (this.roles == null) return Collections.emptyList();
         return this.roles.stream()
-                .map(Role::name)
+                .map(Role::getAuthority)
                 .toList();
     }
     public static class Builder {
