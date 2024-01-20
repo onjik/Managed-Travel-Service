@@ -15,7 +15,8 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON_0002", "해당 리소스를 찾을 수 없습니다."),
     RESOURCE_NOT_MODIFIED(HttpStatus.NOT_MODIFIED, "COMMON_0003", "해당 리소스가 수정되지 않았습니다.(Conditional Request 에 대한 응답)"),
 
-
+    // Place
+    PLACE_DB_OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "PLACE_0001", "장소 데이터베이스 작업에 실패했습니다."),
 
     // Plan
     PLAN_OUT_OF_DATE(HttpStatus.BAD_REQUEST, "PLAN_0001", "여행 일정의 버전 정보가 일치하지 않습니다."),
