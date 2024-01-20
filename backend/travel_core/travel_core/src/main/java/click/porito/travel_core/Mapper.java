@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public abstract class Mapper<S,T> {
 
     /**
-     * Map source object to target object
+     * Map source object to scope object
      * @param source source object, nullable
      * @return transformed object, nullable
      */
@@ -25,7 +25,7 @@ public abstract class Mapper<S,T> {
     }
 
     /**
-     * Map source object to target object
+     * Map source object to scope object
      * @param source source object, nullable
      * @return transformed object, never null, but may be empty
      */
@@ -40,7 +40,7 @@ public abstract class Mapper<S,T> {
 
 
     /**
-     * Map source object to target object
+     * Map source object to scope object
      * @param source source object, never null
      * @return transformed object, never null
      * @throws IllegalArgumentException if source is null
