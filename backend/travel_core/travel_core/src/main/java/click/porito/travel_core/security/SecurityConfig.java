@@ -3,6 +3,7 @@ package click.porito.travel_core.security;
 import click.porito.travel_core.global.exception.ErrorResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -88,7 +89,6 @@ public class SecurityConfig {
                 .rememberMe(c -> c.disable())
                 .httpBasic(c -> c.disable())
                 .logout(c -> c.disable())
-                .oidcLogout(c -> c.disable())
                 .requestCache(c -> c.disable())
                 .headers(c -> c.disable());
     }
@@ -97,8 +97,9 @@ public class SecurityConfig {
     private static final String forbiddenBody;
 
     static {
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         try {
-            unauthorizedBody = new ObjectMapper().writeValueAsString(
+            unauthorizedBody = objectMapper.writeValueAsString(
                     ErrorResponseBody.builder()
                             .status(HttpServletResponse.SC_UNAUTHORIZED)
                             .message("Unauthorized")
@@ -109,7 +110,7 @@ public class SecurityConfig {
         }
 
         try {
-            forbiddenBody = new ObjectMapper().writeValueAsString(
+            forbiddenBody = objectMapper.writeValueAsString(
                     ErrorResponseBody.builder()
                             .status(HttpServletResponse.SC_FORBIDDEN)
                             .message("Forbidden")

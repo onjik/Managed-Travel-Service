@@ -4,7 +4,6 @@ package click.porito.travel_core.place.api.adapter.rest;
 import click.porito.travel_core.place.api.application.PlaceApi;
 import click.porito.travel_core.place.api.request.NearBySearchQuery;
 import click.porito.travel_core.place.domain.Place;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +30,7 @@ public class PlaceRestApi {
     }
 
     @PostMapping("/searchNearBy")
-    public List<Place> searchNearBy(@Valid @RequestBody NearBySearchQuery body) {
+    public List<Place> searchNearBy(@RequestBody NearBySearchQuery body) {
         return placeApi.getNearbyPlaces(body);
     }
 

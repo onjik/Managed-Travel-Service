@@ -2,15 +2,14 @@ package click.porito.travel_core.place.api.application.implementation;
 
 import click.porito.travel_core.place.PlaceRetrieveFailedException;
 import click.porito.travel_core.place.api.application.PlaceApi;
+import click.porito.travel_core.place.api.request.NearBySearchQuery;
+import click.porito.travel_core.place.domain.Place;
 import click.porito.travel_core.place.domain.PlaceType;
 import click.porito.travel_core.place.operation.application.PlaceOperation;
-import click.porito.travel_core.place.domain.Place;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.dao.DataAccessException;
-import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -52,12 +51,14 @@ public class PlaceApiImpl implements PlaceApi {
     @PreAuthorize("hasAuthority('place:read:all')")
     @Valid
     @Override
-    public List<Place> getNearbyPlaces(@Range(min = -90, max = 90, message = "lat must be between -90 and 90") double lat,
-                                       @Range(min = -180, max = 180, message = "lng must be between -180 and 180") double lng,
-                                       @Range(min = 0, max = 50000, message = "radiusMeters must be between 0 and 50000") int radius,
-                                       @Nullable Integer maxResultCount,
-                                       @Nullable PlaceType[] placeTypes,
-                                       @Nullable Boolean distanceSort) {
+    public List<Place> getNearbyPlaces(NearBySearchQuery query) throws PlaceRetrieveFailedException {
+        Assert.notNull(query, "query must not be null");
+        final Double lat = query.latitude();
+        final Double lng = query.longitude();
+        final Integer maxResultCount = query.maxResultCount();
+        final Integer radius = query.radiusMeters();
+        final PlaceType[] placeTypes = query.placeTypes();
+        final Boolean distanceSort = query.distanceSort();
         // validation
         Assert.isTrue(maxResultCount == null || maxResultCount >= 1 && maxResultCount <= 20, "maxResultCount must be between 1 and 20");
         if (placeTypes != null) {

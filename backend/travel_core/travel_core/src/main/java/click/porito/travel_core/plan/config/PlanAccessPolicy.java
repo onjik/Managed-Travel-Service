@@ -32,14 +32,14 @@ public class PlanAccessPolicy extends FetchingAccessPolicyAdapter<Plan>{
 
     @Override
     protected boolean hasPermissionToCreate(AccessContext accessContext) {
-        return accessContext.getScopeAuthoritySet().stream()
+        return accessContext.getPermissionAuthoritySet().stream()
                 .filter(permissionAuthority -> Domain.PLAN.equals(permissionAuthority.domain()))
                 .anyMatch(permissionAuthority -> Action.CREATE.equals(permissionAuthority.action()));
     }
 
     @Override
     protected boolean hasPermissionWithTarget(Action action, List<Plan> target, AccessContext accessContext) {
-        Set<Scope> allowedScope = accessContext.getScopeAuthoritySet().stream()
+        Set<Scope> allowedScope = accessContext.getPermissionAuthoritySet().stream()
                 .filter(permissionAuthority -> Domain.PLAN.equals(permissionAuthority.domain()))
                 .filter(permissionAuthority -> action.equals(permissionAuthority.action()))
                 .map(PermissionAuthority::scope)

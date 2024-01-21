@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * </p>
  */
 public sealed interface Authority permits PermissionAuthority, RoleAuthority {
-    final static Pattern PERMISSION_PATTERN = Pattern.compile("^(?<domain>.+):(?<action>.+)(?::(?<scope>.+))?$");
+    final static Pattern PERMISSION_PATTERN = Pattern.compile("^(?<domain>[^:]+):(?<action>[^:]+)(?::(?<scope>[^:]+))?$");
     final static String ROLE_PREFIX = "ROLE_";
     static Set<Authority> parseAuthoritySet(Authentication authentication, RoleHierarchy roleHierarchy) {
         Collection<? extends GrantedAuthority> userAuthorities = authentication.getAuthorities();

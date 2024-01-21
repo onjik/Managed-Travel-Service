@@ -3,15 +3,12 @@ package click.porito.travel_core.place.api.adapter.graphql;
 import click.porito.travel_core.place.PlaceRetrieveFailedException;
 import click.porito.travel_core.place.api.application.PlaceApi;
 import click.porito.travel_core.place.api.request.NearBySearchQuery;
-import click.porito.travel_core.place.domain.PlaceType;
 import click.porito.travel_core.place.domain.Place;
 import graphql.GraphQLError;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -66,26 +63,6 @@ public class PlaceGraphqlApi {
                 .errorType(ErrorType.BAD_REQUEST)
                 .message(violation)
                 .build();
-    }
-
-    public record NearByPlacesInput(
-            @NotNull
-            @Range(min = -90, max = 90, message = "latitude must be between -90 and 90")
-            Double latitude,
-
-            @NotNull
-            @Range(min = -180, max = 180, message = "longitude must be between -180 and 180")
-            Double longitude,
-
-            @NotNull
-            @Range(min = 0, max = 50000, message = "radiusMeters must be between 0 and 50000")
-            Integer radiusMeters,
-            @Range(min = 1, max = 20, message = "maxResultCount must be between 1 and 20")
-            Integer maxResultCount,
-
-            PlaceType[] placeTypes,
-            Boolean distanceSort
-    ) {
     }
 
 

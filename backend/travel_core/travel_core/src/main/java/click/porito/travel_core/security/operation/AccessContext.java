@@ -36,7 +36,7 @@ public class AccessContext {
                 .collect(Collectors.toSet());
     }
 
-    public final Set<PermissionAuthority> getScopeAuthoritySet() {
+    public final Set<PermissionAuthority> getPermissionAuthoritySet() {
         return authoritySet.stream()
                 .filter(PermissionAuthority.class::isInstance)
                 .map(PermissionAuthority.class::cast)

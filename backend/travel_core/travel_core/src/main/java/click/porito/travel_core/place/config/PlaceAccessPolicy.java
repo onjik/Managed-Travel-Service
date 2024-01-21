@@ -19,13 +19,18 @@ public class PlaceAccessPolicy extends AuthorityOnlyAccessPolicyAdapter<Place> {
     }
 
     @Override
+    protected boolean hasPermissionToOwnedBy(Action action, String ownerId, AccessContext accessContext) {
+        return false;
+    }
+
+    @Override
     protected boolean canCreate(AccessContext accessContext) {
         return false;
     }
 
     @Override
     protected boolean canRead(AccessContext accessContext) {
-        return accessContext.getScopeAuthoritySet().stream()
+        return accessContext.getPermissionAuthoritySet().stream()
                 .filter(scopeAuthority -> Domain.PLACE.equals(scopeAuthority.domain()))
                 .filter(scopeAuthority -> Action.READ.equals(scopeAuthority.action()))
                 .anyMatch(scopeAuthority -> Scope.ALL.equals(scopeAuthority.scope()));
