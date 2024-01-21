@@ -2,6 +2,7 @@ package click.porito.travel_core.place.api.adapter.graphql;
 
 import click.porito.travel_core.place.PlaceRetrieveFailedException;
 import click.porito.travel_core.place.api.application.PlaceApi;
+import click.porito.travel_core.place.api.request.NearBySearchQuery;
 import click.porito.travel_core.place.domain.PlaceType;
 import click.porito.travel_core.place.domain.Place;
 import graphql.GraphQLError;
@@ -33,15 +34,8 @@ public class PlaceGraphqlApi {
     }
 
     @QueryMapping(name = "nearbyPlaces")
-    public List<Place> nearbyPlaces(@Argument("input") @Valid NearByPlacesInput input) {
-        return placeApi.getNearbyPlaces(
-                input.latitude(),
-                input.longitude(),
-                input.radiusMeters(),
-                input.maxResultCount(),
-                input.placeTypes(),
-                input.distanceSort()
-        );
+    public List<Place> nearbyPlaces(@Argument("input") @Valid NearBySearchQuery input) {
+        return placeApi.getNearbyPlaces(input);
     }
 
     @QueryMapping(name = "photoUri")

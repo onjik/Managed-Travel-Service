@@ -2,10 +2,9 @@ package click.porito.travel_core.place.api.adapter.rest;
 
 
 import click.porito.travel_core.place.api.application.PlaceApi;
-import click.porito.travel_core.place.domain.PlaceType;
+import click.porito.travel_core.place.api.request.NearBySearchQuery;
 import click.porito.travel_core.place.domain.Place;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpHeaders;
@@ -32,15 +31,8 @@ public class PlaceRestApi {
     }
 
     @PostMapping("/searchNearBy")
-    public List<Place> searchNearBy(@Valid @RequestBody NearBySearchRequestBody body) {
-        return placeApi.getNearbyPlaces(
-                body.latitude(),
-                body.longitude(),
-                body.radiusMeters(),
-                body.maxResultCount(),
-                body.placeTypes(),
-                body.distanceSort()
-        );
+    public List<Place> searchNearBy(@Valid @RequestBody NearBySearchQuery body) {
+        return placeApi.getNearbyPlaces(body);
     }
 
     @GetMapping("/{placeId}/photos/{photoId}")
@@ -60,27 +52,6 @@ public class PlaceRestApi {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create(url));
         return ResponseEntity.status(HttpStatus.FOUND).headers(httpHeaders).build();
-    }
-
-
-    public record NearBySearchRequestBody(
-            @NotNull
-            @Range(min = -90, max = 90, message = "latitude must be between -90 and 90")
-            Double latitude,
-
-            @NotNull
-            @Range(min = -180, max = 180, message = "longitude must be between -180 and 180")
-            Double longitude,
-
-            @NotNull
-            @Range(min = 0, max = 50000, message = "radiusMeters must be between 0 and 50000")
-            Integer radiusMeters,
-            @Range(min = 1, max = 20, message = "maxResultCount must be between 1 and 20")
-            Integer maxResultCount,
-
-            PlaceType[] placeTypes,
-            Boolean distanceSort
-    ) {
     }
 
 
