@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -34,7 +35,7 @@ public class PlanApiImpl implements PlanApi {
     private final PlanOperation planOperation;
 
     @Override
-    @PreAuthorize("@planAccessPolicy.canRead(authentication, #planId)")
+    @PostAuthorize("returnObject.empty() || @planAccessPolicy.canRead(authentication, returnObject.get())")
     public Optional<Plan> getPlan(@NotNull String planId) {
         try {
             return planOperation.findById(planId);
@@ -69,8 +70,8 @@ public class PlanApiImpl implements PlanApi {
     }
 
     @Override
-    @PreAuthorize("@planAccessPolicy.canUpdate(authentication, #planId)")
     @Valid
+    @PreAuthorize("@planAccessPolicy.canUpdate(authentication, #planId)")
     public Plan updatePlan(@NotNull String planId, @NotNull PlanUpdateRequest planUpdateRequest) throws InvalidUpdateInfoException, PlanVersionOutOfDateException {
         Plan plan = planOperation.findById(planId)
                 .orElseThrow(() -> new PlanNotFoundException("plan not found"));
