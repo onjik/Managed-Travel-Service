@@ -1,4 +1,4 @@
-package click.porito.travel_core.access_controll;
+package click.porito.travel_core.security;
 
 import click.porito.travel_core.global.exception.ErrorResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -76,8 +76,8 @@ public class SecurityConfig {
                 .build();
     }
 
-    private HttpSecurity disableUnnecessarySecurityFeatures(HttpSecurity http) throws Exception {
-        return http
+    private void disableUnnecessarySecurityFeatures(HttpSecurity http) throws Exception {
+        http
                 .formLogin(c -> c.disable())
                 .csrf(c -> c.disable())
                 .sessionManagement(session -> {

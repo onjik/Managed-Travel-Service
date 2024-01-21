@@ -1,4 +1,4 @@
-package click.porito.travel_core.access_controll;
+package click.porito.travel_core.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

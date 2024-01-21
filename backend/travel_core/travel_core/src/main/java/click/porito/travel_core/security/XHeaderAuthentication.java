@@ -1,4 +1,4 @@
-package click.porito.travel_core.access_controll;
+package click.porito.travel_core.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

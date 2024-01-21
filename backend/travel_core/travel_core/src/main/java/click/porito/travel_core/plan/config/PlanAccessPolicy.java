@@ -1,15 +1,14 @@
 package click.porito.travel_core.plan.config;
 
-import click.porito.travel_core.access_controll.operation.FetchingAccessPolicyAdapter;
-import click.porito.travel_core.access_controll.domain.Action;
-import click.porito.travel_core.access_controll.domain.AuthorityMapper;
-import click.porito.travel_core.access_controll.domain.Scope;
+import click.porito.travel_core.security.domain.Action;
+import click.porito.travel_core.security.domain.Scope;
+import click.porito.travel_core.security.domain.PermissionAuthority;
+import click.porito.travel_core.security.operation.AccessContext;
+import click.porito.travel_core.security.operation.FetchingAccessPolicyAdapter;
 import click.porito.travel_core.global.constant.Domain;
-import click.porito.travel_core.plan.PlanNotFoundException;
 import click.porito.travel_core.plan.domain.Plan;
 import click.porito.travel_core.plan.operation.application.PlanOperation;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,66 +16,75 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
-public class PlanAccessPolicy extends FetchingAccessPolicyAdapter<Plan> {
+public class PlanAccessPolicy extends FetchingAccessPolicyAdapter<Plan>{
     private final PlanOperation planOperation;
 
+    protected PlanAccessPolicy(RoleHierarchy roleHierarchy, PlanOperation planOperation) {
+        super(roleHierarchy);
+        this.planOperation = planOperation;
+    }
+
+
     @Override
-    public boolean canCreate(Authentication authentication) {
-        return getGrantedAuthorities(authentication)
-                .stream()
-                .anyMatch(a -> a.startsWith("plan:write"));
+    protected boolean hasPermissionToOwnedBy(Action action, String ownerId, AccessContext accessContext) {
+        return false;
     }
 
     @Override
-    public boolean canReadOwnedBy(Authentication authentication, String ownerId) {
-        return ownerId.equals(authentication.getName());
+    protected boolean hasPermissionToCreate(AccessContext accessContext) {
+        return accessContext.getScopeAuthoritySet().stream()
+                .filter(permissionAuthority -> Domain.PLAN.equals(permissionAuthority.domain()))
+                .anyMatch(permissionAuthority -> Action.CREATE.equals(permissionAuthority.action()));
     }
 
     @Override
-    protected List<Plan> fetchByIds(List<String> targetIds) {
-        return planOperation.findAllByIds(targetIds);
-    }
-
-    @Override
-    protected Plan fetchById(String targetId) {
-        return planOperation.findById(targetId)
-                .orElseThrow(() -> new PlanNotFoundException(targetId));
-    }
-
-    @Override
-    protected boolean canAccess(Action action, Plan domainObject, Authentication authentication, Set<AuthorityMapper> authorityMappers) {
-        //filtering
-        Set<Scope> grantedScopes = authorityMappers.stream()
-                .filter(a -> a.domain().equals(Domain.PLAN))
-                .filter(a -> a.action().equals(action))
-                .map(AuthorityMapper::scope)
+    protected boolean hasPermissionWithTarget(Action action, List<Plan> target, AccessContext accessContext) {
+        Set<Scope> allowedScope = accessContext.getScopeAuthoritySet().stream()
+                .filter(permissionAuthority -> Domain.PLAN.equals(permissionAuthority.domain()))
+                .filter(permissionAuthority -> action.equals(permissionAuthority.action()))
+                .map(PermissionAuthority::scope)
                 .collect(Collectors.toSet());
-        if (grantedScopes.isEmpty()) {
+        String userId = accessContext.getUserId();
+
+        if (allowedScope.isEmpty()) {
             return false;
         }
+        if (allowedScope.contains(Scope.ALL)) {
+            return true;
+        }
 
-        //check
-        if (grantedScopes.contains(Scope.ALL)) {
+        if (allowedScope.contains(Scope.OWNED) && isOwnerOfAll(userId, target)) {
             return true;
         }
-        if (grantedScopes.contains(Scope.OWNED) && isOwnedBy(authentication.getName(), domainObject)) {
+
+        if (allowedScope.contains(Scope.BELONGED) && isBelongedOfAll(userId, target)) {
             return true;
         }
-        return grantedScopes.contains(Scope.BELONGED) && isBelongedTo(authentication.getName(), domainObject);
+
+        return false;
     }
 
-    private boolean isOwnedBy(String userId, Plan plan){
+    private boolean isOwner(String userId, Plan plan) {
         return userId.equals(plan.getOwnerId());
     }
-    private boolean isBelongedTo(String userId, Plan plan){
-        return userId.equals(plan.getOwnerId()); //TODO 조인 기능 구현시 수정
+
+    private boolean isOwnerOfAll(String userId, List<Plan> plans) {
+        return plans.stream()
+                .allMatch(plan -> userId.equals(plan.getOwnerId()));
     }
 
+    private boolean isBelonged(String userId, Plan plan) {
+        return isOwner(userId, plan); // TODO 현재는 조인 로직이 구현되어 있지 않아서, 이렇게 처리, 추후 구현시 수정 필요
+    }
+
+    private boolean isBelongedOfAll(String userId, List<Plan> plans) {
+        return isOwnerOfAll(userId, plans); // TODO 현재는 조인 로직이 구현되어 있지 않아서, 이렇게 처리, 추후 구현시 수정 필요
+    }
 
     @Override
-    protected Class<Plan> getSupportedClass() {
-        return Plan.class;
+    protected List<Plan> fetchTarget(List<String> targetId) {
+        return planOperation.findAllByIds(targetId);
     }
+
 }
 
