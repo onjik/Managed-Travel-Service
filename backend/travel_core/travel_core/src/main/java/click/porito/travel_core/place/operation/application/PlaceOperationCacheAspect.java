@@ -8,8 +8,11 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -50,20 +53,37 @@ public class PlaceOperationCacheAspect {
             log.debug("Cache Hit - Get Places From Cache : {}", placeIds);
             return matchedCache;
         }
-        if (log.isDebugEnabled()) {
-            if (matchedCache.isEmpty()){
-                log.debug("Cache Miss - Get Places From : {}", this.getClass().getSimpleName());
-            } else {
-                log.debug("Cache Partial Hit ({} / {}) - Get Places From : {}", matchedCache.size(), placeIds.length, this.getClass().getSimpleName());
-            }
+        String[] unmatchedPlaceIds;
+        if (matchedCache.isEmpty()){
+            log.debug("Cache Miss - Get Places From : {}", this.getClass().getSimpleName());
+            unmatchedPlaceIds = placeIds;
+        } else {
+            log.debug("Cache Partial Hit ({} / {}) - Get Places From : {}", matchedCache.size(), placeIds.length, this.getClass().getSimpleName());
+            Set<String> matchedIds = matchedCache.stream().map(Place::id).collect(Collectors.toSet());
+            unmatchedPlaceIds = Arrays.stream(placeIds)
+                    .filter(placeId -> !matchedIds.contains(placeId))
+                    .toArray(String[]::new);
         }
-        List<Place> result = (List<Place>) joinPoint.proceed();
+        // 부족한 부분 조회
+        List<Place> result = (List<Place>) joinPoint.proceed(new Object[]{unmatchedPlaceIds});
+        if (result == null) {
+            return matchedCache;
+        }
         // load to cache
-        if (result != null && !result.isEmpty()) {
+        if (!result.isEmpty()) {
             // cache
-            log.debug("Cache Put - Put Places To Cache : {}", placeIds);
+            log.debug("Cache Put - Put Places To Cache : {}", unmatchedPlaceIds);
             placeCacheOperation.putAll(result);
         }
+
+        // merge and sort by placeIds
+        result.addAll(matchedCache);
+        List<String> placeIdList = Arrays.asList(placeIds);
+        result.sort((o1, o2) -> {
+            int o1Index = placeIdList.indexOf(o1.id());
+            int o2Index = placeIdList.indexOf(o2.id());
+            return Integer.compare(o1Index, o2Index);
+        });
 
         return result;
     }
@@ -81,5 +101,17 @@ public class PlaceOperationCacheAspect {
         }
 
         return result;
+    }
+
+    @Around("execution(boolean click.porito.travel_core.place.operation.application.PlaceOperation.exists(String)) && args(placeId)")
+    public boolean aroundExists(ProceedingJoinPoint joinPoint, String placeId) throws Throwable {
+        // check cache
+        boolean exists = placeCacheOperation.exists(placeId);
+        if (exists) {
+            log.debug("Cache Hit - Exists PlaceEntity From Cache : {}", placeId);
+            return true;
+        }
+        // cache put 은 진행하지 않는다(현재 구현체에서)
+        return (boolean) joinPoint.proceed();
     }
 }
