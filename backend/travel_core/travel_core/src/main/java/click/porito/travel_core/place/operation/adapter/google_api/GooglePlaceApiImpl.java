@@ -31,15 +31,9 @@ public class GooglePlaceApiImpl implements GooglePlaceApi, GooglePlacePhotoApi {
     private final static String GOOGLE_API_HEADER = "X-Goog-Api-Key";
     private final static String PLACE_FIELD_MASK = "X-Goog-FieldMask";
     private final static String LANGUAGE_CODE = "languageCode";
-    private final static String FIELD_MASKS_STRING;
     private final static String PREFIXED_FIELD_MASKS_STRING;
 
     static {
-        FIELD_MASKS_STRING = Arrays.stream(FieldMasks.DEFAULT_MASKS)
-                .map(FieldMask::getMaskName)
-                .reduce((a, b) -> a + "," + b)
-                .get();
-
         PREFIXED_FIELD_MASKS_STRING = Arrays.stream(FieldMasks.DEFAULT_MASKS)
                 .map(FieldMask::getPrefixedMaskName)
                 .reduce((a, b) -> a + "," + b)
@@ -52,9 +46,19 @@ public class GooglePlaceApiImpl implements GooglePlaceApi, GooglePlacePhotoApi {
 
     @Override
     public Optional<GooglePlace> placeDetails(String placeId) {
+        return fetchWithMask(placeId, FieldMasks.DEFAULT_MASKS);
+    }
+
+    @Override
+    public boolean exists(String placeId) throws PermissionDeniedDataAccessException, InvalidDataAccessResourceUsageException, PlaceRetrieveFailedException {
+        Optional<GooglePlace> googlePlace = fetchWithMask(placeId, new FieldMask[]{FieldMask.id});
+        return googlePlace.isPresent();
+    }
+
+    private Optional<GooglePlace> fetchWithMask(String placeId, FieldMask[] fieldMasks) {
         // Build URI
         String baseUri = String.format(PLACE_DETAIL_URL, placeId);
-        
+
         var builder = new DefaultUriBuilderFactory(baseUri).builder();
         builder.queryParam(LANGUAGE_CODE, Locale.KOREAN.getLanguage());
         var uri = builder.build(placeId);
@@ -63,7 +67,11 @@ public class GooglePlaceApiImpl implements GooglePlaceApi, GooglePlacePhotoApi {
         HttpHeaders headers = new HttpHeaders();
         headers.add(GOOGLE_API_HEADER, googleApiContext.getKey());
 
-        headers.add(PLACE_FIELD_MASK, FIELD_MASKS_STRING);
+        String fieldMaskString = Arrays.stream(fieldMasks)
+                .map(FieldMask::getMaskName)
+                .reduce((a, b) -> a + "," + b)
+                .get();
+        headers.add(PLACE_FIELD_MASK, fieldMaskString);
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
@@ -72,7 +80,6 @@ public class GooglePlaceApiImpl implements GooglePlaceApi, GooglePlacePhotoApi {
         response.ifPresent(this::publishEvent);
         return response;
     }
-
 
 
     @Override

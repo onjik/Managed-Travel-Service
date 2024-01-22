@@ -76,8 +76,11 @@ public interface PlanRouteApi {
      * @param planId 여행 계획 ID
      * @param request 경유지 삽입 정보
      * @return 삽입 후 경로
+     * @throws PlanNotFoundException 여행 계획을 찾지 못한 경우
+     * @throws PointedComponentNotFoundException 포인터가 가리키는 컴포넌트를 찾지 못한 경우
+     * @throws InvalidRouteReorderRequestException 경로 재정렬 요청이 잘못된 경우
      */
-    RouteResponse appendWayPointAfter(String planId, @Valid WayPointAppendAfterRequest request) throws PlanNotFoundException, PointedComponentNotFoundException;
+    RouteResponse appendWayPointAfter(String planId, @Valid WayPointAppendAfterRequest request) throws PlanNotFoundException, PointedComponentNotFoundException, InvalidRouteReorderRequestException;
 
 
     RouteResponse deleteWayPoint(String planId, @Valid WayPointPointable wayPointPointer) throws PlanNotFoundException, PointedComponentNotFoundException;

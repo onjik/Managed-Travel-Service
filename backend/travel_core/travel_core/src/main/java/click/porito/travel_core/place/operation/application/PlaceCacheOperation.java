@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface PlaceCacheOperation {
     Optional<Place> get(String placeId);
 
+    boolean exists(String placeId);
+
     /**
      * 주어진 placeIds 에 해당하는 장소를 조회합니다.
      * 전부 있지 않은 경우, 있는 것만 반환합니다.

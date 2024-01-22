@@ -20,6 +20,12 @@ public interface GooglePlaceApi {
      */
     Optional<GooglePlace> placeDetails(String placeId);
     /**
+     * @throws PermissionDeniedDataAccessException API key가 잘못된 경우, 권한이 없는 경우, 호출 횟수 초과
+     * @throws InvalidDataAccessResourceUsageException 잘못된 요청
+     * @throws PlaceRetrieveFailedException 외부 API 호출에 실패한 경우
+     */
+    boolean exists(String placeId) throws PermissionDeniedDataAccessException, InvalidDataAccessResourceUsageException, PlaceRetrieveFailedException;
+    /**
      * @return 조회된 Place들, empty list if not found, never null
      * @throws PermissionDeniedDataAccessException API key가 잘못된 경우, 권한이 없는 경우, 호출 횟수 초과
      * @throws InvalidDataAccessResourceUsageException 잘못된 요청

@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface PlaceOperation {
 
+    boolean exists(String placeId) throws DataAccessException;
+
     /**
      * id로 장소를 조회한다.
      * @param placeId 조회하려는 장소의 ID, never null

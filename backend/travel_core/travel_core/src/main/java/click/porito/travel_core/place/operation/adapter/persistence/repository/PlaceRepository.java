@@ -11,4 +11,6 @@ public interface PlaceRepository extends MongoRepository<PlaceEntity, String> {
     Optional<PlaceEntity> findByIdAndUpdatedAtAfter(String id, Instant updatedAt);
 
     List<PlaceEntity> findByIdInAndUpdatedAtAfter(List<String> ids, Instant updatedAt);
+
+    boolean existsByIdAndUpdatedAtAfter(String placeId, Instant updatedAt);
 }

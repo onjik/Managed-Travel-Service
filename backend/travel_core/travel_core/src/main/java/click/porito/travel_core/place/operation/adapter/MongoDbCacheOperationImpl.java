@@ -38,6 +38,12 @@ public class MongoDbCacheOperationImpl implements PlaceCacheOperation, Initializ
     }
 
     @Override
+    public boolean exists(String placeId) {
+        Instant updatedAt = Instant.now().minus(cacheDuration);
+        return placeRepository.existsByIdAndUpdatedAtAfter(placeId, updatedAt);
+    }
+
+    @Override
     public List<Place> getByIdIn(String[] placeIds) {
         Instant updatedAt = Instant.now().minus(cacheDuration);
         return placeRepository.findByIdInAndUpdatedAtAfter(List.of(placeIds), updatedAt)

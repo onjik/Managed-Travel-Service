@@ -25,6 +25,11 @@ public class GooglePlaceOperation implements PlaceOperation {
     private final Mapper<GooglePlace, Place> googlePlaceMapper;
 
     @Override
+    public boolean exists(String placeId) throws DataAccessException {
+        return googlePlaceApi.exists(placeId);
+    }
+
+    @Override
     public Optional<Place> getPlace(String placeId) throws DataAccessException {
         return googlePlaceApi.placeDetails(placeId)
                 .map(googlePlaceMapper::map);

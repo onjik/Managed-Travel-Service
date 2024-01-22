@@ -1,6 +1,8 @@
 package click.porito.travel_core.plan.api.application.implementation;
 
+import click.porito.travel_core.place.operation.application.PlaceOperation;
 import click.porito.travel_core.plan.InvalidRouteReorderRequestException;
+import click.porito.travel_core.plan.InvalidUpdateInfoException;
 import click.porito.travel_core.plan.PlanNotFoundException;
 import click.porito.travel_core.plan.PointedComponentNotFoundException;
 import click.porito.travel_core.plan.api.application.PlanRouteApi;
@@ -21,6 +23,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import click.porito.travel_core.global.exception.FieldError;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalTime;
@@ -34,6 +37,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PlanRouteApiImpl implements PlanRouteApi {
     private final PlanOperation planOperation;
+    private final PlaceOperation placeOperation;
 
     @Override
     @PreAuthorize("@planAccessPolicy.canRead(authentication, #planId)")
@@ -134,7 +138,7 @@ public class PlanRouteApiImpl implements PlanRouteApi {
     @Override
     //@Transactional
     @PreAuthorize("@planAccessPolicy.canUpdate(authentication, #planId)")
-    public RouteResponse appendWayPointAfter(String planId, @Valid WayPointAppendAfterRequest request) throws PlanNotFoundException, PointedComponentNotFoundException {
+    public RouteResponse appendWayPointAfter(String planId, @Valid WayPointAppendAfterRequest request) throws PlanNotFoundException, PointedComponentNotFoundException, InvalidUpdateInfoException {
         Assert.notNull(planId, "planId must not be null");
         Assert.notNull(request, "request must not be null");
         String placeId = request.placeId();
@@ -143,6 +147,14 @@ public class PlanRouteApiImpl implements PlanRouteApi {
         //find plan
         Plan plan = planOperation.findById(planId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
+
+        //placeId 가 유효한지 확인
+        boolean exists = placeOperation.exists(placeId);
+        if (!exists) {
+            List<FieldError> fieldErrors = FieldError.of("placeId", placeId, "invalid placeId");
+            throw new InvalidUpdateInfoException(fieldErrors);
+        }
+
         //create waypoint
         WayPoint wayPoint = WayPoint.createWayPoint(placeId);
 
