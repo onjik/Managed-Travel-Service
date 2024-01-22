@@ -2,17 +2,15 @@ package click.porito.travel_core.plan.operation.adapter;
 
 import click.porito.travel_core.Mapper;
 import click.porito.travel_core.plan.PlanNotFoundException;
-import click.porito.travel_core.plan.operation.application.PlanOperation;
 import click.porito.travel_core.plan.domain.Plan;
 import click.porito.travel_core.plan.operation.adapter.persistent.entity.EntityRouteComponent;
 import click.porito.travel_core.plan.operation.adapter.persistent.entity.PlanEntity;
 import click.porito.travel_core.plan.operation.adapter.persistent.repository.PlanEntityRepository;
+import click.porito.travel_core.plan.operation.application.PlanOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class PlanOperationImpl implements PlanOperation {
     private final Mapper<PlanEntity, Plan> toDtoMapper;
     private final PlanEntityRepository planEntityRepository;
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    //@Transactional(propagation = Propagation.REQUIRED)
     public Plan create(Plan plan) {
         Assert.notNull(plan, "plan must not be null");
         plan.setPlanId(null);
@@ -64,7 +62,7 @@ public class PlanOperationImpl implements PlanOperation {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    //@Transactional(propagation = Propagation.REQUIRED)
     public Plan update(Plan plan) {
         Assert.notNull(plan, "plan must not be null");
         Assert.notNull(plan.getPlanId(), "planId must not be null");
@@ -74,25 +72,25 @@ public class PlanOperationImpl implements PlanOperation {
                 .orElseThrow(() -> new PlanNotFoundException(planId));
 
         //2. 다른 점을 감지하고 업데이트한다.
-        PlanEntity updateNeeded = toEntityMapper.map(plan);
+        PlanEntity request = toEntityMapper.map(plan);
 
-        if (planEntity.equals(updateNeeded)) {
+        if (planEntity.equals(request)) {
             return plan;
         }
 
         //2-1. title
-        if (!planEntity.getTitle().equals(updateNeeded.getTitle())) {
-            planEntity.setTitle(updateNeeded.getTitle());
+        if (!planEntity.getTitle().equals(request.getTitle())) {
+            planEntity.setTitle(request.getTitle());
         }
         //2-2. startDate
-        if (!planEntity.getStartDate().equals(updateNeeded.getStartDate())) {
-            planEntity.setStartDate(updateNeeded.getStartDate());
+        if (!planEntity.getStartDate().equals(request.getStartDate())) {
+            planEntity.setStartDate(request.getStartDate());
         }
         //2-3. route
         List<EntityRouteComponent> route = planEntity.getRoute();
-        List<EntityRouteComponent> changedRoute = updateNeeded.getRoute();
-        if (route.equals(changedRoute)) {
-            planEntity.setRoute(changedRoute);
+        List<EntityRouteComponent> requestedRoute = request.getRoute();
+        if (!route.equals(requestedRoute)) { // 같지않으면 업데이트한다.
+            planEntity.setRoute(requestedRoute);
         }
 
         //3. 업데이트한다.

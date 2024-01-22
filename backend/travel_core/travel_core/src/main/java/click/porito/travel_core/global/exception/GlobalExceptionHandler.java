@@ -8,11 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -28,7 +26,6 @@ import java.util.Set;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final MessageSource messageSource;
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseBody> handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
         log.debug("handleConstraintViolationException", e);
@@ -71,13 +68,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ServerException.class)
     public ResponseEntity<ErrorResponseBody> handleBusinessException(ServerException e) {
-        return ResponseEntity.internalServerError()
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity.status(errorCode.getStatusValue())
                 .body(createErrorBody(e));
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponseBody> handleBusinessException(BusinessException e) {
-        return ResponseEntity.badRequest()
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity.status(errorCode.getStatusValue())
                 .body(createErrorBody(e));
     }
 

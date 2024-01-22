@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "_type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes({
-        @Type(value = WayPoint.class, name = "WAYPOINT"),
-        @Type(value = Day.class, name = "DAY")
+        @Type(value = WayPoint.class),
+        @Type(value = Day.class)
 })
 public sealed interface RouteComponent permits WayPoint, Day {
 }

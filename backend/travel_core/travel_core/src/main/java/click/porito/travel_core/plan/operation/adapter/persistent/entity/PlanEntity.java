@@ -3,10 +3,7 @@ package click.porito.travel_core.plan.operation.adapter.persistent.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -16,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter @Setter
+@TypeAlias("plan")
 @Document(collection = "plan")
 public class PlanEntity {
     @Id

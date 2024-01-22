@@ -6,6 +6,7 @@ import click.porito.travel_core.plan.PlanVersionOutOfDateException;
 import click.porito.travel_core.plan.api.reqeust.PlanCreateRequest;
 import click.porito.travel_core.plan.api.reqeust.PlanUpdateRequest;
 import click.porito.travel_core.plan.domain.Plan;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,7 +27,7 @@ public interface PlanApi {
      * @throws IllegalArgumentException 인자의 값이 유효하지 않을 때(잘못된 placeId, 제약조건 위반 등)
      * @return 생성된 PlanEntity
      */
-    Plan createPlan(String userId, PlanCreateRequest planCreateRequest);
+    Plan createPlan(String userId, @Valid PlanCreateRequest planCreateRequest);
 
     /**
      * 특정 유저의 여행 계획 목록을 조회한다.
@@ -49,7 +50,7 @@ public interface PlanApi {
      * @param planUpdateRequest 수정할 여행 계획 정보
      * @return 수정된 PlanEntity
      */
-    Plan updatePlan(String planId, PlanUpdateRequest planUpdateRequest) throws InvalidUpdateInfoException, PlanVersionOutOfDateException;
+    Plan updatePlan(String planId, @Valid PlanUpdateRequest planUpdateRequest) throws InvalidUpdateInfoException, PlanVersionOutOfDateException;
 
 
 }

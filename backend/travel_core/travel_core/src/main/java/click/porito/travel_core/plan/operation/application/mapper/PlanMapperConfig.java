@@ -142,10 +142,10 @@ public class PlanMapperConfig {
         return new Mapper<>() {
             @Override
             protected WayPointEntity mapInternal(WayPoint source) {
-                UUID wayPointId = UUID.fromString(source.waypointId());
-                String placeId = source.placeId();
-                String memo = source.memo();
-                LocalTime time = source.time();
+                UUID wayPointId = source.getWaypointId() != null ? UUID.fromString(source.getWaypointId()) : UUID.randomUUID();
+                String placeId = source.getPlaceId();
+                String memo = source.getMemo();
+                LocalTime time = source.getTime();
                 return WayPointEntity.builder()
                         .wayPointId(wayPointId)
                         .placeId(placeId)
@@ -177,8 +177,8 @@ public class PlanMapperConfig {
         return new Mapper<>() {
             @Override
             protected DayEntity mapInternal(Day source) {
-                UUID dayId = UUID.fromString(source.dayId());
-                List<WayPointEntity> wayPoints = wayPointDtoMapper.map(source.wayPoints());
+                UUID dayId = source.getDayId() != null ? UUID.fromString(source.getDayId()) : UUID.randomUUID();
+                List<WayPointEntity> wayPoints = wayPointDtoMapper.map(source.getWayPoints());
 
                 return DayEntity.builder()
                         .dayId(dayId)

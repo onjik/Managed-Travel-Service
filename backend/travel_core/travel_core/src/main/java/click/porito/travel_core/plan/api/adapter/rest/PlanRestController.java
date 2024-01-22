@@ -8,7 +8,6 @@ import click.porito.travel_core.plan.api.reqeust.PlanUpdateRequest;
 import click.porito.travel_core.plan.domain.Plan;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.domain.Page;
@@ -54,7 +53,7 @@ public class PlanRestController {
     }
 
     @GetMapping("/{planId}")
-    public Plan getPlan(@NotBlank String planId,
+    public Plan getPlan(@PathVariable String planId,
                         @RequestHeader(value = "If-None-Match",required = false) String version,
                         @RequestHeader(value = X_USER_ID, required = true) String userId,
                         @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
@@ -68,7 +67,7 @@ public class PlanRestController {
     }
 
     @DeleteMapping("/{planId}")
-    public ResponseEntity<Void> deletePlan(@NotBlank String planId,
+    public ResponseEntity<Void> deletePlan(@PathVariable String planId,
                                            @RequestHeader(value = X_USER_ID, required = true) String userId,
                                            @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
     ) throws PlanNotFoundException {
@@ -79,7 +78,7 @@ public class PlanRestController {
     }
 
     @PutMapping("/{planId}")
-    public ResponseEntity<Plan> updatePlan(@NotBlank String planId,
+    public ResponseEntity<Plan> updatePlan(@PathVariable String planId,
                                            @RequestBody PlanUpdateRequest body,
                                            @RequestHeader(value = X_USER_ID, required = true) String userId,
                                            @RequestHeader(value = X_USER_ROLES, required = true) String[] roles,
