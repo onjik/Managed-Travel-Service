@@ -1,10 +1,13 @@
-package click.porito.travel_core.security;
+package click.porito.travel_core.security.config;
 
 import click.porito.travel_core.global.exception.ErrorResponseBody;
+import click.porito.travel_core.security.filter.JwtAuthenticationFilter;
+import click.porito.travel_core.security.operation.JwtOperation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -25,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 @EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
-
     @Bean
     public RoleHierarchy roleHierarchy() {
         //{domain}:{action}:{scope}
@@ -60,7 +62,11 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain config(HttpSecurity http, ObjectMapper objectMapper) throws Exception {
+    public SecurityFilterChain config(
+            HttpSecurity http,
+            ApplicationEventPublisher applicationEventPublisher,
+            JwtOperation jwtOperation
+    ) throws Exception {
         // disable unnecessary security features
         disableUnnecessarySecurityFeatures(http);
         // exception handling
@@ -69,11 +75,16 @@ public class SecurityConfig {
                         .authenticationEntryPoint(responseUnauthorized()) // on AuthenticationException, respons with 401
                         .accessDeniedHandler(responseForbidden()) // on AccessDeniedException, response with 403
         );
+        // authentication, authorization
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtOperation);
+        if (applicationEventPublisher != null) {
+            jwtAuthenticationFilter.setApplicationEventPublisher(applicationEventPublisher);
+        }
         return http
                 .authorizeHttpRequests(
                         c -> c.anyRequest().authenticated()
                 )
-                .addFilterAfter(new XHeaderAuthenticationFilter(objectMapper), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

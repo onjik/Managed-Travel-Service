@@ -16,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
@@ -25,7 +24,11 @@ import java.util.List;
 import static click.porito.gateway.constant.CustomHeaders.X_USER_ID;
 import static click.porito.gateway.constant.CustomHeaders.X_USER_ROLES;
 
-@Component
+/**
+ * 레거시 코드입니다. 이제 더이상 사용하지 않습니다.
+ * @deprecated 각각의 서비스에서 JWT를 검증하도록 변경하였습니다.
+ */
+//@Component
 @Slf4j
 public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtAuthorizationGatewayFilterFactory.Config> {
     public final static Integer ORDER = 1;

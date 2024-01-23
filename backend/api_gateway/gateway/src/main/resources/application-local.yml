@@ -8,30 +8,14 @@ spring:
       label: main
     gateway:
       routes:
-        - id: login_service
-          uri: http://localhost:29090
-          predicates:
-            - Path=/account/login/**, /account/register/**, /login/oauth2/code/**
-
         - id: account_service
           uri: http://localhost:29090
           predicates:
-            - Path=/account/**, /users/**
-          filters:
-            - name: JwtAuthorization
-              args:
-                config:
-                  roles: ADMIN, USER
-
-        - id: place_service
+            - Path=/account/**, /users/**, /login/**
+        - id: travel_core
           uri: http://localhost:29091
           predicates:
-            - Path=/place/**
-          filters:
-            - name: JwtAuthorization
-              args:
-                config:
-                  roles: USER, ADMIN
+            - Path=/place/**, /plan/**
 management:
   endpoints:
     web:

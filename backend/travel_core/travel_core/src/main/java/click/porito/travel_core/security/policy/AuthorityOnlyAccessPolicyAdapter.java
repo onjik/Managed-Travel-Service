@@ -1,6 +1,7 @@
-package click.porito.travel_core.security.operation;
+package click.porito.travel_core.security.policy;
 
 import click.porito.travel_core.security.domain.Action;
+import click.porito.travel_core.security.domain.AccessContext;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 
 import java.util.List;

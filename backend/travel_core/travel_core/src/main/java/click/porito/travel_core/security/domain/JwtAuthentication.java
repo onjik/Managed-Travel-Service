@@ -1,16 +1,17 @@
-package click.porito.travel_core.security;
+package click.porito.travel_core.security.domain;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Arrays;
 import java.util.Collection;
 
-public record XHeaderAuthentication(String username, String[] roles) implements Authentication {
-
+public record JwtAuthentication(
+        String userId,
+        Collection<String> roles
+) implements Authentication {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(roles)
+        return roles.stream()
                 .map(role -> (GrantedAuthority) () -> role)
                 .toList();
     }
@@ -22,12 +23,12 @@ public record XHeaderAuthentication(String username, String[] roles) implements 
 
     @Override
     public Object getDetails() {
-        return null;
+        return userId;
     }
 
     @Override
     public Object getPrincipal() {
-        return username;
+        return userId;
     }
 
     @Override
@@ -37,11 +38,11 @@ public record XHeaderAuthentication(String username, String[] roles) implements 
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        //항상 인증되어 있음
+        // do nothing
     }
 
     @Override
     public String getName() {
-        return this.username;
+        return userId;
     }
 }

@@ -2,8 +2,8 @@ package click.porito.travel_core.place.config;
 
 import click.porito.travel_core.security.domain.Action;
 import click.porito.travel_core.security.domain.Scope;
-import click.porito.travel_core.security.operation.AccessContext;
-import click.porito.travel_core.security.operation.AuthorityOnlyAccessPolicyAdapter;
+import click.porito.travel_core.security.domain.AccessContext;
+import click.porito.travel_core.security.policy.AuthorityOnlyAccessPolicyAdapter;
 import click.porito.travel_core.global.constant.Domain;
 import click.porito.travel_core.place.domain.Place;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;

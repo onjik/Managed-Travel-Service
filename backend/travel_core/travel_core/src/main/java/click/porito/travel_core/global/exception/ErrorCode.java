@@ -23,6 +23,12 @@ public enum ErrorCode {
     PLAN_DB_OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "PLAN_0002", "여행 일정 데이터베이스 작업에 실패했습니다."),
     INVALID_PLAN_ROUTE_REORDER_REQUEST(HttpStatus.BAD_REQUEST, "PLAN_0003", "여행 일정의 경로 재정렬 요청이 올바르지 않습니다."),
     POINTED_COMPONENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PLAN_0004", "가리키는 요소를 찾을 수 없습니다."),
+
+    // Security
+    JWT_PROCESSING_SERVER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "SECURITY_0001", "JWT 처리에 실패했습니다."),
+    JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "SECURITY_0002", "JWT 토큰이 만료되었습니다."),
+    JWT_INVALID(HttpStatus.UNAUTHORIZED, "SECURITY_0003", "JWT 토큰이 올바르지 않습니다."),
+    JWT_NOT_EXIST(HttpStatus.UNAUTHORIZED, "SECURITY_0004", "JWT 토큰이 존재하지 않습니다."),
     ;
     private final HttpStatus status;
     private final String code;

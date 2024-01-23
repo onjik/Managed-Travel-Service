@@ -1,5 +1,6 @@
 package click.porito.travel_core.security.operation;
 
+import click.porito.travel_core.security.domain.AccessContext;
 import click.porito.travel_core.security.domain.Authority;
 import lombok.Builder;
 import lombok.Getter;

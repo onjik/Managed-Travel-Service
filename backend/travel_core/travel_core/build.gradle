@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'com.auth0:java-jwt:4.4.0'
 
     //db
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

@@ -12,12 +12,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Date;
 
 @Service
+@RefreshScope
 @RequiredArgsConstructor
 public class JwtService implements InitializingBean {
     private final static String ROLES = "roles";
@@ -46,12 +48,7 @@ public class JwtService implements InitializingBean {
         Assert.notNull(payload, "payload must not be null");
         Assert.notNull(payload.userId(), "userId must not be null");
         Assert.notEmpty(payload.roles(), "roles must not be empty");
-        final String roles;
-        try {
-            roles = objectMapper.writeValueAsString(payload.roles());
-        } catch (JsonProcessingException e) {
-            throw new JwtEncodeException();
-        }
+        final String roles = String.join(",", payload.roles());
         Date expiresAt = new Date(System.currentTimeMillis() + expirationMin * 60 * 1000);
         return JWT.create()
                 .withExpiresAt(expiresAt)

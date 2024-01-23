@@ -1,7 +1,7 @@
 package click.porito.travel_core.security.domain;
 
 import click.porito.travel_core.global.constant.Domain;
-import click.porito.travel_core.security.SecurityConfig;
+import click.porito.travel_core.security.config.SecurityConfig;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

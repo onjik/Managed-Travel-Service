@@ -1,4 +1,4 @@
-package click.porito.travel_core.security.operation;
+package click.porito.travel_core.security.domain;
 
 import click.porito.travel_core.security.domain.Authority;
 import click.porito.travel_core.security.domain.RoleAuthority;

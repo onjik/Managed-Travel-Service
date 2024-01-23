@@ -1,4 +1,4 @@
-package click.porito.travel_core.security.operation;
+package click.porito.travel_core.security.policy;
 
 import click.porito.travel_core.security.ResourceNotFoundException;
 import org.springframework.security.core.Authentication;
