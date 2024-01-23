@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -78,6 +79,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity.status(errorCode.getStatusValue())
                 .body(createErrorBody(e));
+    }
+
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ErrorResponseBody> handleThrowable(Throwable e) {
+        log.error("!!UNHANDLED EXCEPTION!!", e);
+        ErrorResponseBody body = ErrorResponseBody.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message("unhandled exception")
+                .debugDescription(e.getClass().getSimpleName() + ": " + e.getMessage())
+                .build();
+        return ResponseEntity.internalServerError()
+                .body(body);
     }
 
 
