@@ -2,11 +2,6 @@ logging:
   level:
     org.springframework.web.client.RestTemplate: DEBUG
     root: debug
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh, health, beans # refresh for cloud config refresh
 spring:
   security:
     oauth2:
@@ -22,12 +17,14 @@ spring:
   cloud:
     config: # config server 설정
       uri: http://localhost:8888
-      profile: local
+      profile: test
       label: main
     aws:
       s3:
         enabled: true
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8070/eureka/
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+      retries: 3

@@ -9,18 +9,14 @@ spring:
     gateway:
       routes:
         - id: account_service
-          uri: http://localhost:29090
+          uri: lb://ACCOUNT-SERVICE
           predicates:
             - Path=/account/**, /users/**, /login/**
         - id: travel_core
-          uri: http://localhost:29091
+          uri: lb://TRAVEL-CORE
           predicates:
             - Path=/place/**, /plan/**
 management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh, health, beans, gateway # refresh for cloud config refresh
   endpoint:
     gateway:
       enabled: true
