@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @Valid
@@ -22,16 +23,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/v1/plans")
 public class PlanRestController {
-    private final static String X_USER_ID = "X-Authorization-Id";
-    private final static String X_USER_ROLES = "X-Authorization-Roles";
 
     private final PlanApi planApi;
     @PostMapping
     public ResponseEntity<Plan> createPlan(
             @RequestBody PlanCreateRequest body,
-            @RequestHeader(value = X_USER_ID, required = true) String userId,
-            @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
+            Authentication authentication
     ) {
+        String userId = authentication.getName();
         Plan plan = planApi.createPlan(userId, body);
 
         String version = plan.getVersion();
@@ -43,9 +42,7 @@ public class PlanRestController {
     public ResponseEntity<Page<Plan>> getPlanIdOwnedBy(
             @RequestParam(name = "ownerId") String ownerId,
             @RequestParam(name = "page", defaultValue = "0") @Min(0) Integer page,
-            @RequestParam(name = "size", defaultValue = "10") @Range(min = 5, max = 100) Integer size,
-            @RequestHeader(value = X_USER_ID, required = true) String userId,
-            @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
+            @RequestParam(name = "size", defaultValue = "10") @Range(min = 5, max = 100) Integer size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Plan> plansOwnedBy = planApi.getPlansOwnedBy(ownerId, pageable);
@@ -54,9 +51,7 @@ public class PlanRestController {
 
     @GetMapping("/{planId}")
     public Plan getPlan(@PathVariable String planId,
-                        @RequestHeader(value = "If-None-Match",required = false) String version,
-                        @RequestHeader(value = X_USER_ID, required = true) String userId,
-                        @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
+                        @RequestHeader(value = "If-None-Match",required = false) String version
     ) throws PlanNotModifiedException, PlanNotFoundException {
         Plan plan = planApi.getPlan(planId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
@@ -67,9 +62,7 @@ public class PlanRestController {
     }
 
     @DeleteMapping("/{planId}")
-    public ResponseEntity<Void> deletePlan(@PathVariable String planId,
-                                           @RequestHeader(value = X_USER_ID, required = true) String userId,
-                                           @RequestHeader(value = X_USER_ROLES, required = true) String[] roles
+    public ResponseEntity<Void> deletePlan(@PathVariable String planId
     ) throws PlanNotFoundException {
 
         planApi.deletePlan(planId);
@@ -80,8 +73,6 @@ public class PlanRestController {
     @PutMapping("/{planId}")
     public ResponseEntity<Plan> updatePlan(@PathVariable String planId,
                                            @RequestBody PlanUpdateRequest body,
-                                           @RequestHeader(value = X_USER_ID, required = true) String userId,
-                                           @RequestHeader(value = X_USER_ROLES, required = true) String[] roles,
                                            @RequestHeader(value = "If-Match",required = false) String version
     ) throws PlanNotFoundException {
         final Plan plan = planApi.updatePlan(planId, body);

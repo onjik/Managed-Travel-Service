@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/plans/{planId}/route")
 @RequiredArgsConstructor
-public class PlanRouteController {
+public class PlanRouteRestController {
     private final PlanRouteApi planRouteApi;
 
     @GetMapping("/days/{dayId}")
