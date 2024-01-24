@@ -4,17 +4,12 @@
 인증, 인가, 회원 정보에 대한 포괄적인 관리를 포함하는 도메인 입니다.
 
 # 📍 role (역할)
-- `ADMIN` : 관리자 권한을 상징합니다
-- `USER` : 일반적인 사용자를 상징합니다.
-- `ANNONYMOUS` : 로그인 되지 않은 사용자를 의미합니다.(일반적인 경우 외부로 보일 일이 없음)
+- `ROLE_ADMIN` : 관리자 권한을 상징합니다
+- `ROLE_SERVER` : 서버 권한을 상징합니다.
+- `ROLE_STAFF` : 직원 권한을 상징합니다.
+- `ROLE_USER` : 일반적인 사용자를 상징합니다.
+- `ROLE_ANNONYMOUS` : 로그인 되지 않은 사용자를 의미합니다.(일반적인 경우 외부로 보일 일이 없음)
 
-# 📍 서브 도메인
-
-## 계정 도메인 : `/account/*`
-현재 로그인한 자신의 정보를 정의합니다.
-
-## 유저 도메인 : `/users/*`
-자신이 아닌 다른 유저의 정보를 정의합니다.
 
 # 📍 공통 응답 사항
 이 응답 사항은 모든 응답에서 발생할 수 있으며, 따로 명시 하지 않습니다. 혹시나 각 API 별로, 동일 상태 코드에 대한 추가적인 응답이 있을 수 있는 경우에만 명시합니다.
@@ -67,9 +62,9 @@ API 호출에서 필드의 제한사항을 준수하지 않았을 경우 발생�
 ```
 
 # 📍 계정 도메인 `/account`
-## 로그인 된 자신 계정의 상세 정보 조회
+## 사용자 조회
 ### Request
-`GET /account`
+`GET /accounts/{accountId}`
 ### Response
 #### 200 : 성공적 조회
 ```json
@@ -90,9 +85,9 @@ API 호출에서 필드의 제한사항을 준수하지 않았을 경우 발생�
 ```
 gender, birthDate, pictureUri, locale, emailVerified 는 선택적 필드입니다.
 
-## 자신의 간단 프로파일 조회
+## 간단 프로파일 조회
 ### Request
-`GET /account/profile`
+`GET /accounts/{accountId}/summary`
 ### Response
 #### 200 : 성공적 조회
 ```json
@@ -106,7 +101,7 @@ gender, birthDate, pictureUri, locale, emailVerified 는 선택적 필드입니�
 
 ## 계정 정보 수정 요청
 ### Request
-`PATCH /account/profile`
+`PATCH /accounts/{accountId}`
 ```json
 {
   "name" : "string(2~20)",
@@ -123,7 +118,7 @@ gender, birthDate, pictureUri, locale, emailVerified 는 선택적 필드입니�
 
 ## 자신의 프로필 이미지 등록 엔드포인트 요청
 ### Request
-`GET /account/profile/image/signed-put-url`
+`GET /accounts/{accountId}/profile/image/signed-put-url`
 #### Query Parameter
 - `filename` : 파일 이름 (필수, 확장자와 함께)
   - 지원되는 타입은 png, jpg, jpeg, gif 입니다. 
@@ -139,12 +134,12 @@ gender, birthDate, pictureUri, locale, emailVerified 는 선택적 필드입니�
 
 ## 계정 프로필 사진 삭제, 기본 프로필로 바꾸기
 ### Request
-`DELETE /account/profile/image`
+`DELETE /account/{accountId}/profile/imag`
 ### Response
 #### 204 : 성공적으로 삭제됨
 
 ## 계정 삭제, 회원 탈퇴 요청
-`DELETE /account`
+`DELETE /accounts/{accountId}`
 ### 204 : 삭제 요청이 잘 접수되었습니다.
 
 # 로그인 로그아웃

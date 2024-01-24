@@ -1,25 +1,30 @@
 package click.porito.account.security.component;
 
-import click.porito.account.account.AccountDTO;
-import click.porito.account.account.AccountRegisterDTO;
-import click.porito.account.account.AccountService;
-import click.porito.account.account.Gender;
-import click.porito.account.security.exception.OidcEmailNotVerifiedException;
+import click.porito.account.account.api.request.AccountRegisterRequest;
+import click.porito.account.account.domain.Account;
+import click.porito.account.account.domain.Gender;
+import click.porito.account.account.operation.AccountOperation;
 import click.porito.account.security.exception.InsufficientRegisterInfoException;
+import click.porito.account.security.exception.OidcEmailNotVerifiedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -31,7 +36,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest, OidcUser> {
 
-    private final AccountService accountService;
+    private final AccountOperation accountOperation;
     private final Validator validator;
     private OidcUserService oidcUserService = new OidcUserService();
 
@@ -46,20 +51,39 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
         if (!emailVerified){
             throw new OidcEmailNotVerifiedException(oidcUser.getEmail(), userRequest.getClientRegistration().getClientName());
         }
-        AccountDTO account = accountService.retrieveAccountByEmail(oidcUser.getEmail())
+        Account account = accountOperation.findByEmail(oidcUser.getEmail())
                 .orElse(null);
         if (account == null){
             //check required info
-            AccountRegisterDTO registerForm = createRegisterForm(oidcUser);
-            Set<ConstraintViolation<AccountRegisterDTO>> violations = validator.validate(registerForm);
+            AccountRegisterRequest registerForm = createRegisterForm(oidcUser);
+            List<GrantedAuthority> roles = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            Set<ConstraintViolation<AccountRegisterRequest>> violations = validator.validate(registerForm);
             if (!violations.isEmpty()){
                 //필수 정보가 부족한 경우
                 throw new InsufficientRegisterInfoException(registerForm,violations);
             }
             //register
-            account = accountService.registerAccount(registerForm);
+            account = accountOperation.create(roles, registerForm);
         }
-        return account.toOidcUser(userRequest.getIdToken());
+        return toOidcUser(userRequest.getIdToken(), account);
+    }
+
+    protected OidcUser toOidcUser(final OidcIdToken idToken, Account account){
+        Assert.notEmpty(idToken.getClaims(), "claims must not be empty");
+
+        //idToken 의 sub(Subject) 을 account 의 userId 로 변경 하여 다시 생성
+        HashMap<String, Object> map = new HashMap<>(idToken.getClaims());
+        map.put(IdTokenClaimNames.SUB, account.getUserId());
+        OidcIdToken token = new OidcIdToken(
+                idToken.getTokenValue(),
+                idToken.getIssuedAt(),
+                idToken.getExpiresAt(),
+                Collections.unmodifiableMap(map)
+        );
+        List<SimpleGrantedAuthority> authorities = account.getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+        return new DefaultOidcUser(authorities, token);
     }
 
     protected boolean isEmailVerified(OidcUser oidcUser){
@@ -69,7 +93,7 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
     }
 
 
-    protected AccountRegisterDTO createRegisterForm(OidcUser oidcUser){
+    protected AccountRegisterRequest createRegisterForm(OidcUser oidcUser){
         Gender gender = Stream.of(oidcUser.getGender())
                 .filter(Objects::nonNull)
                 .map(String::toUpperCase)
@@ -83,7 +107,7 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
                 .findFirst()
                 .orElse(null);
 
-        return AccountRegisterDTO.builder()
+        return AccountRegisterRequest.builder()
                 .email(oidcUser.getEmail())
                 .name(oidcUser.getFullName())
                 .gender(gender)

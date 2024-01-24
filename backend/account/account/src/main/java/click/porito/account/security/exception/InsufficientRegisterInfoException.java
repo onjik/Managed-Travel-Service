@@ -1,6 +1,6 @@
 package click.porito.account.security.exception;
 
-import click.porito.account.account.AccountRegisterDTO;
+import click.porito.account.account.api.request.AccountRegisterRequest;
 import click.porito.account.security.component.DefaultLoginFailureHandler;
 import jakarta.validation.ConstraintViolation;
 import lombok.Getter;
@@ -15,9 +15,9 @@ import java.util.Set;
  */
 @Getter
 public class InsufficientRegisterInfoException extends AuthenticationException {
-    private final AccountRegisterDTO registerForm;
-    private final Set<ConstraintViolation<AccountRegisterDTO>> violations;
-    public InsufficientRegisterInfoException(AccountRegisterDTO registerForm, Set<ConstraintViolation<AccountRegisterDTO>> violations) {
+    private final AccountRegisterRequest registerForm;
+    private final Set<ConstraintViolation<AccountRegisterRequest>> violations;
+    public InsufficientRegisterInfoException(AccountRegisterRequest registerForm, Set<ConstraintViolation<AccountRegisterRequest>> violations) {
         super("Try to sign in with insufficient user info");
         Assert.notNull(registerForm, "registerForm must not be null");
         Assert.notNull(violations, "violations must not be null");

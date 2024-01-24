@@ -1,15 +1,12 @@
 package click.porito.account.security.component;
 
-import click.porito.account.account.AccountRegisterDTO;
-import click.porito.account.security.constant.SecurityConstant;
+import click.porito.account.account.api.request.AccountRegisterRequest;
 import click.porito.account.security.event.AuthenticationFailEvent;
 import click.porito.account.security.event.SecurityTopics;
 import click.porito.account.security.exception.InsufficientRegisterInfoException;
 import click.porito.account.security.exception.OidcEmailNotVerifiedException;
-import click.porito.account.security.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -33,7 +30,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DefaultLoginFailureHandler implements AuthenticationFailureHandler {
     private final ObjectMapper objectMapper;
-    private final JwtService jwtService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
 
@@ -50,15 +46,7 @@ public class DefaultLoginFailureHandler implements AuthenticationFailureHandler 
             responseError(response, body, HttpServletResponse.SC_UNAUTHORIZED);
         } else if (exception instanceof InsufficientRegisterInfoException e){
             //영속화
-            AccountRegisterDTO registerForm = e.getRegisterForm();
-            String token = jwtService.encodeRegisterDTO(registerForm);
-            //cookie
-            Cookie cookie = new Cookie(SecurityConstant.INSUFFICIENT_FORM_TOKEN, token);
-            cookie.setPath(SecurityConstant.SUPPLEMENT_REGISTER_URI);
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(30 * 60); //30분
-            response.addCookie(cookie);
-
+            AccountRegisterRequest registerForm = e.getRegisterForm();
             //response body
             List<String> invalidFields = e.getViolations().stream()
                     .map(ConstraintViolation::getPropertyPath)
@@ -66,7 +54,8 @@ public class DefaultLoginFailureHandler implements AuthenticationFailureHandler 
                     .toList();
             Map<String,Object> body = Map.of(
                     "message", "insufficient user info",
-                    "invalidFields", invalidFields
+                    "invalidFields", invalidFields,
+                    "givenDetails", registerForm
             );
             responseError(response, body, HttpServletResponse.SC_PRECONDITION_FAILED);
         } else if (exception instanceof AuthenticationCredentialsNotFoundException e){

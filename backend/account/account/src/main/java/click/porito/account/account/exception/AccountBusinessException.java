@@ -1,12 +1,19 @@
 package click.porito.account.account.exception;
 
-/**
- * Account 도메인 내에서 발생되고 처리되는 예외의 최상위 클래스
- */
-public abstract class AccountBusinessException extends RuntimeException {
-    private final static String DOMAIN_NAME = "Account";
+import click.porito.account.global.constant.Domain;
+import click.porito.account.global.exception.BusinessException;
+import click.porito.account.global.exception.ErrorCode;
 
-    public final String getDomainName() {
-        return DOMAIN_NAME;
+/**
+ * AccountEntity 도메인 내에서 발생되고 처리되는 예외의 최상위 클래스
+ */
+public abstract class AccountBusinessException extends BusinessException {
+
+    public AccountBusinessException(ErrorCode errorCode) {
+        super(Domain.ACCOUNT, errorCode);
+    }
+
+    public AccountBusinessException(Throwable cause, ErrorCode errorCode) {
+        super(cause, Domain.ACCOUNT, errorCode);
     }
 }

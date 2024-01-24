@@ -11,7 +11,7 @@ spring:
         - id: account_service
           uri: lb://ACCOUNT-SERVICE
           predicates:
-            - Path=/account/**, /users/**, /login/**
+            - Path=/account/**, /accounts/** , /login/**
         - id: travel_core
           uri: lb://TRAVEL-CORE
           predicates:

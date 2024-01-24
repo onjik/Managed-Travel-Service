@@ -82,7 +82,7 @@ public class SecurityConfig {
         }
         return http
                 .authorizeHttpRequests(
-                        c -> c.anyRequest().authenticated()
+                        c -> c.anyRequest().permitAll()
                 )
                 .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

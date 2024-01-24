@@ -1,7 +1,7 @@
 package click.porito.account.security.component;
 
-import click.porito.account.account.AccountDTO;
-import click.porito.account.account.AccountService;
+import click.porito.account.account.domain.Account;
+import click.porito.account.account.operation.AccountOperation;
 import click.porito.account.security.event.AuthenticationSuccessEvent;
 import click.porito.account.security.event.SecurityTopics;
 import click.porito.account.security.exception.OidcUnexpectedServerError;
@@ -27,7 +27,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class DefaultLoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final AccountService accountService;
+    private final AccountOperation accountOperation;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String,Object> kafkaTemplate;
 
@@ -45,8 +45,7 @@ public class DefaultLoginSuccessHandler implements AuthenticationSuccessHandler 
 
     private void responseLoginSuccess(HttpServletResponse response, String userId) throws IOException {
         //response body
-        Long userIdLong = Long.parseLong(userId);
-        AccountDTO account = accountService.retrieveAccountById(userIdLong)
+        Account account = accountOperation.findByUserId(userId)
                 .orElseThrow(OidcUnexpectedServerError::new);
         LoginSuccessResponse responseBody = LoginSuccessResponse.from(account);
         response.setContentType("application/json");
@@ -64,17 +63,17 @@ public class DefaultLoginSuccessHandler implements AuthenticationSuccessHandler 
     @AllArgsConstructor
     @NoArgsConstructor
     public static class LoginSuccessResponse {
-        private Long userId;
+        private String userId;
         private String name;
         private String profileImageUri;
         private Collection<String> roles;
 
-        public static LoginSuccessResponse from(AccountDTO account) {
+        public static LoginSuccessResponse from(Account account) {
             return new LoginSuccessResponse(
                     account.getUserId(),
                     account.getName(),
                     account.getProfileImgUri(),
-                    account.getPrefixedRoleNames());
+                    account.getRoles());
         }
 
 

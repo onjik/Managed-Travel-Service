@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "jwt",
+      "type": "click.porito.account.security.config.JwtConfigProperties",
+      "sourceType": "click.porito.account.security.config.JwtConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "jwt.expiration-min",
+      "type": "java.lang.Long",
+      "sourceType": "click.porito.account.security.config.JwtConfigProperties"
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "click.porito.account.security.config.JwtConfigProperties"
+    }
+  ],
+  "hints": []
+}
