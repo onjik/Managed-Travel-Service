@@ -71,6 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements App
             String userId = authResult.getName();
             this.eventPublisher.publishEvent(new JwtAuthenticationSuccessEvent(this,userId));
         }
+        filterChain.doFilter(request, response);
     }
 
     protected void onUnsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException, ServletException {
