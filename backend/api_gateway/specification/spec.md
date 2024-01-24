@@ -1,22 +1,12 @@
 # API Gateway Specification
 
 ## 인가 로직
-API Gateway 단에서 토큰 검증을 실시하고, 성공한 경우 포워딩 합니다.
+API Gateway는 이제 인증 인가 로직을 담당하지 않습니다. 
+인증 인가 로직은 각 서비스에서 처리합니다.
 
-포워딩 할때는 토큰을 제거하고, 사용자 정보를 헤더에 추가합니다.
+## Correlation ID
+API Gateway 에서는 두개의 필터가 동작합니다.
+- `click.porito.gateway.filter.CorrelationIdGrantFilter` : Correlation ID가 없는 경우 생성합니다.
+- `click.porito.gateway.filter.ResponseFilter` : 응답시 Correlation ID를 헤더에 추가합니다.
 
-```java
-public interface CustomHeaders {
-    public final static String X_USER_ID = "X-Authorization-Id";
-    public final static String X_USER_ROLES = "X-Authorization-Roles";
-
-}
-```
-
-```java
-public record JwtPayLoad(
-        String userId,
-        Collection<String> roles
-) {
-}
-```
+Correlation ID는 `X-Correlation-Id` 헤더에 저장됩니다.

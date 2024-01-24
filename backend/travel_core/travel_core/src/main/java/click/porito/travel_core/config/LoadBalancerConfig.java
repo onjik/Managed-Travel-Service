@@ -1,5 +1,6 @@
 package click.porito.travel_core.config;
 
+import click.porito.travel_core.global.trace.TraceContextInterceptor;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,9 @@ public class LoadBalancerConfig {
     @LoadBalanced
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors()
+                .add(new TraceContextInterceptor());
+        return restTemplate;
     }
 }

@@ -1,5 +1,6 @@
 package click.porito.account;
 
+import click.porito.account.global.trace.TraceContextInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,7 +23,10 @@ public class AccountApplication {
 	@LoadBalanced
 	@Bean
 	public RestTemplate restTemplate() {
-		return new RestTemplate();
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors()
+				.add(new TraceContextInterceptor());
+		return restTemplate;
 	}
 
 }
