@@ -1,0 +1,7 @@
+# spring config disable
+spring:
+  cloud:
+    config:
+      enabled: false
+jwt:
+  secret: test-secret
