@@ -1,0 +1,61 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.8'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+ext {
+	set('springCloudVersion', "2022.0.4")
+}
+
+bootJar.enabled = false
+
+//모든 프로젝트에 적용
+allprojects {
+	group = 'click.porito'
+	version = '0.0.1-SNAPSHOT'
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+	compileJava.options.encoding = 'UTF-8'
+
+	repositories {
+		mavenCentral()
+	}
+}
+
+// subprojects 에 적용
+subprojects {
+	apply plugin: 'java'
+	// build.gradle 에서 api() 를 사용하려면 java-library 사용
+	apply plugin: 'java-library'
+	// 위에서 불러온 plugin 을 적용시켰으므로, 자식에서 명시 하지 않아도 해당 버전을 받게 된다.
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
+
+	// 공통 의존성
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter'
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
+
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
+
+}
+

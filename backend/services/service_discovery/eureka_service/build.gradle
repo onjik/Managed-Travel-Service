@@ -1,0 +1,13 @@
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server') {
+        exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-ribbon'
+        exclude group: 'com.netflix.ribbon', module: 'ribbon-eureka'
+    }
+    implementation ('org.springframework.cloud:spring-cloud-starter-loadbalancer'){
+        exclude(group: 'org.junit.vintage', module: 'junit-vintage-engine')
+    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

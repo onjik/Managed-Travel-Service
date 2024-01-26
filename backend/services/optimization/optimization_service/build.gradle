@@ -1,0 +1,26 @@
+def timefoldSolverVersion = "1.6.0"
+
+dependencies {
+    implementation project(':shared:security')
+    implementation project(':shared:common')
+    implementation project(':services:optimization:optimization_common')
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.auth0:java-jwt:4.4.0'
+
+    // msa infrastructure
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    // timefold solver
+    implementation platform("ai.timefold.solver:timefold-solver-bom:${timefoldSolverVersion}")
+    implementation "ai.timefold.solver:timefold-solver-spring-boot-starter"
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

@@ -1,0 +1,10 @@
+bootJar {enabled = false}
+jar {enabled = true}
+
+dependencies {
+    implementation project(':shared:common')
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

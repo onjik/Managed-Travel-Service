@@ -1,0 +1,15 @@
+bootJar {enabled = false}
+jar {enabled = true}
+
+dependencies {
+    // core
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // cloud
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    // test
+    testImplementation 'org.springframework.security:spring-security-test'
+}
