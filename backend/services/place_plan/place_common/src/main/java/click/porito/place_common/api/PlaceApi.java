@@ -1,12 +1,15 @@
 package click.porito.place_common.api;
 
-import click.porito.place_common.exception.PlaceRetrieveFailedException;
 import click.porito.place_common.api.request.NearBySearchQuery;
 import click.porito.place_common.domain.Place;
+import click.porito.place_common.exception.PlaceRetrieveFailedException;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
 
+@Validated
 public interface PlaceApi {
 
     /**
@@ -34,7 +37,7 @@ public interface PlaceApi {
      * @return 조회된 장소 목록
      * @throws PlaceRetrieveFailedException 외부 API 호출에 실패한 경우
      */
-    List<Place> getNearbyPlaces(NearBySearchQuery query) throws PlaceRetrieveFailedException;
+    List<Place> getNearbyPlaces(@Valid NearBySearchQuery query) throws PlaceRetrieveFailedException;
 
     Optional<String> getPhotoUrl(String placeId, String photoId, Integer maxWidth, Integer maxHeight);
 }

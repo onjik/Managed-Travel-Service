@@ -12,7 +12,6 @@ import click.porito.travel_core_service.plan.operation.application.PlanOperation
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,14 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 
-import static click.porito.common.exception.ErrorCode.PLAN_DB_OPERATION_FAILED;
+import static click.porito.common.exception.ErrorCodes.PLAN_DB_OPERATION_FAILED;
 
 @Service
-@Validated
 @Slf4j
 @RequiredArgsConstructor
 public class PlanApiImpl implements PlanApi {
@@ -59,10 +57,10 @@ public class PlanApiImpl implements PlanApi {
 
     @Override
     @PreAuthorize("@planAccessPolicy.canReadOwnedBy(authentication, #userId)")
-    public Page<Plan> getPlansOwnedBy(String userId, Pageable pageable) {
+    public List<Plan> getPlansOwnedBy(String userId, Pageable pageable) {
         Assert.notNull(userId, "userId must not be null");
         Assert.notNull(pageable, "pageable must not be null");
-        return planOperation.findAllByOwnerId(userId, pageable);
+        return planOperation.findAllByOwnerId(userId, pageable).getContent();
     }
 
 

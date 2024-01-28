@@ -1,14 +1,14 @@
 package click.porito.plan_common.exception;
 
 
-import click.porito.common.exception.ErrorCode;
+import click.porito.common.exception.ErrorCodes;
 
 public class PlanOperationFailedException extends PlanServerException {
     public PlanOperationFailedException() {
-        super(ErrorCode.PLAN_DB_OPERATION_FAILED);
+        super(ErrorCodes.PLAN_DB_OPERATION_FAILED);
     }
 
     public PlanOperationFailedException(Throwable cause) {
-        super(cause, ErrorCode.PLAN_DB_OPERATION_FAILED);
+        super(cause, ErrorCodes.PLAN_DB_OPERATION_FAILED);
     }
 }

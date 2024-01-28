@@ -1,7 +1,7 @@
 package click.porito.place_common.exception;
 
 import click.porito.common.exception.BusinessException;
-import click.porito.common.exception.ErrorCode;
+import click.porito.common.exception.common.ErrorCode;
 
 import static click.porito.common.exception.Domain.PLACE;
 

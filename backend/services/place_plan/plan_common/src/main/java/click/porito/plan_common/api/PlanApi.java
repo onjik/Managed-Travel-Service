@@ -7,11 +7,13 @@ import click.porito.plan_common.exception.InvalidUpdateInfoException;
 import click.porito.plan_common.exception.PlanOperationFailedException;
 import click.porito.plan_common.exception.PlanVersionOutOfDateException;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 
+@Validated
 public interface PlanApi {
     /**
      * planId로 PlanEntity 를 조회한다.
@@ -35,7 +37,7 @@ public interface PlanApi {
      * @param pageable 페이지 정보
      * @return 조회된 여행 계획 목록, 없으면 empty list
      */
-    Page<Plan> getPlansOwnedBy(String userId, Pageable pageable);
+    List<Plan> getPlansOwnedBy(String userId, Pageable pageable);
 
     /**
      * 유저의 여행 계획을 삭제한다.

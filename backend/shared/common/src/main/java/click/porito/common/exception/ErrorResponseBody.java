@@ -34,7 +34,7 @@ public class ErrorResponseBody {
         this.details = details;
     }
 
-    public static ErrorResponseBody of(@NonNull ErrorCode errorCode, @Nullable String message, @Nullable Map<String, Object> detailsToExpose) {
+    public static ErrorResponseBody of(@NonNull ErrorCodes errorCode, @Nullable String message, @Nullable Map<String, Object> detailsToExpose) {
         return ErrorResponseBody.builder()
                 .code(errorCode.getCode())
                 .status(errorCode.getStatus().value())

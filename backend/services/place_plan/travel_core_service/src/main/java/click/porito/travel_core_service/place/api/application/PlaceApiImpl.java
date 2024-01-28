@@ -13,14 +13,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
-@Validated
 @RequiredArgsConstructor
 public class PlaceApiImpl implements PlaceApi {
     private final PlaceOperation placeOperation;

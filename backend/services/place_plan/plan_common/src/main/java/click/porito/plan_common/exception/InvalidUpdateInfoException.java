@@ -5,7 +5,7 @@ import org.springframework.lang.Nullable;
 
 import java.util.List;
 
-import static click.porito.common.exception.ErrorCode.INVALID_INPUT_VALUE;
+import static click.porito.common.exception.ErrorCodes.INVALID_INPUT_VALUE;
 
 
 public class InvalidUpdateInfoException extends PlanBusinessException {

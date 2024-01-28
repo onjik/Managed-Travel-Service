@@ -1,7 +1,7 @@
 package click.porito.place_common.exception;
 
 
-import static click.porito.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
+import static click.porito.common.exception.ErrorCodes.RESOURCE_NOT_FOUND;
 
 public class PlaceNotFoundException extends PlaceBusinessException {
     public PlaceNotFoundException(String placeId) {

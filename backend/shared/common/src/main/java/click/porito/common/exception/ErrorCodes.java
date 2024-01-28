@@ -1,5 +1,6 @@
 package click.porito.common.exception;
 
+import click.porito.common.exception.common.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,11 +10,13 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum ErrorCodes implements ErrorCode {
     // Common
+    WILD_CARD(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_0000", "StatusOnlyErrorCode 에 사용될 더미 코드입니다."),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "COMMON_0001", "요청한 값이 올바르지 않습니다."),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON_0002", "해당 리소스를 찾을 수 없습니다."),
     RESOURCE_NOT_MODIFIED(HttpStatus.NOT_MODIFIED, "COMMON_0003", "해당 리소스가 수정되지 않았습니다.(Conditional Request 에 대한 응답)"),
+    UNEXPECTED_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_0004", "예상치 못한 서버 에러가 발생했습니다."),
 
     // Account
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "ACCOUNT_0001", "해당 계정을 찾을 수 없습니다."),

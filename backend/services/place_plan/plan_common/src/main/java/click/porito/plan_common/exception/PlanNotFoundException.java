@@ -2,7 +2,7 @@ package click.porito.plan_common.exception;
 
 import lombok.Getter;
 
-import static click.porito.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
+import static click.porito.common.exception.ErrorCodes.RESOURCE_NOT_FOUND;
 
 
 /**

@@ -44,7 +44,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
                     return FieldError.of(field, value, reason).stream();
                 })
                 .toList();
-        ErrorCode errorCode = ErrorCode.INVALID_INPUT_VALUE;
+        ErrorCodes errorCode = ErrorCodes.INVALID_INPUT_VALUE;
         ErrorResponseBody body = ErrorResponseBody.builder()
                 .code(errorCode.getCode())
                 .status(errorCode.getStatusValue())
@@ -61,26 +61,26 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponseBody> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
         log.debug("handleIllegalArgumentException", e);
         return ResponseEntity.badRequest()
-                .body(ErrorResponseBody.of(ErrorCode.INVALID_INPUT_VALUE, e.getMessage(), null));
+                .body(ErrorResponseBody.of(ErrorCodes.INVALID_INPUT_VALUE, e.getMessage(), null));
     }
 
     @ExceptionHandler(Mapper.MapperException.class)
     public ResponseEntity<ErrorResponseBody> handleMapperException(Mapper.MapperException e, HttpServletRequest request) {
         log.debug("handleMapperException", e);
         return ResponseEntity.badRequest()
-                .body(ErrorResponseBody.of(ErrorCode.INVALID_INPUT_VALUE, e.getMessage(), null));
+                .body(ErrorResponseBody.of(ErrorCodes.INVALID_INPUT_VALUE, e.getMessage(), null));
     }
 
     @ExceptionHandler(ServerException.class)
     public ResponseEntity<ErrorResponseBody> handleBusinessException(ServerException e) {
-        ErrorCode errorCode = e.getErrorCode();
+        ErrorCodes errorCode = e.getErrorCode();
         return ResponseEntity.status(errorCode.getStatusValue())
                 .body(createErrorBody(e));
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponseBody> handleBusinessException(BusinessException e) {
-        ErrorCode errorCode = e.getErrorCode();
+        ErrorCodes errorCode = e.getErrorCode();
         return ResponseEntity.status(errorCode.getStatusValue())
                 .body(createErrorBody(e));
     }
@@ -111,14 +111,14 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     protected ErrorResponseBody createErrorBody(ServerThrownException businessException) {
-        final ErrorCode errorCode = businessException.getErrorCode();//never null
+        final ErrorCodes errorCode = businessException.getErrorCode();//never null
         final String code = errorCode.getCode();
         final int status = errorCode.getStatusValue();
         final String debugDescription = errorCode.getDebugDescription();
         final List<FieldError> fieldErrors = businessException.getFieldErrors(); // nullable
         final Map<String, Object> detailsToExpose = businessException.getDetailsToExpose(); // nullable
 
-        // ErrorCode enum 으로 다국어 메시지 조회 - nullable
+        // ErrorCodes enum 으로 다국어 메시지 조회 - nullable
         final String message = messageSource.getMessage(errorCode.name(), null, null, Locale.getDefault());
 
         // ErrorResponseBody 객체 생성

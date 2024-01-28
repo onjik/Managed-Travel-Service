@@ -1,6 +1,6 @@
 package click.porito.account_common.exception;
 
-import click.porito.common.exception.ErrorCode;
+import click.porito.common.exception.ErrorCodes;
 import lombok.Getter;
 
 
@@ -8,10 +8,10 @@ import lombok.Getter;
 public class ImageTypeNotSupportedException extends AccountBusinessException {
 
     public ImageTypeNotSupportedException(Throwable cause) {
-        super(cause, ErrorCode.PROFILE_IMG_TYPE_NOT_SUPPORTED);
+        super(cause, ErrorCodes.PROFILE_IMG_TYPE_NOT_SUPPORTED);
     }
     public ImageTypeNotSupportedException() {
-        super(ErrorCode.PROFILE_IMG_TYPE_NOT_SUPPORTED);
+        super(ErrorCodes.PROFILE_IMG_TYPE_NOT_SUPPORTED);
     }
 
 }

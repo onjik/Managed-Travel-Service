@@ -1,7 +1,7 @@
 package click.porito.plan_common.exception;
 
 
-import static click.porito.common.exception.ErrorCode.PLAN_OUT_OF_DATE;
+import static click.porito.common.exception.ErrorCodes.PLAN_OUT_OF_DATE;
 
 /**
  * PlanEntity 의 버전이 일치하지 않을 때 발생하는 예외

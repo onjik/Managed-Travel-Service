@@ -1,5 +1,6 @@
 package click.porito.common.exception;
 
+import click.porito.common.exception.common.ErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.core.NestedRuntimeException;

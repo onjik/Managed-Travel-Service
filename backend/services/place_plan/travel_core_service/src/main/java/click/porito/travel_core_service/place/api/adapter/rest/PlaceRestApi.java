@@ -29,6 +29,11 @@ public class PlaceRestApi {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping
+    public ResponseEntity<List<Place>> getPlaces(@RequestParam String[] placeIds) {
+        return ResponseEntity.ok(placeApi.getPlaces(placeIds));
+    }
+
     @PostMapping("/searchNearBy")
     public List<Place> searchNearBy(@RequestBody NearBySearchQuery body) {
         return placeApi.getNearbyPlaces(body);
