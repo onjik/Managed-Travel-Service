@@ -1,40 +1,52 @@
 package click.porito.connector;
 
-import click.porito.common.exception.*;
+import click.porito.common.exception.Domain;
+import click.porito.common.exception.ErrorCodes;
+import click.porito.common.exception.ErrorResponseBody;
+import click.porito.common.exception.ServerThrownException;
 import click.porito.common.exception.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.client.RestClientResponseException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Slf4j
 @RequiredArgsConstructor
-public abstract class AbstractRestConnector {
-    private final RestTemplate restTemplate;
+public abstract class AbstractRestConnector implements RestExchangeable {
+    private final RestExchangeable restExchangeable;
+    private final String uriPrefix;
 
-    @NonNull
     protected abstract Domain getDomain();
 
-    protected <T> Optional<T> doExchange(Function<RestTemplate, ResponseEntity<T>> exchangeFunction) {
+    @Override
+    public <T> Optional<T> doExchange(String url, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType, Object... uriVariables){
         try {
-            return Optional.ofNullable(
-                    exchangeFunction.apply(restTemplate).getBody()
-            );
+            return restExchangeable.doExchange(uriPrefix + url, method, requestEntity, responseType, uriVariables);
         } catch (Throwable e) {
             throw exceptionWrapper(e);
         }
     }
 
-    protected void doRequest(Consumer<RestTemplate> exchangeConsumer){
+
+    @Override
+    public <T> Optional<T> doExchange(String url, HttpMethod method, HttpEntity<?> requestEntity, ParameterizedTypeReference<T> responseType, Object... uriVariables) {
         try {
-            exchangeConsumer.accept(restTemplate);
+            return restExchangeable.doExchange(uriPrefix + url, method, requestEntity, responseType, uriVariables);
+        } catch (Throwable e) {
+            throw exceptionWrapper(e);
+        }
+    }
+
+    @Override
+    public <T> void doRequest(String url, HttpMethod method, HttpEntity<?> requestEntity, Object... uriVariables) {
+        try {
+            restExchangeable.doRequest(uriPrefix + url, method, requestEntity, uriVariables);
         } catch (Throwable e) {
             throw exceptionWrapper(e);
         }

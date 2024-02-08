@@ -2,6 +2,7 @@ package click.porito.place_connector;
 
 import click.porito.common.exception.Domain;
 import click.porito.connector.AbstractRestConnector;
+import click.porito.connector.RestExchangeable;
 import click.porito.place_common.api.PlaceApi;
 import click.porito.place_common.api.request.NearBySearchQuery;
 import click.porito.place_common.domain.Place;
@@ -9,7 +10,6 @@ import click.porito.place_common.exception.PlaceRetrieveFailedException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
@@ -17,8 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class PlaceRestConnector extends AbstractRestConnector implements PlaceApi {
-    public PlaceRestConnector(RestTemplate restTemplate) {
-        super(restTemplate);
+
+    public PlaceRestConnector(RestExchangeable restExchangeable, String uriPrefix) {
+        super(restExchangeable, uriPrefix);
     }
 
     @Override
@@ -28,32 +29,27 @@ public class PlaceRestConnector extends AbstractRestConnector implements PlaceAp
 
     @Override
     public Optional<Place> getPlace(String placeId) throws PlaceRetrieveFailedException {
-        return doExchange(
-                restTemplate -> restTemplate.getForEntity("/v1/places/{placeId}", Place.class, placeId)
-        );
+        return doExchange("/v1/places/{placeId}", HttpMethod.GET, null, Place.class, placeId);
     }
 
     @Override
     public List<Place> getPlaces(String[] placeIds) throws PlaceRetrieveFailedException {
         return doExchange(
-                restTemplate -> restTemplate.exchange(
-                        "/v1/places?placeIds={placeIds}", HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<List<Place>>() {
-                        },
-                        String.join(",", placeIds)
-                )
+                "/v1/places?placeIds={placeIds}", HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Place>>() {
+                },
+                String.join(",", placeIds)
         ).orElse(Collections.emptyList());
     }
 
     @Override
     public List<Place> getNearbyPlaces(NearBySearchQuery query) throws PlaceRetrieveFailedException {
         return doExchange(
-                restTemplate -> restTemplate.exchange(
-                        "/v1/places/searchNearBy", HttpMethod.POST,
-                        new HttpEntity<>(query),
-                        new ParameterizedTypeReference<List<Place>>() {}
-                )
+                "/v1/places/searchNearBy", HttpMethod.POST,
+                new HttpEntity<>(query),
+                new ParameterizedTypeReference<List<Place>>() {
+                }
         ).orElse(Collections.emptyList());
     }
 
@@ -64,11 +60,11 @@ public class PlaceRestConnector extends AbstractRestConnector implements PlaceAp
                 .queryParam("maxWidthPx", maxWidth)
                 .queryParam("maxHeightPx", maxHeight);
         return doExchange(
-                restTemplate -> restTemplate.getForEntity(
-                        uriComponentsBuilder.toUriString(),
-                        String.class,
-                        placeId, photoId
-                )
+                uriComponentsBuilder.toUriString(),
+                HttpMethod.GET,
+                null,
+                String.class,
+                placeId, photoId
         );
 
     }
