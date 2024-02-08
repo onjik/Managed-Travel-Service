@@ -1,5 +1,6 @@
 package click.porito.common.exception;
 
+import click.porito.common.exception.common.ErrorCode;
 import click.porito.common.util.Mapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -73,15 +74,15 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ServerException.class)
     public ResponseEntity<ErrorResponseBody> handleBusinessException(ServerException e) {
-        ErrorCodes errorCode = e.getErrorCode();
-        return ResponseEntity.status(errorCode.getStatusValue())
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity.status(errorCode.getStatus())
                 .body(createErrorBody(e));
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponseBody> handleBusinessException(BusinessException e) {
-        ErrorCodes errorCode = e.getErrorCode();
-        return ResponseEntity.status(errorCode.getStatusValue())
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity.status(errorCode.getStatus())
                 .body(createErrorBody(e));
     }
 
@@ -111,15 +112,15 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     protected ErrorResponseBody createErrorBody(ServerThrownException businessException) {
-        final ErrorCodes errorCode = businessException.getErrorCode();//never null
+        final ErrorCode errorCode = businessException.getErrorCode();//never null
         final String code = errorCode.getCode();
-        final int status = errorCode.getStatusValue();
+        final int status = errorCode.getStatus() != null ? errorCode.getStatus().value() : 500;
         final String debugDescription = errorCode.getDebugDescription();
         final List<FieldError> fieldErrors = businessException.getFieldErrors(); // nullable
         final Map<String, Object> detailsToExpose = businessException.getDetailsToExpose(); // nullable
 
         // ErrorCodes enum 으로 다국어 메시지 조회 - nullable
-        final String message = messageSource.getMessage(errorCode.name(), null, null, Locale.getDefault());
+        final String message = messageSource.getMessage(errorCode.getClass().getName(), null, null, Locale.getDefault());
 
         // ErrorResponseBody 객체 생성
         return ErrorResponseBody.builder()
