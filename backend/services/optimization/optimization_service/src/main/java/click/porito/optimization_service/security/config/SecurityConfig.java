@@ -1,6 +1,5 @@
 package click.porito.optimization_service.security.config;
 
-import click.porito.security.autoconfigure.EnableJwtPermitAllSecurityChain;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
@@ -10,7 +9,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @EnableMethodSecurity
-@EnableJwtPermitAllSecurityChain
 @Configuration
 public class SecurityConfig {
     @Bean

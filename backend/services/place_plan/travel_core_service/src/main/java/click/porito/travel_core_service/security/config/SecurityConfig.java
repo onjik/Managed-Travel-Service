@@ -1,6 +1,5 @@
 package click.porito.travel_core_service.security.config;
 
-import click.porito.security.autoconfigure.EnableJwtPermitAllSecurityChain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +9,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 
 @Configuration
-@EnableJwtPermitAllSecurityChain
 @RequiredArgsConstructor
 public class SecurityConfig {
     @Bean

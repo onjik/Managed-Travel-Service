@@ -8,7 +8,6 @@ import click.porito.account_service.security.filter.JwtResponseReinforceFilter;
 import click.porito.security.CommonSecurityUtils;
 import click.porito.security.ForbiddenAccessDeniedHandler;
 import click.porito.security.UnauthorizedAuthenticationEntryPoint;
-import click.porito.security.autoconfigure.EnableJwtOperation;
 import click.porito.security.jwt_authentication.JwtOperation;
 import click.porito.security.jwt_authentication.filter.JwtAuthenticationFilter;
 import jakarta.servlet.ServletException;
@@ -22,7 +21,6 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
@@ -35,8 +33,6 @@ import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter
 import java.io.IOException;
 
 @Configuration
-@EnableJwtOperation
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 

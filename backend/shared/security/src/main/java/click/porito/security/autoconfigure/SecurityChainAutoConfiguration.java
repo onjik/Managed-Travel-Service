@@ -5,23 +5,25 @@ import click.porito.security.ForbiddenAccessDeniedHandler;
 import click.porito.security.UnauthorizedAuthenticationEntryPoint;
 import click.porito.security.jwt_authentication.JwtOperation;
 import click.porito.security.jwt_authentication.filter.JwtAuthenticationFilter;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@AutoConfiguration(after = {JwtOperationAutoConfiguration.class})
 @EnableMethodSecurity
 @EnableWebSecurity
-@EnableJwtOperation
-@ConditionalOnDefaultWebSecurity
-public class JwtPermitAllSecurityChainAutoConfiguration {
+public class SecurityChainAutoConfiguration {
     @Bean
+    @ConditionalOnDefaultWebSecurity
     public SecurityFilterChain config(
             HttpSecurity http,
             ApplicationEventPublisher applicationEventPublisher,
