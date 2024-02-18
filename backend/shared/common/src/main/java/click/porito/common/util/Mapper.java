@@ -4,6 +4,7 @@ import org.springframework.core.NestedRuntimeException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class Mapper<S,T> {
@@ -35,6 +36,7 @@ public abstract class Mapper<S,T> {
         }
         return source.stream()
                 .map(this::map)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

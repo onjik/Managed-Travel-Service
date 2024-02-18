@@ -38,6 +38,7 @@ public enum ErrorCodes implements ErrorCode {
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "SECURITY_0002", "JWT 토큰이 만료되었습니다."),
     JWT_INVALID(HttpStatus.UNAUTHORIZED, "SECURITY_0003", "JWT 토큰이 올바르지 않습니다."),
     JWT_NOT_EXIST(HttpStatus.UNAUTHORIZED, "SECURITY_0004", "JWT 토큰이 존재하지 않습니다."),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "SECURITY_0005", "해당 리소스에 접근할 권한이 없습니다."),
     ;
     private final HttpStatus status;
     private final String code;

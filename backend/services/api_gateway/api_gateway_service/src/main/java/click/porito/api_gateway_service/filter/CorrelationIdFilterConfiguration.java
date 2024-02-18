@@ -2,11 +2,13 @@ package click.porito.api_gateway_service.filter;
 
 import click.porito.common.trace.TraceConfigurationProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
 @Slf4j
+@EnableConfigurationProperties(TraceConfigurationProperties.class)
 @Configuration
 public class CorrelationIdFilterConfiguration {
 

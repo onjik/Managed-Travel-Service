@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @AutoConfiguration
+@EnableDiscoveryClient
 @EnableConfigurationProperties(TraceConfigurationProperties.class)
 @ConditionalOnClass(name = "org.springframework.cloud.client.loadbalancer.LoadBalanced")
 @ConditionalOnProperty(value = "spring.cloud.service-registry.auto-registration.enabled", matchIfMissing = true)

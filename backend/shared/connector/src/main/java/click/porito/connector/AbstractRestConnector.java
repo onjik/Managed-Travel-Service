@@ -53,7 +53,7 @@ public abstract class AbstractRestConnector implements RestExchangeable {
     }
 
     @NonNull
-    private ServerThrownException exceptionWrapper(Throwable e){
+    protected ServerThrownException exceptionWrapper(Throwable e){
         if (e instanceof RestClientResponseException) {
             log.debug("error occurred while parse errorResponse from http response", e);
             HttpStatusCode statusCode = ((RestClientResponseException) e).getStatusCode();

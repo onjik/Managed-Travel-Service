@@ -1,8 +1,8 @@
 bootJar {enabled = false}
 jar {enabled = true}
 dependencies {
-    implementation project(':shared:common')
+    api project(':shared:common')
     api 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    api 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

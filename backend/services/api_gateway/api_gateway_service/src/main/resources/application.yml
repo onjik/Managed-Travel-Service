@@ -6,3 +6,6 @@ spring:
 logging:
   level:
     root: debug
+porito:
+  trace:
+    enabled: false
