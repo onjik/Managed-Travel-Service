@@ -1,8 +1,8 @@
 package click.porito.account_service.security.component;
 
-import click.porito.account_common.domain.Account;
-import click.porito.account_common.event.AuthenticationSuccessEvent;
-import click.porito.account_common.event.SecurityTopics;
+import click.porito.managed_travel.domain.domain.Account;
+import click.porito.managed_travel.domain.event.AuthenticationSuccessEvent;
+import click.porito.managed_travel.domain.event.SecurityTopics;
 import click.porito.account_service.account.operation.AccountOperation;
 import click.porito.account_service.security.exception.OidcUnexpectedServerError;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +38,7 @@ public class DefaultLoginSuccessHandler implements AuthenticationSuccessHandler 
         responseLoginSuccess(response, userId);
 
         //kafka
-        var event = AuthenticationSuccessEvent.from(userId, request);
+        var event = createSuccessEvent(userId, request);
         kafkaTemplate.send(SecurityTopics.AUTHENTICATION_SUCCESS_0,event);
     }
 
@@ -53,6 +53,11 @@ public class DefaultLoginSuccessHandler implements AuthenticationSuccessHandler 
         String body = objectMapper.writeValueAsString(responseBody);
         response.getWriter().write(body);
     }
+
+    public AuthenticationSuccessEvent createSuccessEvent(String userId, HttpServletRequest request) {
+        return new AuthenticationSuccessEvent(userId, request.getRemoteAddr(), request.getRequestURI());
+    }
+
 
 
     /**

@@ -1,6 +1,6 @@
 package click.porito.account_service.security.filter;
 
-import click.porito.security.jwt_authentication.JwtOperation;
+import click.porito.managed_travel.common.porito_travel_spring_boot_starter_jwt.jwt_authentication.JwtOperation;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

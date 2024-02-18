@@ -1,6 +1,6 @@
 package click.porito.account_service.account.operation;
 
-import click.porito.account_common.exception.AccountServerException;
+import click.porito.managed_travel.domain.exception.AccountServerException;
 import click.porito.common.exception.ErrorCodes;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

@@ -1,7 +1,7 @@
 package click.porito.account_service.photo.api;
 
-import click.porito.account_common.api.ImageApi;
-import click.porito.account_common.exception.ImageTypeNotSupportedException;
+import click.porito.managed_travel.domain.api.ImageApi;
+import click.porito.managed_travel.domain.exception.ImageTypeNotSupportedException;
 import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

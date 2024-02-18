@@ -1,14 +1,14 @@
 package click.porito.travel_core_service.plan.api.adapter.rest;
 
-import click.porito.plan_common.api.PlanRouteApi;
-import click.porito.plan_common.api.reqeust.ReorderRouteRequest;
-import click.porito.plan_common.api.reqeust.WayPointAppendAfterRequest;
-import click.porito.plan_common.api.reqeust.WayPointDetailUpdateRequest;
-import click.porito.plan_common.api.reqeust.pointer.DayPointable;
-import click.porito.plan_common.api.reqeust.pointer.WayPointPointable;
-import click.porito.plan_common.api.response.RouteResponse;
-import click.porito.plan_common.domain.Day;
-import click.porito.plan_common.domain.WayPoint;
+import click.porito.managed_travel.plan.domain.api.PlanRouteApi;
+import click.porito.managed_travel.plan.domain.api.reqeust.ReorderRouteRequest;
+import click.porito.managed_travel.plan.domain.api.reqeust.WayPointAppendAfterRequest;
+import click.porito.managed_travel.plan.domain.api.reqeust.WayPointDetailUpdateRequest;
+import click.porito.managed_travel.plan.domain.api.reqeust.pointer.DayPointable;
+import click.porito.managed_travel.plan.domain.api.reqeust.pointer.WayPointPointable;
+import click.porito.managed_travel.plan.domain.api.response.RouteResponse;
+import click.porito.managed_travel.plan.Day;
+import click.porito.managed_travel.plan.WayPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package click.porito.travel_core_service.plan.operation.application;
 
-import click.porito.plan_common.domain.Plan;
+import click.porito.managed_travel.plan.Plan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

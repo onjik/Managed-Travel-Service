@@ -1,9 +1,9 @@
 package click.porito.travel_core_service.place.operation.adapter.mapper;
 
 import click.porito.common.util.Mapper;
-import click.porito.place_common.domain.AuthorAttribution;
-import click.porito.place_common.domain.PhotoReference;
-import click.porito.place_common.domain.Place;
+import click.porito.managed_travel.place.domain.AuthorAttribution;
+import click.porito.managed_travel.place.domain.PhotoReference;
+import click.porito.managed_travel.place.domain.Place;
 import click.porito.travel_core_service.place.operation.adapter.google_api.model.GooglePhotoReference;
 import click.porito.travel_core_service.place.operation.adapter.google_api.model.GooglePlace;
 import click.porito.travel_core_service.place.operation.adapter.persistence.entity.AuthorAttributionEntity;

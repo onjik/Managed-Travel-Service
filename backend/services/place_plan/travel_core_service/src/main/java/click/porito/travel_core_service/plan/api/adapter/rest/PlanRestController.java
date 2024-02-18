@@ -1,11 +1,11 @@
 package click.porito.travel_core_service.plan.api.adapter.rest;
 
-import click.porito.plan_common.api.PlanApi;
-import click.porito.plan_common.api.reqeust.PlanCreateRequest;
-import click.porito.plan_common.api.reqeust.PlanUpdateRequest;
-import click.porito.plan_common.domain.Plan;
-import click.porito.plan_common.exception.PlanNotFoundException;
-import click.porito.plan_common.exception.PlanNotModifiedException;
+import click.porito.managed_travel.plan.domain.api.PlanApi;
+import click.porito.managed_travel.plan.domain.api.reqeust.PlanCreateRequest;
+import click.porito.managed_travel.plan.domain.api.reqeust.PlanUpdateRequest;
+import click.porito.managed_travel.plan.Plan;
+import click.porito.managed_travel.plan.domain.exception.PlanNotFoundException;
+import click.porito.managed_travel.plan.domain.exception.PlanNotModifiedException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

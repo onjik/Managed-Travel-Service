@@ -1,0 +1,8 @@
+bootJar {enabled = false}
+jar {enabled = true}
+dependencies {
+    implementation project(':common:domain')
+    api project(':services:account:account_domain')
+    api project(':common:porito_travel_spring_boot_starter_servlet_connector')
+
+}

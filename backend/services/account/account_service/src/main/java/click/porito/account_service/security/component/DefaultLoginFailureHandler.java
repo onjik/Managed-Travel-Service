@@ -1,8 +1,9 @@
 package click.porito.account_service.security.component;
 
-import click.porito.account_common.api.request.AccountRegisterRequest;
-import click.porito.account_common.event.AuthenticationFailEvent;
-import click.porito.account_common.event.SecurityTopics;
+import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
+import click.porito.managed_travel.domain.event.AuthenticationFailEvent;
+import click.porito.managed_travel.domain.event.AuthenticationSuccessEvent;
+import click.porito.managed_travel.domain.event.SecurityTopics;
 import click.porito.account_service.security.exception.InsufficientRegisterInfoException;
 import click.porito.account_service.security.exception.OidcEmailNotVerifiedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,7 +69,7 @@ public class DefaultLoginFailureHandler implements AuthenticationFailureHandler 
             responseError(response, "{\"message\":\"unexpected error\"}", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        var event = AuthenticationFailEvent.from(request, exception);
+        var event = createFailEvent(request, exception);
         kafkaTemplate.send(SecurityTopics.AUTHENTICATION_FAILURE_0, event);
     }
 
@@ -85,6 +86,16 @@ public class DefaultLoginFailureHandler implements AuthenticationFailureHandler 
         }
         return;
     }
+
+    public AuthenticationFailEvent createFailEvent(HttpServletRequest request, AuthenticationException exception) {
+        return new AuthenticationFailEvent(
+                request.getRemoteAddr(),
+                request.getRequestURI(),
+                exception.getClass().getSimpleName(),
+                exception.getMessage()
+        );
+    }
+
 
 
 }

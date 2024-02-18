@@ -1,6 +1,6 @@
 package click.porito.account_service.security.exception;
 
-import click.porito.account_common.api.request.AccountRegisterRequest;
+import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
 import click.porito.account_service.security.component.DefaultLoginFailureHandler;
 import jakarta.validation.ConstraintViolation;
 import lombok.Getter;

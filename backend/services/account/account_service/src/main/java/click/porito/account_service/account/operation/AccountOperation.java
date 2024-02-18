@@ -1,7 +1,7 @@
 package click.porito.account_service.account.operation;
 
-import click.porito.account_common.api.request.AccountRegisterRequest;
-import click.porito.account_common.domain.Account;
+import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
+import click.porito.managed_travel.domain.domain.Account;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;

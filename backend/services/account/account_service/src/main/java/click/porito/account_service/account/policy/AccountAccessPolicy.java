@@ -1,7 +1,7 @@
 package click.porito.account_service.account.policy;
 
-import click.porito.account_common.api.response.AccountSummaryResponse;
-import click.porito.account_common.domain.Account;
+import click.porito.managed_travel.domain.api.response.AccountSummaryResponse;
+import click.porito.managed_travel.domain.domain.Account;
 import click.porito.account_service.account.operation.AccountOperation;
 import click.porito.account_service.security.domain.Action;
 import click.porito.account_service.security.domain.Authority;

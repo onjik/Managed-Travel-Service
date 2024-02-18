@@ -1,15 +1,15 @@
 package click.porito.account_service.account.api.application;
 
-import click.porito.account_common.api.AccountApi;
-import click.porito.account_common.api.request.AccountInfoPatchRequest;
-import click.porito.account_common.api.request.AccountRegisterRequest;
-import click.porito.account_common.api.response.AccountSummaryResponse;
-import click.porito.account_common.domain.Account;
-import click.porito.account_common.exception.AccountBusinessException;
-import click.porito.account_common.exception.AccountServerException;
-import click.porito.account_common.exception.UserNotFoundException;
+import click.porito.managed_travel.common.porito_travel_spring_boot_starter_jwt.jwt_authentication.JwtOperation;
+import click.porito.managed_travel.domain.api.AccountApi;
+import click.porito.managed_travel.domain.api.request.AccountInfoPatchRequest;
+import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
+import click.porito.managed_travel.domain.api.response.AccountSummaryResponse;
+import click.porito.managed_travel.domain.domain.Account;
+import click.porito.managed_travel.domain.exception.AccountBusinessException;
+import click.porito.managed_travel.domain.exception.AccountServerException;
+import click.porito.managed_travel.domain.exception.UserNotFoundException;
 import click.porito.account_service.account.operation.AccountOperation;
-import click.porito.security.jwt_authentication.JwtOperation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

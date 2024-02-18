@@ -1,9 +1,9 @@
 package click.porito.travel_core_service.place.api.adapter.rest;
 
 
-import click.porito.place_common.api.PlaceApi;
-import click.porito.place_common.api.request.NearBySearchQuery;
-import click.porito.place_common.domain.Place;
+import click.porito.managed_travel.place.domain.api.PlaceApi;
+import click.porito.managed_travel.place.domain.api.request.NearBySearchQuery;
+import click.porito.managed_travel.place.domain.Place;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpHeaders;

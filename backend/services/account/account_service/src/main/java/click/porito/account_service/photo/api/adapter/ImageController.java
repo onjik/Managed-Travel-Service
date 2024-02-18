@@ -1,6 +1,6 @@
 package click.porito.account_service.photo.api.adapter;
 
-import click.porito.account_common.api.ImageApi;
+import click.porito.managed_travel.domain.api.ImageApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

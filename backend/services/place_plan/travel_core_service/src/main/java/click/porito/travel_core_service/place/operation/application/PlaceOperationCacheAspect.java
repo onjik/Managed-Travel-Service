@@ -1,6 +1,6 @@
 package click.porito.travel_core_service.place.operation.application;
 
-import click.porito.place_common.domain.Place;
+import click.porito.managed_travel.place.domain.Place;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,7 +22,7 @@ public class PlaceOperationCacheAspect {
     private final PlaceCacheOperation placeCacheOperation;
 
     @SuppressWarnings("unchecked")
-    @Around("execution(java.util.Optional<click.porito.place_common.domain.Place> click.porito.travel_core_service.place.operation.application.PlaceOperation.getPlace(String)) && args(placeId)")
+    @Around("execution(java.util.Optional<click.porito.managed_travel.place.domain.Place> click.porito.travel_core_service.place.operation.application.PlaceOperation.getPlace(String)) && args(placeId)")
     public Object aroundGetPlace(ProceedingJoinPoint joinPoint, String placeId) throws Throwable {
         // check cache
         Optional<Place> placeView = placeCacheOperation.get(placeId);
@@ -46,7 +46,7 @@ public class PlaceOperationCacheAspect {
     }
 
     @SuppressWarnings("unchecked")
-    @Around("execution(java.util.List<click.porito.place_common.domain.Place> click.porito.travel_core_service.place.operation.application.PlaceOperation.getPlaces(String[])) && args(placeIds)")
+    @Around("execution(java.util.List<click.porito.managed_travel.place.domain.Place> click.porito.travel_core_service.place.operation.application.PlaceOperation.getPlaces(String[])) && args(placeIds)")
     public List<Place> getPlaces(ProceedingJoinPoint joinPoint, String[] placeIds) throws Throwable {
         List<Place> matchedCache = placeCacheOperation.getByIdIn(placeIds);
         if (matchedCache.size() == placeIds.length) {
@@ -89,7 +89,7 @@ public class PlaceOperationCacheAspect {
     }
 
     @SuppressWarnings("unchecked")
-    @Around("execution(java.util.List<click.porito.place_common.domain.Place> click.porito.travel_core_service.place.operation.application.PlaceOperation.getPlaceNearBy(double, double, int, java.lang.Integer, click.porito.place_common.domain.PlaceType[], java.lang.Boolean))")
+    @Around("execution(java.util.List<click.porito.managed_travel.place.domain.Place> click.porito.travel_core_service.place.operation.application.PlaceOperation.getPlaceNearBy(double, double, int, java.lang.Integer, click.porito.managed_travel.place.domain.PlaceType[], java.lang.Boolean))")
     public Object aroundGetNearbyPlaces(ProceedingJoinPoint joinPoint) throws Throwable {
         //TODO 파라미터 기반 결과 캐싱
 

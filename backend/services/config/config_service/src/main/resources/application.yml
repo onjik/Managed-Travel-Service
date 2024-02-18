@@ -13,5 +13,5 @@ spring:
           delete-untracked-branches: true # delete local branches that are not in the remote repository
           ignore-local-ssh-settings: true #ignore local ssh settings
           search-paths: "backend/{application}"
-  config:
+  config: # 여기서 git private key를 가져온다.
     import: file:${HOME}/github/Managed-Travel-Service/secret/application-private.yml

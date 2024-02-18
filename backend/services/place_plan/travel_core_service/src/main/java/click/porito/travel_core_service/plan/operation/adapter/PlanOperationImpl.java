@@ -1,8 +1,8 @@
 package click.porito.travel_core_service.plan.operation.adapter;
 
 import click.porito.common.util.Mapper;
-import click.porito.plan_common.domain.Plan;
-import click.porito.plan_common.exception.PlanNotFoundException;
+import click.porito.managed_travel.plan.Plan;
+import click.porito.managed_travel.plan.domain.exception.PlanNotFoundException;
 import click.porito.travel_core_service.plan.operation.adapter.persistent.entity.EntityRouteComponent;
 import click.porito.travel_core_service.plan.operation.adapter.persistent.entity.PlanEntity;
 import click.porito.travel_core_service.plan.operation.adapter.persistent.repository.PlanEntityRepository;

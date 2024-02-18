@@ -1,7 +1,7 @@
 package click.porito.travel_core_service.place.operation.application;
 
 
-import click.porito.place_common.domain.Place;
+import click.porito.managed_travel.place.domain.Place;
 
 import java.util.List;
 import java.util.Optional;

@@ -2,8 +2,8 @@ package click.porito.travel_core_service.security.policy;
 
 import click.porito.common.exception.Domain;
 import click.porito.common.exception.common.ResourceNotFoundException;
-import click.porito.place_common.domain.Place;
-import click.porito.plan_common.domain.Plan;
+import click.porito.managed_travel.place.domain.Place;
+import click.porito.managed_travel.plan.Plan;
 import click.porito.travel_core_service.security.domain.AccessContext;
 import click.porito.travel_core_service.security.domain.Action;
 import lombok.extern.slf4j.Slf4j;

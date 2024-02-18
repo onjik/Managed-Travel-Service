@@ -1,6 +1,6 @@
 package click.porito.travel_core_service.plan.operation.adapter;
 
-import click.porito.plan_common.domain.Plan;
+import click.porito.managed_travel.plan.Plan;
 import click.porito.travel_core_service.plan.operation.application.PlanOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

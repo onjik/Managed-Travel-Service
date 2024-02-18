@@ -1,7 +1,7 @@
 package click.porito.travel_core_service.place.operation.application;
 
-import click.porito.place_common.domain.Place;
-import click.porito.place_common.domain.PlaceType;
+import click.porito.managed_travel.place.domain.Place;
+import click.porito.managed_travel.place.domain.PlaceType;
 import org.springframework.dao.DataAccessException;
 import org.springframework.lang.Nullable;
 

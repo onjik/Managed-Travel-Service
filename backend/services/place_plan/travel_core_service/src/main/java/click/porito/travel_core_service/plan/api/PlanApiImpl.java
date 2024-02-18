@@ -1,13 +1,13 @@
 package click.porito.travel_core_service.plan.api;
 
-import click.porito.plan_common.api.PlanApi;
-import click.porito.plan_common.api.reqeust.PlanCreateRequest;
-import click.porito.plan_common.api.reqeust.PlanUpdateRequest;
-import click.porito.plan_common.domain.Plan;
-import click.porito.plan_common.exception.InvalidUpdateInfoException;
-import click.porito.plan_common.exception.PlanNotFoundException;
-import click.porito.plan_common.exception.PlanServerException;
-import click.porito.plan_common.exception.PlanVersionOutOfDateException;
+import click.porito.managed_travel.plan.domain.api.PlanApi;
+import click.porito.managed_travel.plan.domain.api.reqeust.PlanCreateRequest;
+import click.porito.managed_travel.plan.domain.api.reqeust.PlanUpdateRequest;
+import click.porito.managed_travel.plan.Plan;
+import click.porito.managed_travel.plan.domain.exception.InvalidUpdateInfoException;
+import click.porito.managed_travel.plan.domain.exception.PlanNotFoundException;
+import click.porito.managed_travel.plan.domain.exception.PlanServerException;
+import click.porito.managed_travel.plan.domain.exception.PlanVersionOutOfDateException;
 import click.porito.travel_core_service.plan.operation.application.PlanOperation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

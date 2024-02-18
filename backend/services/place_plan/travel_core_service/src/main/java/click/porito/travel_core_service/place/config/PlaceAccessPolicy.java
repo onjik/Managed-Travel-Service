@@ -1,7 +1,7 @@
 package click.porito.travel_core_service.place.config;
 
 import click.porito.common.exception.Domain;
-import click.porito.place_common.domain.Place;
+import click.porito.managed_travel.place.domain.Place;
 import click.porito.travel_core_service.security.domain.AccessContext;
 import click.porito.travel_core_service.security.domain.Action;
 import click.porito.travel_core_service.security.domain.Scope;

@@ -1,6 +1,6 @@
 package click.porito.travel_core_service.security.domain;
 
-import click.porito.travel_core_service.global.constant.Domain;
+import click.porito.common.exception.Domain;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

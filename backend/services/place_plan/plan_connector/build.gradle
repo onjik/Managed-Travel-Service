@@ -1,9 +1,0 @@
-bootJar {enabled = false}
-jar {enabled = true}
-
-dependencies {
-    api project(':services:place_plan:plan_common')
-    api project(':shared:connector')
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}

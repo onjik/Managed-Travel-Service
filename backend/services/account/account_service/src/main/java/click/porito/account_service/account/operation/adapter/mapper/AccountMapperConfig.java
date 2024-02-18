@@ -1,7 +1,7 @@
 package click.porito.account_service.account.operation.adapter.mapper;
 
-import click.porito.account_common.domain.Account;
-import click.porito.account_common.domain.Gender;
+import click.porito.managed_travel.domain.domain.Account;
+import click.porito.managed_travel.domain.domain.Gender;
 import click.porito.account_service.account.operation.adapter.persistence.entity.AccountEntity;
 import click.porito.account_service.account.operation.adapter.persistence.entity.GenderProperty;
 import click.porito.common.util.Mapper;

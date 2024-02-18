@@ -1,8 +1,8 @@
 dependencies {
-    implementation project(':services:place_plan:plan_common')
-    implementation project(':services:place_plan:place_common')
-    implementation project(":shared:security")
-    implementation project(":shared:common")
+    implementation project(':services:place_plan:plan_domain')
+    implementation project(':services:place_plan:place_domain')
+    implementation project(":common:porito_travel_spring_boot_starter_servlet_security")
+    implementation project(":common:domain")
 
     //core
     implementation 'org.springframework.boot:spring-boot-starter-validation'

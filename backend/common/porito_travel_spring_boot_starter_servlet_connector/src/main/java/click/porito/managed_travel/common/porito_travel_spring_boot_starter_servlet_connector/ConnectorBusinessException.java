@@ -1,0 +1,11 @@
+package click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_connector;
+
+import click.porito.common.exception.BusinessException;
+import click.porito.common.exception.Domain;
+import click.porito.common.exception.common.ErrorCode;
+
+public class ConnectorBusinessException extends BusinessException {
+    public ConnectorBusinessException(Throwable cause, Domain domain, ErrorCode errorCode) {
+        super(cause, domain, errorCode);
+    }
+}

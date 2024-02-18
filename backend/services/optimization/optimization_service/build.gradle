@@ -1,9 +1,9 @@
 def timefoldSolverVersion = "1.6.0"
 
 dependencies {
-    implementation project(':shared:security')
-    implementation project(':shared:common')
-    implementation project(':services:optimization:optimization_common')
+    implementation project(':common:porito_travel_spring_boot_starter_servlet_security')
+    implementation project(':common:domain')
+    implementation project(':services:optimization:optimization_domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'

@@ -1,0 +1,10 @@
+bootJar {enabled = false}
+jar {enabled = true}
+
+dependencies {
+    implementation project(':services:place_plan:place_domain')
+    implementation project(':common:porito_travel_spring_boot_starter_servlet_connector')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

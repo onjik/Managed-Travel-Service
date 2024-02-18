@@ -1,0 +1,11 @@
+bootJar {enabled = false}
+jar {enabled = true}
+
+dependencies {
+    implementation project(':common:domain')
+
+    implementation 'org.springframework.data:spring-data-commons'
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

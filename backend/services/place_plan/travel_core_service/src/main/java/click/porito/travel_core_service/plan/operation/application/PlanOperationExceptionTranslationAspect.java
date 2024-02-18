@@ -1,6 +1,6 @@
 package click.porito.travel_core_service.plan.operation.application;
 
-import click.porito.plan_common.exception.PlanOperationFailedException;
+import click.porito.managed_travel.plan.domain.exception.PlanOperationFailedException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

@@ -1,5 +1,8 @@
 package click.porito.travel_core_service.plan.domain;
 
+import click.porito.managed_travel.plan.Day;
+import click.porito.managed_travel.plan.RouteComponent;
+import click.porito.managed_travel.plan.WayPoint;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

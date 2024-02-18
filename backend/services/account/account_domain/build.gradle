@@ -1,0 +1,10 @@
+bootJar {enabled = false}
+jar {enabled = true}
+
+dependencies {
+    implementation project(':common:domain')
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+    api ('org.springframework.boot:spring-boot-starter-validation') {
+        exclude(group: 'org.apache.tomcat.embed', module: 'tomcat-embed-el')
+    }
+}

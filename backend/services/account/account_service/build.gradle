@@ -1,7 +1,7 @@
 dependencies {
-	implementation project(":services:account:account_common")
-	implementation project(":shared:security")
-	implementation project(":shared:common")
+	implementation project(":services:account:account_domain")
+	implementation project(":common:porito_travel_spring_boot_starter_servlet_security")
+	implementation project(":common:domain")
 
 	//CORE
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

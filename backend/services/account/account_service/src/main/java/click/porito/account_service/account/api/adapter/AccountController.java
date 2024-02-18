@@ -1,11 +1,11 @@
 package click.porito.account_service.account.api.adapter;
 
-import click.porito.account_common.api.AccountApi;
-import click.porito.account_common.api.request.AccountInfoPatchRequest;
-import click.porito.account_common.api.request.AccountRegisterRequest;
-import click.porito.account_common.api.response.AccountSummaryResponse;
-import click.porito.account_common.domain.Account;
-import click.porito.account_common.exception.UserNotFoundException;
+import click.porito.managed_travel.domain.api.AccountApi;
+import click.porito.managed_travel.domain.api.request.AccountInfoPatchRequest;
+import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
+import click.porito.managed_travel.domain.api.response.AccountSummaryResponse;
+import click.porito.managed_travel.domain.domain.Account;
+import click.porito.managed_travel.domain.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

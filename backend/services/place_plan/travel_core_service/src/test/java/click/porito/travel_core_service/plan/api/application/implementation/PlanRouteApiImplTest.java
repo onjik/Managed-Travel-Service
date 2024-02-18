@@ -1,14 +1,14 @@
 package click.porito.travel_core_service.plan.api.application.implementation;
 
-import click.porito.plan_common.api.reqeust.ReorderRouteRequest;
-import click.porito.plan_common.api.reqeust.pointer.StructureAwareDayPointer;
-import click.porito.plan_common.api.reqeust.pointer.StructureAwarePointer;
-import click.porito.plan_common.api.reqeust.pointer.StructureAwareWaypointPointer;
-import click.porito.plan_common.api.response.RouteResponse;
-import click.porito.plan_common.domain.Day;
-import click.porito.plan_common.domain.Plan;
-import click.porito.plan_common.domain.RouteComponent;
-import click.porito.plan_common.domain.WayPoint;
+import click.porito.managed_travel.plan.domain.api.reqeust.ReorderRouteRequest;
+import click.porito.managed_travel.plan.domain.api.reqeust.pointer.StructureAwareDayPointer;
+import click.porito.managed_travel.plan.domain.api.reqeust.pointer.StructureAwarePointer;
+import click.porito.managed_travel.plan.domain.api.reqeust.pointer.StructureAwareWaypointPointer;
+import click.porito.managed_travel.plan.domain.api.response.RouteResponse;
+import click.porito.managed_travel.plan.Day;
+import click.porito.managed_travel.plan.Plan;
+import click.porito.managed_travel.plan.RouteComponent;
+import click.porito.managed_travel.plan.WayPoint;
 import click.porito.travel_core_service.place.operation.application.PlaceOperation;
 import click.porito.travel_core_service.plan.api.PlanRouteApiImpl;
 import click.porito.travel_core_service.plan.operation.adapter.MockPlanOperation;

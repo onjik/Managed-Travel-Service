@@ -1,6 +1,6 @@
 package click.porito.travel_core_service.place.operation.adapter.google_api;
 
-import click.porito.place_common.exception.PlaceRetrieveFailedException;
+import click.porito.managed_travel.place.domain.exception.PlaceRetrieveFailedException;
 import click.porito.travel_core_service.place.operation.adapter.google_api.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

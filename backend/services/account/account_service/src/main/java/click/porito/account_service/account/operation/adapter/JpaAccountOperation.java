@@ -1,8 +1,8 @@
 package click.porito.account_service.account.operation.adapter;
 
-import click.porito.account_common.api.request.AccountRegisterRequest;
-import click.porito.account_common.domain.Account;
-import click.porito.account_common.exception.UserNotFoundException;
+import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
+import click.porito.managed_travel.domain.domain.Account;
+import click.porito.managed_travel.domain.exception.UserNotFoundException;
 import click.porito.account_service.account.operation.AccountOperation;
 import click.porito.account_service.account.operation.adapter.persistence.entity.AccountEntity;
 import click.porito.account_service.account.operation.adapter.persistence.entity.GenderProperty;

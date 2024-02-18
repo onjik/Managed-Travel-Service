@@ -1,8 +1,8 @@
 package click.porito.account_service.security.component;
 
-import click.porito.account_common.api.request.AccountRegisterRequest;
-import click.porito.account_common.domain.Account;
-import click.porito.account_common.domain.Gender;
+import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
+import click.porito.managed_travel.domain.domain.Account;
+import click.porito.managed_travel.domain.domain.Gender;
 import click.porito.account_service.account.operation.AccountOperation;
 import click.porito.account_service.security.exception.InsufficientRegisterInfoException;
 import click.porito.account_service.security.exception.OidcEmailNotVerifiedException;

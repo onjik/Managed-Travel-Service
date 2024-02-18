@@ -1,7 +1,7 @@
 package click.porito.travel_core_service.place.operation.adapter;
 
 import click.porito.common.util.Mapper;
-import click.porito.place_common.domain.Place;
+import click.porito.managed_travel.place.domain.Place;
 import click.porito.travel_core_service.place.operation.adapter.config.PlaceCacheConfiguration;
 import click.porito.travel_core_service.place.operation.adapter.persistence.entity.PlaceEntity;
 import click.porito.travel_core_service.place.operation.adapter.persistence.repository.PlaceRepository;

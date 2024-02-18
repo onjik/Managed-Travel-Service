@@ -1,10 +1,10 @@
 package click.porito.travel_core_service.plan.operation.application.mapper;
 
 import click.porito.common.util.Mapper;
-import click.porito.plan_common.domain.Day;
-import click.porito.plan_common.domain.Plan;
-import click.porito.plan_common.domain.RouteComponent;
-import click.porito.plan_common.domain.WayPoint;
+import click.porito.managed_travel.plan.Day;
+import click.porito.managed_travel.plan.Plan;
+import click.porito.managed_travel.plan.RouteComponent;
+import click.porito.managed_travel.plan.WayPoint;
 import click.porito.travel_core_service.plan.operation.adapter.persistent.entity.DayEntity;
 import click.porito.travel_core_service.plan.operation.adapter.persistent.entity.EntityRouteComponent;
 import click.porito.travel_core_service.plan.operation.adapter.persistent.entity.PlanEntity;
