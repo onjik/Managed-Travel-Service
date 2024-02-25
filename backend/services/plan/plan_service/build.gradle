@@ -1,0 +1,17 @@
+dependencies {
+    implementation project(':services:plan:plan_domain')
+    implementation project(':services:place:porito_travel_spring_boot_starter_place_servlet_connector')
+    implementation project(":common:porito_travel_spring_boot_starter_servlet_security")
+    implementation project(":common:domain")
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+}

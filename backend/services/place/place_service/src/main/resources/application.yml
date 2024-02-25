@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: place-service
+  config:
+    import: "configserver:${spring.cloud.config.uri}"
+  cloud:
+    config: # config server ??
+      uri: http://localhost:8888
+      label: main
+      profile: local

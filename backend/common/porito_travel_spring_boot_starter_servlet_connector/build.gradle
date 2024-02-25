@@ -1,7 +1,7 @@
 bootJar {enabled = false}
 jar {enabled = true}
 dependencies {
-    implementation project(':common:domain')
+    api project(':common:domain')
     implementation project(':common:porito_travel_spring_boot_starter_servlet_distribution')
     api 'org.springframework.boot:spring-boot-starter-web'
 }

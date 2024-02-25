@@ -1,0 +1,23 @@
+dependencies {
+    implementation project(':services:place:place_domain')
+    implementation project(":common:porito_travel_spring_boot_starter_servlet_security")
+    implementation project(":common:domain")
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    implementation 'com.graphql-java:graphql-java-extended-scalars:20.2' exclude(group: 'com.graphql-java', module: 'graphql-java') // spring-graphql 에 포함
+
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    testImplementation 'org.springframework.graphql:spring-graphql-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
