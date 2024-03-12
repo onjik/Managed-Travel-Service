@@ -10,7 +10,6 @@ import click.porito.managed_travel.common.porito_travel_spring_boot_starter_serv
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.filter.JwtAuthenticationProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @AutoConfiguration(after = {JwtOperationAutoConfiguration.class})
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @Import({JwtOperationAutoConfiguration.class})
 @EnableMethodSecurity
 @EnableWebSecurity

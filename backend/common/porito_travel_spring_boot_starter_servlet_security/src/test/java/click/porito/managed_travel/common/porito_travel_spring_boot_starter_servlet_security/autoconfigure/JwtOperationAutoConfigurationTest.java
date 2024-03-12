@@ -1,5 +1,7 @@
-package click.porito.security.autoconfigure;
+package click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.autoconfigure;
 
+import click.porito.managed_travel.common.porito_travel_spring_boot_starter_jwt.JwtOperationAutoConfiguration;
+import click.porito.managed_travel.common.porito_travel_spring_boot_starter_jwt.jwt_authentication.JwtOperation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
