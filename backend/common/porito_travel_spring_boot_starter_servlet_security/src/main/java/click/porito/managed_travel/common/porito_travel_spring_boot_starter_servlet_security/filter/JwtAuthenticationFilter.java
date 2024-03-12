@@ -1,13 +1,6 @@
 package click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.filter;
 
-import click.porito.common.security.UserContext;
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_jwt.exception.JwtNotExistException;
-import click.porito.managed_travel.common.porito_travel_spring_boot_starter_jwt.jwt_authentication.JwtOperation;
-import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.SecurityBusinessException;
-import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.SecurityServerException;
-import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.JwtAuthentication;
-import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.event.JwtAuthenticationFailedEvent;
-import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_security.event.JwtAuthenticationSuccessEvent;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.log.LogMessage;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +25,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter implements ApplicationEventPublisherAware {
-    private final JwtOperation jwtOperation;
+    private final AuthenticationManager authenticationManager;
     @Setter
     private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     private ApplicationEventPublisher eventPublisher;
@@ -44,20 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements App
             return;
         }
         String tokenValue = resolveToken(request).orElseThrow(JwtNotExistException::new);
+        JwtAuthenticationToken token = new JwtAuthenticationToken(tokenValue);
         try {
-            UserContext userContext = jwtOperation.parseToken(tokenValue);
-            JwtAuthentication jwtAuthentication = new JwtAuthentication(userContext);
-            onSuccessfulAuthentication(request, response, filterChain, jwtAuthentication);
+            Authentication authentication = this.authenticationManager.authenticate(token);
+            onSuccessfulAuthentication(request, response, filterChain, authentication);
         } catch (Exception e){
-            if (logger.isErrorEnabled()){
-                if (e instanceof SecurityBusinessException){
-                    logger.error("An Business Side error occurred while trying to authenticate the user.", e);
-                } else if (e instanceof SecurityServerException){
-                    logger.error("An Server Side error occurred while trying to authenticate the user.", e);
-                } else {
-                    logger.error("An error occurred while trying to authenticate the user.", e);
-                }
-            }
             this.onUnsuccessfulAuthentication(request, response, e);
         }
     };
@@ -69,10 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements App
         if (this.logger.isDebugEnabled()) {
             this.logger.debug(LogMessage.format("Set SecurityContextHolder to %s", authResult));
         }
-        if (this.eventPublisher != null) {
-            String userId = authResult.getName();
-            this.eventPublisher.publishEvent(new JwtAuthenticationSuccessEvent(this,userId));
-        }
         filterChain.doFilter(request, response);
     }
 
@@ -81,9 +62,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements App
         this.logger.trace("Failed to process authentication request", exception);
         this.logger.trace("Cleared SecurityContextHolder");
         this.logger.trace("Handling authentication failure");
-        if (this.eventPublisher != null) {
-            this.eventPublisher.publishEvent(new JwtAuthenticationFailedEvent(this, exception));
-        }
     }
 
 
