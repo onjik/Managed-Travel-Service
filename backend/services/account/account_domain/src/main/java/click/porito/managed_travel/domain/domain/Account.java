@@ -15,6 +15,7 @@ public class Account {
     private String email;
     private List<String> roles;
     private Instant createdAt;
+    private Instant updatedAt;
     private Gender gender;
     private LocalDate birthDate;
     private String profileImgUri;

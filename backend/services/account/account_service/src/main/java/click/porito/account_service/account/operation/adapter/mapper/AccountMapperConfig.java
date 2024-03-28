@@ -1,10 +1,9 @@
 package click.porito.account_service.account.operation.adapter.mapper;
 
+import click.porito.account_service.account.operation.adapter.persistence.entity.AccountEntity;
+import click.porito.common.util.Mapper;
 import click.porito.managed_travel.domain.domain.Account;
 import click.porito.managed_travel.domain.domain.Gender;
-import click.porito.account_service.account.operation.adapter.persistence.entity.AccountEntity;
-import click.porito.account_service.account.operation.adapter.persistence.entity.GenderProperty;
-import click.porito.common.util.Mapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +30,7 @@ public class AccountMapperConfig {
                     roles = new ArrayList<>();
                 }
                 Instant createdAt = source.getCreatedAt();
+                Instant updatedAt = source.getUpdatedAt();
                 Gender gender;
                 if (source.getGender() != null){
                     gender = Gender.valueOf(source.getGender().name());
@@ -46,6 +46,7 @@ public class AccountMapperConfig {
                         .email(email)
                         .roles(roles)
                         .createdAt(createdAt)
+                        .updatedAt(updatedAt)
                         .gender(gender)
                         .birthDate(birthDate)
                         .profileImgUri(profileImgUri)
@@ -54,30 +55,4 @@ public class AccountMapperConfig {
         };
     }
 
-    @Bean
-    public Mapper<Account,AccountEntity> toAccountEntityMapper(){
-        return new Mapper<Account, AccountEntity>() {
-            @Override
-            protected AccountEntity mapInternal(Account source) {
-                Long userId = source.getUserId() == null ? null : Long.parseLong(source.getUserId());
-                String name = source.getName();
-                String email = source.getEmail();
-                List<String> roles = source.getRoles();
-                Instant createdAt = source.getCreatedAt();
-                GenderProperty genderProperty;
-                if (source.getGender() != null){
-                    genderProperty = GenderProperty.valueOf(source.getGender().name());
-                } else {
-                    genderProperty = null;
-                }
-                LocalDate birthDate = source.getBirthDate();
-                String profileImgUri = source.getProfileImgUri();
-
-                AccountEntity accountEntity = new AccountEntity(name, email, roles, genderProperty, birthDate, profileImgUri);
-                accountEntity.setUserId(userId);
-                accountEntity.setCreatedAt(createdAt);
-                return accountEntity;
-            }
-        };
-    }
 }

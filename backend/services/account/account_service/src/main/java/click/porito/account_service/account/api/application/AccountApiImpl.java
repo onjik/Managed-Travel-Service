@@ -62,19 +62,7 @@ public class AccountApiImpl implements AccountApi {
     public void patchProfileInfo(String userId, @Valid AccountInfoPatchRequest body) throws AccountBusinessException, AccountServerException {
         Assert.notNull(userId, "userId must not be null");
         Assert.notNull(body, "body must not be null");
-        Account account = accountOperation.findByUserId(userId)
-                .orElseThrow(UserNotFoundException::new);
-        if (body.name() != null) {
-            account.setName(body.name());
-        }
-        if (body.gender() != null) {
-            account.setGender(body.gender());
-        }
-        if (body.birthDate() != null) {
-            account.setBirthDate(body.birthDate());
-        }
-
-        accountOperation.update(account);
+        accountOperation.update(userId, body);
     }
 
     @Override

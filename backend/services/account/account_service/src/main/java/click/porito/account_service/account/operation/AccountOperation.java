@@ -1,5 +1,6 @@
 package click.porito.account_service.account.operation;
 
+import click.porito.managed_travel.domain.api.request.AccountInfoPatchRequest;
 import click.porito.managed_travel.domain.api.request.AccountRegisterRequest;
 import click.porito.managed_travel.domain.domain.Account;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,7 @@ public interface AccountOperation {
 
     void deleteByUserId(String userId);
 
-    void update(Account account);
+    void update(String userId, AccountInfoPatchRequest request);
 
     Account create(List<GrantedAuthority> roles, AccountRegisterRequest request);
 
