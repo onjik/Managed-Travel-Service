@@ -24,7 +24,7 @@ public enum ErrorCodes implements ErrorCode {
     PROFILE_IMG_TYPE_NOT_SUPPORTED(400, "ACCOUNT_0004", "지원하지 않는 이미지 타입입니다."),
 
     // Place
-    PLACE_DB_OPERATION_FAILED(500, "PLACE_0001", "장소 데이터베이스 작업에 실패했습니다."),
+    PLACE_API_OPERATION_FAILED(500, "PLACE_0001", "장소 API 호출 중 서버측 에러 발생"),
 
     // Plan
     PLAN_OUT_OF_DATE(400, "PLAN_0001", "여행 일정의 버전 정보가 일치하지 않습니다."),

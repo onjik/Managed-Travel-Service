@@ -1,8 +1,10 @@
 package click.porito.managed_travel.place.domain.api.request;
 
-import click.porito.managed_travel.place.domain.PlaceType;
+import click.porito.managed_travel.place.domain.PlaceCategory;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Range;
+
+import java.util.List;
 
 public record NearBySearchQuery(
 
@@ -21,8 +23,10 @@ public record NearBySearchQuery(
         @Range(min = 1, max = 20, message = "maxResultCount must be between 1 and 20")
         Integer maxResultCount,
 
-        PlaceType[] placeTypes,
+        PlaceCategory[] placeCategories,
 
-        Boolean distanceSort
+        Boolean distanceSort,
+
+        List<String> excludePlaceIds
 ) {
 }

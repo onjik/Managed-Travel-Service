@@ -1,18 +1,29 @@
 package click.porito.managed_travel.place.domain;
 
 import lombok.Builder;
+import lombok.Data;
+import org.geojson.Point;
+import org.geojson.Polygon;
 
+import java.time.Instant;
 import java.util.List;
 
 @Builder
-public record Place(
-    String id,
-    String name,
-    List<String> tags,
-    String address,
-    Double latitude,
-    Double longitude,
-    String summary,
-    List<PhotoReference> photos
-){
+@Data
+public class Place{
+    private Long placeId;
+    private String name;
+    private List<String> keywords;
+    private String address;
+    private String postalCode;
+    private String phoneNumber;
+    private String website;
+    private String summary;
+    private Point location;
+    private Polygon boundary;
+    private List<PlaceCategory> categories;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private Boolean isGooglePlace;
+    private List<OperationTime> operationTimes;
 }
