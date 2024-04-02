@@ -29,6 +29,7 @@ CREATE TABLE place (
     created_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL ,
     updated_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL ,
     google_place_id TEXT default NULL,
+    is_public BOOLEAN default TRUE NOT NULL,
     version BIGINT default 0 NOT NULL,
     CONSTRAINT google_place_id_unique UNIQUE (google_place_id),
     CONSTRAINT location_boundary_check CHECK (boundary IS NULL OR ST_Contains(boundary, location))

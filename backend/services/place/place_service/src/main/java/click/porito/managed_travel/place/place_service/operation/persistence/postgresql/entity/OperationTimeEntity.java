@@ -1,12 +1,16 @@
 package click.porito.managed_travel.place.place_service.operation.persistence.postgresql.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Table(name = "operation_time")
 @Entity
+@Data
+@NoArgsConstructor
 public class OperationTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +28,7 @@ public class OperationTimeEntity {
     private PlaceEntity placeEntity;
 
     @OneToMany(mappedBy = "operationTimeEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<DayOperationTime> dayOperationTimeEntities;
+    private List<DayOperationTimeEntity> dayOperationTimeEntities;
 
     @Version
     @Column(name = "version")

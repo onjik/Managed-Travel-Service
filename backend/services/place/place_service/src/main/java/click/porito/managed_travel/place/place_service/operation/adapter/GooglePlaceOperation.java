@@ -2,7 +2,7 @@ package click.porito.managed_travel.place.place_service.operation.adapter;
 
 import click.porito.common.util.Mapper;
 import click.porito.managed_travel.place.domain.Place;
-import click.porito.managed_travel.place.domain.PlaceType;
+import click.porito.managed_travel.place.place_service.operation.adapter.google_api.PlaceType;
 import click.porito.managed_travel.place.place_service.operation.adapter.google_api.GooglePlaceApi;
 import click.porito.managed_travel.place.place_service.operation.adapter.google_api.GooglePlacePhotoApi;
 import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.Circle;

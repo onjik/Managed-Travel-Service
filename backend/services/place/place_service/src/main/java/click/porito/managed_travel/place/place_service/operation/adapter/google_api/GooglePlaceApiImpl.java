@@ -1,6 +1,6 @@
 package click.porito.managed_travel.place.place_service.operation.adapter.google_api;
 
-import click.porito.managed_travel.place.domain.exception.PlaceRetrieveFailedException;
+import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
 import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -50,7 +50,7 @@ public class GooglePlaceApiImpl implements GooglePlaceApi, GooglePlacePhotoApi {
     }
 
     @Override
-    public boolean exists(String placeId) throws PermissionDeniedDataAccessException, InvalidDataAccessResourceUsageException, PlaceRetrieveFailedException {
+    public boolean exists(String placeId) throws PermissionDeniedDataAccessException, InvalidDataAccessResourceUsageException, PlaceApiFailedException {
         Optional<GooglePlace> googlePlace = fetchWithMask(placeId, new FieldMask[]{FieldMask.id});
         return googlePlace.isPresent();
     }
@@ -143,10 +143,10 @@ public class GooglePlaceApiImpl implements GooglePlaceApi, GooglePlacePhotoApi {
             }
         } catch (Throwable e){
             //여기 까지 오면 에러
-            throw new PlaceRetrieveFailedException(e);
+            throw new PlaceApiFailedException(e);
         }
         //여기 까지 오면 에러
-        throw new PlaceRetrieveFailedException();
+        throw new PlaceApiFailedException();
     }
 
     protected void publishEvent(GooglePlace responses) {

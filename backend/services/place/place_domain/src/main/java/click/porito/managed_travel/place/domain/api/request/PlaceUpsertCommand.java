@@ -27,6 +27,7 @@ public class PlaceUpsertCommand implements UpsertCommand{
     @NotEmpty
     private List<PlaceCategory> categories;
     private Boolean isPublic = Boolean.TRUE;
+    private String googlePlaceId;
 
     @Override
     public boolean isUpdateCommand() {

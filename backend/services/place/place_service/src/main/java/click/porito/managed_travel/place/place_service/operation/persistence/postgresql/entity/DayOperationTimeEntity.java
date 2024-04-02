@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @Entity
 @NoArgsConstructor
 @Getter @Setter
-public class DayOperationTime {
+public class DayOperationTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

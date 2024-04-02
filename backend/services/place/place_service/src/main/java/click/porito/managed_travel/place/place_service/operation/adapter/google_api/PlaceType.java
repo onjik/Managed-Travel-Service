@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.domain;
+package click.porito.managed_travel.place.place_service.operation.adapter.google_api;
 
 public enum PlaceType {
     TOURIST_ATTRACTION(new String[]{"tourist_attraction"}),

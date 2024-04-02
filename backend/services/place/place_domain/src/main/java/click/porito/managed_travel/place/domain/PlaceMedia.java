@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Data
 public class PlaceMedia {
-    private String mediaId;
+    private Long mediaId;
     private Integer widthPx;
     private Integer heightPx;
     private Map<String,String> sourceRef;

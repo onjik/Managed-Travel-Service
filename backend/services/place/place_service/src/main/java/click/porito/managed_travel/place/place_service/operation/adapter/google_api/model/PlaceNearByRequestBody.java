@@ -1,6 +1,6 @@
 package click.porito.managed_travel.place.place_service.operation.adapter.google_api.model;
 
-import click.porito.managed_travel.place.domain.PlaceType;
+import click.porito.managed_travel.place.place_service.operation.adapter.google_api.PlaceType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import org.springframework.util.Assert;

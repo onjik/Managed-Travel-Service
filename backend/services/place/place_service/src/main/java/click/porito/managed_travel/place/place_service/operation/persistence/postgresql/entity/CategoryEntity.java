@@ -21,6 +21,6 @@ public class CategoryEntity {
 
     @Column(name = "category_name", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    private PlaceCategory categoryName;
+    private PlaceCategory category;
 
 }

@@ -1,7 +1,7 @@
 package click.porito.managed_travel.plan.plan_service.api;
 
 import click.porito.common.exception.FieldError;
-import click.porito.managed_travel.place.domain.api.PlaceApi;
+import click.porito.managed_travel.place.domain.api.command.PlaceApi;
 import click.porito.managed_travel.plan.Day;
 import click.porito.managed_travel.plan.Plan;
 import click.porito.managed_travel.plan.RouteComponent;

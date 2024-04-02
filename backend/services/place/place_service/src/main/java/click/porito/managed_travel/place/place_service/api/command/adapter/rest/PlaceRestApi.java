@@ -1,8 +1,8 @@
-package click.porito.managed_travel.place.place_service.api.adapter.rest;
+package click.porito.managed_travel.place.place_service.api.command.adapter.rest;
 
 
 import click.porito.managed_travel.place.domain.Place;
-import click.porito.managed_travel.place.domain.api.PlaceApi;
+import click.porito.managed_travel.place.domain.api.command.PlaceApi;
 import click.porito.managed_travel.place.domain.api.request.NearBySearchQuery;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;

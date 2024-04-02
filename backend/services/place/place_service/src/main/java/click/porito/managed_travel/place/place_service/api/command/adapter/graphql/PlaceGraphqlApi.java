@@ -1,9 +1,9 @@
-package click.porito.managed_travel.place.place_service.api.adapter.graphql;
+package click.porito.managed_travel.place.place_service.api.command.adapter.graphql;
 
 import click.porito.managed_travel.place.domain.Place;
-import click.porito.managed_travel.place.domain.api.PlaceApi;
+import click.porito.managed_travel.place.domain.api.command.PlaceApi;
 import click.porito.managed_travel.place.domain.api.request.NearBySearchQuery;
-import click.porito.managed_travel.place.domain.exception.PlaceRetrieveFailedException;
+import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
 import graphql.GraphQLError;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -45,8 +45,8 @@ public class PlaceGraphqlApi {
         }
         return placeApi.getPhotoUrl(placeId, photoId, maxWidthPx, maxHeightPx).orElse(null);
     }
-    @GraphQlExceptionHandler(PlaceRetrieveFailedException.class)
-    public GraphQLError handleExternalApiException(PlaceRetrieveFailedException e) {
+    @GraphQlExceptionHandler(PlaceApiFailedException.class)
+    public GraphQLError handleExternalApiException(PlaceApiFailedException e) {
         ErrorType errorType = ErrorType.BAD_REQUEST;
         return GraphQLError.newError()
                 .errorType(errorType)

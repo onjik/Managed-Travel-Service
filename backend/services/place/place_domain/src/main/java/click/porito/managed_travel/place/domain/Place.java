@@ -1,15 +1,15 @@
 package click.porito.managed_travel.place.domain;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.geojson.Point;
 import org.geojson.Polygon;
 
 import java.time.Instant;
 import java.util.List;
 
-@Builder
 @Data
+@NoArgsConstructor
 public class Place{
     private Long placeId;
     private String name;

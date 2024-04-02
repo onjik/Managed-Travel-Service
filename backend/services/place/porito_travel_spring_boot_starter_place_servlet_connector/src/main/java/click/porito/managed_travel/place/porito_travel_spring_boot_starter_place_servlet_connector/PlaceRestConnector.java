@@ -3,10 +3,10 @@ package click.porito.managed_travel.place.porito_travel_spring_boot_starter_plac
 import click.porito.common.exception.Domain;
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_connector.AbstractRestConnector;
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_connector.RestExchangeable;
-import click.porito.managed_travel.place.domain.api.PlaceApi;
+import click.porito.managed_travel.place.domain.api.command.PlaceApi;
 import click.porito.managed_travel.place.domain.api.request.NearBySearchQuery;
 import click.porito.managed_travel.place.domain.Place;
-import click.porito.managed_travel.place.domain.exception.PlaceRetrieveFailedException;
+import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -28,7 +28,7 @@ public class PlaceRestConnector extends AbstractRestConnector implements PlaceAp
     }
 
     @Override
-    public Optional<Place> getPlace(String placeId) throws PlaceRetrieveFailedException {
+    public Optional<Place> getPlace(String placeId) throws PlaceApiFailedException {
         return doExchange("/v1/places/{placeId}", HttpMethod.GET, null, Place.class, placeId);
     }
 
@@ -38,7 +38,7 @@ public class PlaceRestConnector extends AbstractRestConnector implements PlaceAp
     }
 
     @Override
-    public List<Place> getPlaces(String[] placeIds) throws PlaceRetrieveFailedException {
+    public List<Place> getPlaces(String[] placeIds) throws PlaceApiFailedException {
         return doExchange(
                 "/v1/places?placeIds={placeIds}", HttpMethod.GET,
                 null,
@@ -49,7 +49,7 @@ public class PlaceRestConnector extends AbstractRestConnector implements PlaceAp
     }
 
     @Override
-    public List<Place> getNearbyPlaces(NearBySearchQuery query) throws PlaceRetrieveFailedException {
+    public List<Place> getNearbyPlaces(NearBySearchQuery query) throws PlaceApiFailedException {
         return doExchange(
                 "/v1/places/searchNearBy", HttpMethod.POST,
                 new HttpEntity<>(query),

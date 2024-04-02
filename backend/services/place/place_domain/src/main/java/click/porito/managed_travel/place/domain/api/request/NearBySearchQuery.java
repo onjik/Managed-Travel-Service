@@ -27,6 +27,6 @@ public record NearBySearchQuery(
 
         Boolean distanceSort,
 
-        List<String> excludePlaceIds
+        List<Long> excludePlaceIds
 ) {
 }

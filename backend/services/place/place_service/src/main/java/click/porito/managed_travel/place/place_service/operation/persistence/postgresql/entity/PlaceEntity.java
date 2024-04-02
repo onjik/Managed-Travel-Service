@@ -56,6 +56,8 @@ public class PlaceEntity {
     private Instant updatedAt;
     @Column(name = "google_place_id")
     private String googlePlaceId;
+    @Column(name = "is_public")
+    private Boolean isPublic;
     @Version
     @Column(name = "version")
     private Long version;
