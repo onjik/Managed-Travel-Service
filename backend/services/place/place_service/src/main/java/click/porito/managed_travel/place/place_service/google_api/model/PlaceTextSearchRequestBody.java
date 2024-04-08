@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.place_service.operation.adapter.google_api.model;
+package click.porito.managed_travel.place.place_service.google_api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

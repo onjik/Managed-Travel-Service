@@ -1,7 +1,7 @@
-package click.porito.managed_travel.place.place_service.operation.adapter.google_api;
+package click.porito.managed_travel.place.place_service.google_api;
 
 import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.*;
+import click.porito.managed_travel.place.place_service.google_api.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;

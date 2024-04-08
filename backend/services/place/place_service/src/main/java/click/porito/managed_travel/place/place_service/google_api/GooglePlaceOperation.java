@@ -1,15 +1,11 @@
-package click.porito.managed_travel.place.place_service.operation.adapter;
+package click.porito.managed_travel.place.place_service.google_api;
 
 import click.porito.common.util.Mapper;
 import click.porito.managed_travel.place.domain.Place;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.PlaceType;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.GooglePlaceApi;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.GooglePlacePhotoApi;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.Circle;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.GooglePlace;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.PlaceNearByRequestBody;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.RankPreference;
-import click.porito.managed_travel.place.place_service.operation.application.PlaceOperation;
+import click.porito.managed_travel.place.place_service.google_api.model.Circle;
+import click.porito.managed_travel.place.place_service.google_api.model.GooglePlace;
+import click.porito.managed_travel.place.place_service.google_api.model.PlaceNearByRequestBody;
+import click.porito.managed_travel.place.place_service.google_api.model.RankPreference;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;

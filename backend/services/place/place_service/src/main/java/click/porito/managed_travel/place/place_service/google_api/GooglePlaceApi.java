@@ -1,10 +1,10 @@
-package click.porito.managed_travel.place.place_service.operation.adapter.google_api;
+package click.porito.managed_travel.place.place_service.google_api;
 
 
 import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.GooglePlace;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.PlaceNearByRequestBody;
-import click.porito.managed_travel.place.place_service.operation.adapter.google_api.model.PlaceTextSearchRequestBody;
+import click.porito.managed_travel.place.place_service.google_api.model.GooglePlace;
+import click.porito.managed_travel.place.place_service.google_api.model.PlaceNearByRequestBody;
+import click.porito.managed_travel.place.place_service.google_api.model.PlaceTextSearchRequestBody;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 

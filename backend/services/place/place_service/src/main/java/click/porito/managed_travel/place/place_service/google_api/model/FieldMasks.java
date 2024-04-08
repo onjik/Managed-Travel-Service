@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.place_service.operation.adapter.google_api.model;
+package click.porito.managed_travel.place.place_service.google_api.model;
 
 public final class FieldMasks {
     public static FieldMask[] DEFAULT_MASKS = {

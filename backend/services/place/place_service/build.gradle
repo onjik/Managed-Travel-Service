@@ -7,7 +7,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
-    implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -17,11 +16,5 @@ dependencies {
     implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
     implementation 'org.hibernate:hibernate-spatial:6.2.20.Final'
 
-    implementation 'org.springframework.boot:spring-boot-starter-graphql'
-    implementation 'com.graphql-java:graphql-java-extended-scalars:20.2' exclude(group: 'com.graphql-java', module: 'graphql-java') // spring-graphql 에 포함
-
-    implementation 'com.google.code.gson:gson:2.10.1'
-
-    testImplementation 'org.springframework.graphql:spring-graphql-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

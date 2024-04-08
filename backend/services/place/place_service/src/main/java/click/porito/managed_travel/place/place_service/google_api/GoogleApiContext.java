@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.place_service.operation.adapter.google_api;
+package click.porito.managed_travel.place.place_service.google_api;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
