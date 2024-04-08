@@ -13,4 +13,5 @@ public class PlaceArticle {
     private String placeId;
     private Instant createdAt;
     private Instant updatedAt;
+    private Boolean isTemp;
 }

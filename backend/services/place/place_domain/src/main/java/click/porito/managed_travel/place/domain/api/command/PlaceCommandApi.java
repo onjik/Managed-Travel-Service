@@ -4,12 +4,11 @@ import click.porito.common.exception.common.AccessDeniedException;
 import click.porito.common.exception.common.DataIntegrityViolationException;
 import click.porito.common.exception.common.InvalidInputValueException;
 import click.porito.common.exception.common.ResourceNotFoundException;
-import click.porito.managed_travel.place.domain.request.command.OfficialPlaceInsertRequest;
+import click.porito.managed_travel.place.domain.request.command.OfficialPlaceCreateRequest;
 import click.porito.managed_travel.place.domain.request.command.OfficialPlaceUpdateRequest;
-import click.porito.managed_travel.place.domain.request.command.UserPlaceInsertRequest;
+import click.porito.managed_travel.place.domain.request.command.UserPlaceCreateRequest;
 import click.porito.managed_travel.place.domain.request.command.UserPlaceUpdateRequest;
 import click.porito.managed_travel.place.domain.view.OfficialPlaceView;
-import click.porito.managed_travel.place.domain.view.PlaceView;
 import click.porito.managed_travel.place.domain.exception.PlaceServerException;
 import click.porito.managed_travel.place.domain.view.UserPlaceView;
 
@@ -24,7 +23,7 @@ public interface PlaceCommandApi {
      * @throws InvalidInputValueException 잘못된 인자가 주어진 경우
      * @throws AccessDeniedException 권한이 없는 경우
      */
-    UserPlaceView insertUserPlace(UserPlaceInsertRequest request);
+    UserPlaceView createUserPlace(UserPlaceCreateRequest request);
 
     /**
      * 사용자 장소를 수정합니다.
@@ -48,7 +47,7 @@ public interface PlaceCommandApi {
      * @throws ResourceNotFoundException 장소가 존재하지 않는 경우
      * @throws AccessDeniedException 권한이 없는 경우
      */
-    OfficialPlaceView insertOfficialPlace(OfficialPlaceInsertRequest request);
+    OfficialPlaceView createOfficialPlace(OfficialPlaceCreateRequest request);
 
     /**
      * 공식 장소를 수정합니다.

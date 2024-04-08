@@ -15,6 +15,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
     implementation 'org.hibernate:hibernate-spatial:6.2.20.Final'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     testImplementation 'org.springframework.security:spring-security-test'
 }

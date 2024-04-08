@@ -4,6 +4,7 @@ import click.porito.common.exception.Domain;
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_connector.AbstractRestConnector;
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_connector.RestExchangeable;
 import click.porito.managed_travel.place.domain.api.command.PlaceCommandApi;
+import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
 import click.porito.managed_travel.place.domain.request.query.NearBySearchQueryRequest;
 import click.porito.managed_travel.place.domain.view.PlaceView;
 import org.springframework.core.ParameterizedTypeReference;

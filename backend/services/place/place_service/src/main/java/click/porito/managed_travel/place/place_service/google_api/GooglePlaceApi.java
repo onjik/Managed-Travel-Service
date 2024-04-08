@@ -1,6 +1,7 @@
 package click.porito.managed_travel.place.place_service.google_api;
 
 
+import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
 import click.porito.managed_travel.place.place_service.google_api.model.GooglePlace;
 import click.porito.managed_travel.place.place_service.google_api.model.PlaceNearByRequestBody;
 import click.porito.managed_travel.place.place_service.google_api.model.PlaceTextSearchRequestBody;

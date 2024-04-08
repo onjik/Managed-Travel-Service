@@ -13,11 +13,11 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class OfficialPlaceInsertRequest extends AbstractPlaceCommandRequestBase{
+public class OfficialPlaceCreateRequest extends AbstractPlaceCommandRequestBase{
     private String googlePlaceId;
 
     @Builder
-    public OfficialPlaceInsertRequest(String name, List<String> keywords, String address, String postalCode, String phoneNumber, String website, String summary, Point location, Polygon boundary, Instant createdAt, Instant updatedAt, List<PlaceCategory> categories, List<OperationTime> operationTimes, String googlePlaceId) {
+    public OfficialPlaceCreateRequest(String name, List<String> keywords, String address, String postalCode, String phoneNumber, String website, String summary, Point location, Polygon boundary, Instant createdAt, Instant updatedAt, List<PlaceCategory> categories, List<OperationTime> operationTimes, String googlePlaceId) {
         super(name, keywords, address, postalCode, phoneNumber, website, summary, location, boundary, createdAt, updatedAt, categories, operationTimes);
         this.googlePlaceId = googlePlaceId;
     }
