@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.place_service.operation.persistence.postgresql.entity;
+package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -48,8 +48,7 @@ public class PlaceMediaEntity {
     private PlaceEntity placeEntity;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserPrincipal userPrincipal;
-
+    @JoinColumn(name = "account_id")
+    private AccountSnapshotEntity accountSnapshotEntity;
 
 }

@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.place_service.operation.persistence.postgresql.entity;
+package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ public class ContentTypeEntity {
     @Column(name = "content_type_id")
     private Integer contentTypeId;
 
-    @Column(name = "content_type_name", length = 200)
+    @Column(name = "content_type_name", length = 200, unique = true)
     private String name;
 
 }

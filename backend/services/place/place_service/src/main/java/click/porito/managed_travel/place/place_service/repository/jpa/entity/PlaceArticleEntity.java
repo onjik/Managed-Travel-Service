@@ -1,19 +1,18 @@
-package click.porito.managed_travel.place.place_service.operation.persistence.postgresql.entity;
+package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Table(name = "place_article")
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"placeArticleId", "title"})
 public class PlaceArticleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +26,8 @@ public class PlaceArticleEntity {
     private String content;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private UserPrincipal userPrincipal;
+    @JoinColumn(name = "account_id")
+    private AccountSnapshotEntity accountSnapshotEntity;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "place_id")
@@ -46,7 +45,19 @@ public class PlaceArticleEntity {
     @Column(name = "is_temp")
     private Boolean isTemp;
 
-    @Version
-    @Column(name = "version")
-    private Long version;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (this.getPlaceArticleId() == null) return false;
+        PlaceArticleEntity that = (PlaceArticleEntity) o;
+        if (that.getPlaceArticleId() == null) return false;
+        return Objects.equals(getPlaceArticleId(), that.getPlaceArticleId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPlaceArticleId());
+    }
 }

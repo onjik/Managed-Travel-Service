@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.place_service.operation.persistence.postgresql.entity;
+package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,8 +29,4 @@ public class OperationTimeEntity {
 
     @OneToMany(mappedBy = "operationTimeEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DayOperationTimeEntity> dayOperationTimeEntities;
-
-    @Version
-    @Column(name = "version")
-    private Long version;
 }

@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.place_service.operation.persistence.postgresql.entity;
+package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,20 +18,16 @@ public class DayOperationTimeEntity {
     @Column(name = "day_operation_time_id")
     private Long dayOperationTimeId;
 
-    @Column(name = "start_time")
+    @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
 
-    @Column(name = "end_time")
+    @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
-    @Column(name = "next_day_linked")
+    @Column(name = "next_day_linked", nullable = false)
     private Boolean nextDayLinked;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "operation_time_id")
     private OperationTimeEntity operationTimeEntity;
-
-    @Version
-    @Column(name = "version")
-    private Long version;
 }

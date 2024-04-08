@@ -1,8 +1,7 @@
-package click.porito.managed_travel.place.place_service.operation.persistence.postgresql.entity;
+package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
 import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,14 +11,16 @@ import org.locationtech.jts.geom.Polygon;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "place_type")
 @Table(name = "place")
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"placeId", "name"})
-public class PlaceEntity {
+public abstract class PlaceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,13 +55,6 @@ public class PlaceEntity {
     private Instant createdAt;
     @Column(name = "updated_at")
     private Instant updatedAt;
-    @Column(name = "google_place_id")
-    private String googlePlaceId;
-    @Column(name = "is_public")
-    private Boolean isPublic;
-    @Version
-    @Column(name = "version")
-    private Long version;
     @ManyToMany
     @JoinTable(
             name = "place_category",
@@ -84,4 +78,18 @@ public class PlaceEntity {
     )
     private List<OperationTimeEntity> operationTimes;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (this.getPlaceId() == null) return false;
+        PlaceEntity that = (PlaceEntity) o;
+        if (that.getPlaceId() == null) return false;
+        return Objects.equals(getPlaceId(), that.getPlaceId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPlaceId());
+    }
 }
