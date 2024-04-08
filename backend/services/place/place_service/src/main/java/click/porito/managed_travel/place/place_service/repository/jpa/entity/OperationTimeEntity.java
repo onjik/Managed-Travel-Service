@@ -23,7 +23,7 @@ public class OperationTimeEntity {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "place_id")
     private PlaceEntity placeEntity;
 

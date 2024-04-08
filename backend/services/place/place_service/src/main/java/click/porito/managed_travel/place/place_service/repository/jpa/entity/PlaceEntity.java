@@ -55,7 +55,7 @@ public abstract class PlaceEntity {
     private Instant createdAt;
     @Column(name = "updated_at")
     private Instant updatedAt;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "place_category",
             joinColumns = @JoinColumn(name = "place_id"),

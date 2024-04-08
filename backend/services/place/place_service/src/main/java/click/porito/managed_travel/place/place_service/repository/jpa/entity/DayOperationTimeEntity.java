@@ -27,7 +27,7 @@ public class DayOperationTimeEntity {
     @Column(name = "next_day_linked", nullable = false)
     private Boolean nextDayLinked;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "operation_time_id")
     private OperationTimeEntity operationTimeEntity;
 }

@@ -32,13 +32,13 @@ public class AccountSnapshotEntity {
     @Column(name = "is_temp", nullable = false)
     private Boolean isTemp;
 
-    @OneToMany(mappedBy = "accountSnapshotEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "accountSnapshotEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserPlaceEntity> userPlaceEntities;
 
-    @OneToMany(mappedBy = "accountSnapshotEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "accountSnapshotEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PlaceMediaEntity> placeMediaEntities;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "place_article_like",
             joinColumns = @JoinColumn(name = "account_id"),
@@ -46,15 +46,15 @@ public class AccountSnapshotEntity {
     )
     private Set<PlaceArticleEntity> likedPlaceArticleEntities;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "place_like",
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "place_id")
     )
-    private Set<PlaceEntity> likedPlaceEntities;
+    private Set<OfficialPlaceEntity> likedPlaceEntities;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "review_like",
             joinColumns = @JoinColumn(name = "account_id"),
@@ -62,7 +62,7 @@ public class AccountSnapshotEntity {
     )
     private Set<ReviewEntity> likedReviewEntities;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "place_media_like",
             joinColumns = @JoinColumn(name = "account_id"),
