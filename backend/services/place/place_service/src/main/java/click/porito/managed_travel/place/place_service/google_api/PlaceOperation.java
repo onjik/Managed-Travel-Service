@@ -1,7 +1,6 @@
 package click.porito.managed_travel.place.place_service.google_api;
 
-import click.porito.managed_travel.place.domain.Place;
-import click.porito.managed_travel.place.place_service.google_api.PlaceType;
+import click.porito.managed_travel.place.domain.view.PlaceView;
 import org.springframework.dao.DataAccessException;
 import org.springframework.lang.Nullable;
 
@@ -18,7 +17,7 @@ public interface PlaceOperation {
      * @return 조회된 장소, 없으면 empty, never null
      * @throws DataAccessException 데이터 접근에 실패한 경우
      */
-    Optional<Place> getPlace(String placeId) throws DataAccessException;
+    Optional<PlaceView> getPlace(String placeId) throws DataAccessException;
 
     /**
      * id로 장소들을 조회한다.
@@ -26,7 +25,7 @@ public interface PlaceOperation {
      * @return 조회된 장소들, 없으면 empty list, never null, 순서를 보장하지 않으며, 없는 장소는 포함하지 않는다.
      * @throws DataAccessException 데이터 접근에 실패한 경우
      */
-    List<Place> getPlaces(String[] placeIds) throws DataAccessException;
+    List<PlaceView> getPlaces(String[] placeIds) throws DataAccessException;
 
     /**
      * 주어진 위치에서 가까운 장소들을 조회한다.
@@ -41,7 +40,7 @@ public interface PlaceOperation {
      * <p>
      * <b>주의사항</b> 이 메서드는 위의 사항이 준수되었음을 가정하고 실행됩니다.(validation을 진행하지 않습니다.)
      */
-    List<Place> getPlaceNearBy(double lat, double lng, int radius, @Nullable Integer maxResultCount, @Nullable PlaceType[] placeTypes, @Nullable Boolean distanceSort) throws DataAccessException;
+    List<PlaceView> getPlaceNearBy(double lat, double lng, int radius, @Nullable Integer maxResultCount, @Nullable PlaceType[] placeTypes, @Nullable Boolean distanceSort) throws DataAccessException;
 
     //TODO textSearch
 

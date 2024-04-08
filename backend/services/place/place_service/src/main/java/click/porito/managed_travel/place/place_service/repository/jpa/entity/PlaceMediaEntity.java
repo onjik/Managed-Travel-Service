@@ -45,7 +45,7 @@ public class PlaceMediaEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
-    private PlaceEntity placeEntity;
+    private OfficialPlaceEntity placeEntity;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")

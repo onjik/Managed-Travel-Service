@@ -1,13 +1,13 @@
 package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
 import com.vladmihalcea.hibernate.type.array.DoubleArrayType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+
+import java.util.List;
 
 @Table(name = "official_place")
 @Entity
@@ -24,5 +24,10 @@ public class OfficialPlaceEntity extends PlaceEntity {
     @Type(DoubleArrayType.class)
     @Column(name = "embedding", columnDefinition = "double precision[]")
     private double[] embedding;
+
+    @OneToMany(mappedBy = "placeEntity", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true
+    )
+    private List<ReviewEntity> reviews;
 
 }

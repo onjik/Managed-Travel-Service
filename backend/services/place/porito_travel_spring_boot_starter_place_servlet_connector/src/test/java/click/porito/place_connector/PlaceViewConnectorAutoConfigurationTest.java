@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PlaceConnectorAutoConfigurationTest {
+class PlaceViewConnectorAutoConfigurationTest {
 
     ApplicationContextRunner applicationContextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(PlaceConnectorAutoConfiguration.class, ConnectorBaseAutoConfiguration.class));

@@ -37,7 +37,7 @@ public class ReviewEntity {
     private Instant updatedAt;
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "place_id")
-    private PlaceEntity placeEntity;
+    private OfficialPlaceEntity placeEntity;
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private AccountSnapshotEntity accountSnapshotEntity;

@@ -1,5 +1,7 @@
-package click.porito.managed_travel.place.domain;
+package click.porito.managed_travel.place.domain.view;
 
+import click.porito.managed_travel.place.domain.OperationTime;
+import click.porito.managed_travel.place.domain.PlaceCategory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.geojson.Point;
@@ -10,7 +12,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class Place{
+public abstract class PlaceView {
     private Long placeId;
     private String name;
     private List<String> keywords;
@@ -21,9 +23,8 @@ public class Place{
     private String summary;
     private Point location;
     private Polygon boundary;
-    private List<PlaceCategory> categories;
     private Instant createdAt;
     private Instant updatedAt;
-    private Boolean isGooglePlace;
+    private List<PlaceCategory> categories;
     private List<OperationTime> operationTimes;
 }

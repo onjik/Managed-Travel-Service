@@ -3,10 +3,9 @@ package click.porito.managed_travel.place.porito_travel_spring_boot_starter_plac
 import click.porito.common.exception.Domain;
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_connector.AbstractRestConnector;
 import click.porito.managed_travel.common.porito_travel_spring_boot_starter_servlet_connector.RestExchangeable;
-import click.porito.managed_travel.place.domain.api.command.PlaceApi;
-import click.porito.managed_travel.place.domain.api.request.NearBySearchQuery;
-import click.porito.managed_travel.place.domain.Place;
-import click.porito.managed_travel.place.domain.exception.PlaceApiFailedException;
+import click.porito.managed_travel.place.domain.api.command.PlaceCommandApi;
+import click.porito.managed_travel.place.domain.request.query.NearBySearchQueryRequest;
+import click.porito.managed_travel.place.domain.view.PlaceView;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -16,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class PlaceRestConnector extends AbstractRestConnector implements PlaceApi {
+public class PlaceRestConnector extends AbstractRestConnector implements PlaceCommandApi {
 
     public PlaceRestConnector(RestExchangeable restExchangeable, String uriPrefix) {
         super(restExchangeable, uriPrefix);
@@ -28,8 +27,8 @@ public class PlaceRestConnector extends AbstractRestConnector implements PlaceAp
     }
 
     @Override
-    public Optional<Place> getPlace(String placeId) throws PlaceApiFailedException {
-        return doExchange("/v1/places/{placeId}", HttpMethod.GET, null, Place.class, placeId);
+    public Optional<PlaceView> getPlace(String placeId) throws PlaceApiFailedException {
+        return doExchange("/v1/places/{placeId}", HttpMethod.GET, null, PlaceView.class, placeId);
     }
 
     @Override
@@ -38,22 +37,22 @@ public class PlaceRestConnector extends AbstractRestConnector implements PlaceAp
     }
 
     @Override
-    public List<Place> getPlaces(String[] placeIds) throws PlaceApiFailedException {
+    public List<PlaceView> getPlaces(String[] placeIds) throws PlaceApiFailedException {
         return doExchange(
                 "/v1/places?placeIds={placeIds}", HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Place>>() {
+                new ParameterizedTypeReference<List<PlaceView>>() {
                 },
                 String.join(",", placeIds)
         ).orElse(Collections.emptyList());
     }
 
     @Override
-    public List<Place> getNearbyPlaces(NearBySearchQuery query) throws PlaceApiFailedException {
+    public List<PlaceView> getNearbyPlaces(NearBySearchQueryRequest query) throws PlaceApiFailedException {
         return doExchange(
                 "/v1/places/searchNearBy", HttpMethod.POST,
                 new HttpEntity<>(query),
-                new ParameterizedTypeReference<List<Place>>() {
+                new ParameterizedTypeReference<List<PlaceView>>() {
                 }
         ).orElse(Collections.emptyList());
     }

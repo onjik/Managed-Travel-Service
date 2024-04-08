@@ -68,10 +68,7 @@ public abstract class PlaceEntity {
     )
     private List<PlaceArticleEntity> placeArticles;
 
-    @OneToMany(mappedBy = "placeEntity", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true
-    )
-    private List<ReviewEntity> reviews;
+
 
     @OneToMany(mappedBy = "placeEntity", fetch = FetchType.EAGER,
             cascade = CascadeType.ALL, orphanRemoval = true

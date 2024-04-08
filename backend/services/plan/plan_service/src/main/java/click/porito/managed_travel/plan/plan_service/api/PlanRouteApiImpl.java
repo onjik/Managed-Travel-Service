@@ -1,7 +1,7 @@
 package click.porito.managed_travel.plan.plan_service.api;
 
 import click.porito.common.exception.FieldError;
-import click.porito.managed_travel.place.domain.api.command.PlaceApi;
+import click.porito.managed_travel.place.domain.api.command.PlaceCommandApi;
 import click.porito.managed_travel.plan.Day;
 import click.porito.managed_travel.plan.Plan;
 import click.porito.managed_travel.plan.RouteComponent;
@@ -37,7 +37,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PlanRouteApiImpl implements PlanRouteApi {
     private final PlanOperation planOperation;
-    private final PlaceApi placeApi;
+    private final PlaceCommandApi placeCommandApi;
 
     @Override
     @PreAuthorize("@planAccessPolicy.canRead(authentication, #planId)")
@@ -149,7 +149,7 @@ public class PlanRouteApiImpl implements PlanRouteApi {
                 .orElseThrow(() -> new PlanNotFoundException(planId));
 
         //placeId 가 유효한지 확인
-        boolean exists = placeApi.exists(placeId);
+        boolean exists = placeCommandApi.exists(placeId);
         if (!exists) {
             List<FieldError> fieldErrors = FieldError.of("placeId", placeId, "invalid placeId");
             throw new InvalidUpdateInfoException(fieldErrors);

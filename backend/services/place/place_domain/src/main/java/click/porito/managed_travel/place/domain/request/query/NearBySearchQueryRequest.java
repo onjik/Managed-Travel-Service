@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.domain.api.request;
+package click.porito.managed_travel.place.domain.request.query;
 
 import click.porito.managed_travel.place.domain.PlaceCategory;
 import jakarta.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Range;
 
 import java.util.List;
 
-public record NearBySearchQuery(
+public record NearBySearchQueryRequest(
 
         @NotNull
         @Range(min = -90, max = 90, message = "latitude must be between -90 and 90")

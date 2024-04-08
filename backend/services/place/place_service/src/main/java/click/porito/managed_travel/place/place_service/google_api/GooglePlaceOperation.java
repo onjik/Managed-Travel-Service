@@ -1,7 +1,7 @@
 package click.porito.managed_travel.place.place_service.google_api;
 
 import click.porito.common.util.Mapper;
-import click.porito.managed_travel.place.domain.Place;
+import click.porito.managed_travel.place.domain.view.PlaceView;
 import click.porito.managed_travel.place.place_service.google_api.model.Circle;
 import click.porito.managed_travel.place.place_service.google_api.model.GooglePlace;
 import click.porito.managed_travel.place.place_service.google_api.model.PlaceNearByRequestBody;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class GooglePlaceOperation implements PlaceOperation {
     private final GooglePlaceApi googlePlaceApi;
     private final GooglePlacePhotoApi googlePlacePhotoApi;
-    private final Mapper<GooglePlace, Place> googlePlaceMapper;
+    private final Mapper<GooglePlace, PlaceView> googlePlaceMapper;
 
     @Override
     public boolean exists(String placeId) throws DataAccessException {
@@ -29,13 +29,13 @@ public class GooglePlaceOperation implements PlaceOperation {
     }
 
     @Override
-    public Optional<Place> getPlace(String placeId) throws DataAccessException {
+    public Optional<PlaceView> getPlace(String placeId) throws DataAccessException {
         return googlePlaceApi.placeDetails(placeId)
                 .map(googlePlaceMapper::map);
     }
 
     @Override
-    public List<Place> getPlaces(String[] placeIds) throws DataAccessException {
+    public List<PlaceView> getPlaces(String[] placeIds) throws DataAccessException {
         //fetch all places
         ArrayList<GooglePlace> googlePlaces = Arrays.stream(placeIds)
                 .map(googlePlaceApi::placeDetails)
@@ -47,7 +47,7 @@ public class GooglePlaceOperation implements PlaceOperation {
     }
 
     @Override
-    public List<Place> getPlaceNearBy(double lat, double lng, int radius, Integer maxResultCount, PlaceType[] placeTypes, Boolean distanceSort) throws DataAccessException {
+    public List<PlaceView> getPlaceNearBy(double lat, double lng, int radius, Integer maxResultCount, PlaceType[] placeTypes, Boolean distanceSort) throws DataAccessException {
         Circle circle = Circle.of(lat, lng, radius);
         var builder = PlaceNearByRequestBody.builder();
         builder.locationRestriction(circle);
