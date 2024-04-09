@@ -42,7 +42,7 @@ public class ReviewEntity {
     @JoinColumn(name = "account_id")
     private AccountSnapshotEntity accountSnapshotEntity;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "review_place_media",
             joinColumns = @JoinColumn(name = "review_id"),

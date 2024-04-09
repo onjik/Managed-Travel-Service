@@ -1,12 +1,13 @@
-package click.porito.managed_travel.place.domain;
+package click.porito.managed_travel.place.domain.view;
 
+import click.porito.managed_travel.place.domain.PlaceMedia;
 import lombok.Data;
 
 import java.time.Instant;
 import java.util.List;
 
 @Data
-public class Review {
+public class ReviewView {
     private Long reviewId;
     private Integer rating;
     private String content;
