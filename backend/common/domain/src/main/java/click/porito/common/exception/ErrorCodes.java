@@ -17,6 +17,7 @@ public enum ErrorCodes implements ErrorCode {
     RESOURCE_NOT_MODIFIED(304, "COMMON_0003", "해당 리소스가 수정되지 않았습니다.(Conditional Request 에 대한 응답)"),
     UNEXPECTED_SERVER_ERROR(500, "COMMON_0004", "예상치 못한 서버 에러가 발생했습니다."),
     DATA_INTEGRITY_VIOLATION(400, "COMMON_0005", "데이터 무결성 제약 조건이 위배되었습니다."),
+    DUPLICATED_LIKE(400, "COMMON_0006", "이미 좋아요를 누른 상태입니다."),
 
     // Account
     ACCOUNT_NOT_FOUND(400, "ACCOUNT_0001", "해당 계정을 찾을 수 없습니다."),
