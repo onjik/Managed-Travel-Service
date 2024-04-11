@@ -94,6 +94,8 @@ CREATE TABLE operation_time (
     start_date DATE default NULL,
     end_date DATE default NULL,
     place_id BIGINT NOT NULL,
+    created_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (place_id) REFERENCES place(place_id)
 );
 CREATE INDEX operation_time_place_id_index ON operation_time (place_id);
@@ -107,6 +109,8 @@ CREATE TABLE day_operation_time (
     next_day_linked BOOLEAN NOT NULL default FALSE,
     day_of_week SMALLINT NOT NULL , -- 0 - 6 : 월 - 일, Java WeekOfDays ordinal
     operation_time_id BIGINT NOT NULL ,
+    created_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (operation_time_id) REFERENCES operation_time(operation_time_id),
     CONSTRAINT day_of_week_check CHECK (day_of_week >= 0 AND day_of_week <= 6),
     CONSTRAINT start_time_end_time_check CHECK (start_time < end_time)

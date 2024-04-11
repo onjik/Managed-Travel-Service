@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
 import java.util.List;
@@ -51,8 +53,10 @@ public abstract class PlaceEntity {
     private Point location;
     @Column(name = "boundary")
     private Polygon boundary;
+    @CreatedDate
     @Column(name = "created_at")
     private Instant createdAt;
+    @LastModifiedDate
     @Column(name = "updated_at")
     private Instant updatedAt;
     @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})

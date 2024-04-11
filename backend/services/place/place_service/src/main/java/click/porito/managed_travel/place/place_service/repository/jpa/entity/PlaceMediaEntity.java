@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.id.uuid.UuidGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Map;
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class PlaceMediaEntity {
     @Type(JsonType.class)
     private Map<String,String> sourceRef;
 
+    @CreatedDate
     @Column(name = "created_at")
     private Long createdAt;
 

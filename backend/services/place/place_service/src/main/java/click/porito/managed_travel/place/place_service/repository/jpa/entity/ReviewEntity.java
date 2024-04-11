@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
 import java.util.List;
@@ -31,8 +33,10 @@ public class ReviewEntity {
     private Integer rate; // 1 - 10
     @Column(name = "content")
     private String content;
+    @CreatedDate
     @Column(name = "created_at")
     private Instant createdAt;
+    @LastModifiedDate
     @Column(name = "updated_at")
     private Instant updatedAt;
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
