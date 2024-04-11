@@ -1,6 +1,5 @@
 package click.porito.managed_travel.place.domain.view;
 
-import click.porito.managed_travel.place.domain.PlaceMedia;
 import lombok.Data;
 
 import java.time.Instant;
@@ -15,5 +14,5 @@ public class ReviewView {
     private Instant updatedAt;
     private String placeId;
     private String publisherId;
-    private List<PlaceMedia> photos;
+    private List<PlaceMediaView> photos;
 }

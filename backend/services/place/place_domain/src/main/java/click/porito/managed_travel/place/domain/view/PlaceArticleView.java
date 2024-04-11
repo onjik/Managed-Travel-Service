@@ -1,11 +1,11 @@
-package click.porito.managed_travel.place.domain;
+package click.porito.managed_travel.place.domain.view;
 
 import lombok.Data;
 
 import java.time.Instant;
 
 @Data
-public class PlaceArticle {
+public class PlaceArticleView {
     private String articleId;
     private String title;
     private String content;

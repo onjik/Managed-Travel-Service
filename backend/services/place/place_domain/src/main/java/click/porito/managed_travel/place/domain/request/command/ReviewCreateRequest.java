@@ -7,7 +7,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
+
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -18,10 +21,13 @@ public class ReviewCreateRequest {
     @NotNull
     @Range(min = 1, max = 10)
     private Integer rating;
-    public ReviewCreateRequest(String placeId, String content, int rating) {
+    @Length(max = 20)
+    private List<String> mediaIds;
+    public ReviewCreateRequest(String placeId, String content, int rating, List<String> mediaIds) {
         this.placeId = placeId;
         this.content = content;
         this.rating = rating;
+        this.mediaIds = mediaIds;
     }
 
 }

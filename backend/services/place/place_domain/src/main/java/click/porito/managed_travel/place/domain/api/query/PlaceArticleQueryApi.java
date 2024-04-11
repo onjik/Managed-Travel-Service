@@ -3,7 +3,7 @@ package click.porito.managed_travel.place.domain.api.query;
 import click.porito.common.exception.common.AccessDeniedException;
 import click.porito.common.exception.common.InvalidInputValueException;
 import click.porito.common.exception.common.ResourceNotFoundException;
-import click.porito.managed_travel.place.domain.PlaceArticle;
+import click.porito.managed_travel.place.domain.view.PlaceArticleView;
 import click.porito.managed_travel.place.domain.exception.PlaceServerException;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface PlaceArticleQueryApi {
      * @throws ResourceNotFoundException 장소 게시글이 존재하지 않는 경우
      * @throws AccessDeniedException 권한이 없는 경우
      */
-    PlaceArticle getPlaceArticle(Long id);
+    PlaceArticleView getPlaceArticle(Long id);
 
     /**
      * 장소 게시글 목록 조회
@@ -39,5 +39,5 @@ public interface PlaceArticleQueryApi {
      * @throws InvalidInputValueException 잘못된 인자가 주어진 경우
      * @throws AccessDeniedException 권한이 없는 경우
      */
-    List<PlaceArticle> searchPlaceArticles(String keyword);
+    List<PlaceArticleView> searchPlaceArticles(String keyword);
 }

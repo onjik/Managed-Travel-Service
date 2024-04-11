@@ -6,7 +6,7 @@ import click.porito.common.exception.common.ResourceNotFoundException;
 import click.porito.common.util.PageableRequest;
 import click.porito.common.util.SlicedResponse;
 import click.porito.managed_travel.place.domain.view.PlaceView;
-import click.porito.managed_travel.place.domain.PlaceMedia;
+import click.porito.managed_travel.place.domain.view.PlaceMediaView;
 import click.porito.managed_travel.place.domain.request.query.NearBySearchQueryRequest;
 import click.porito.managed_travel.place.domain.exception.PlaceServerException;
 
@@ -48,13 +48,4 @@ public interface PlaceQueryApi {
      */
     List<PlaceView> getNearbyPlaces(NearBySearchQueryRequest request);
 
-    /**
-     * 장소의 사진을 조회합니다.
-     * @param placeId 장소 id, not null
-     * @return 장소 사진 목록
-     * @throws PlaceServerException 장소 API 호출 중 서버측 에러 발생
-     * @throws InvalidInputValueException 잘못된 인자가 주어진 경우
-     * @throws AccessDeniedException 권한이 없는 경우
-     */
-    SlicedResponse<PlaceMedia> getPlacePhotoReference(Long placeId, PageableRequest request) ;
 }
