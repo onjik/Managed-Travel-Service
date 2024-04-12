@@ -13,7 +13,7 @@ import org.geojson.Polygon;
 import java.time.Instant;
 import java.util.List;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class UserPlaceUpdateRequest extends AbstractPlaceCommandRequestBase{
     @NotNull(message = "placeId is required")

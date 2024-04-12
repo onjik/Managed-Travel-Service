@@ -5,13 +5,14 @@ import click.porito.managed_travel.place.domain.PlaceCategory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.geojson.Point;
 import org.geojson.Polygon;
 
 import java.time.Instant;
 import java.util.List;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class OfficialPlaceCreateRequest extends AbstractPlaceCommandRequestBase{
     private String googlePlaceId;

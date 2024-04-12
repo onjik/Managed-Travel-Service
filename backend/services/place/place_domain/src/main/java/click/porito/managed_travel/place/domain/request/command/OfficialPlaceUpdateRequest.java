@@ -5,13 +5,14 @@ import click.porito.managed_travel.place.domain.PlaceCategory;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.geojson.Point;
 import org.geojson.Polygon;
 
 import java.time.Instant;
 import java.util.List;
 
-@Getter
+@Getter @Setter
 public class OfficialPlaceUpdateRequest extends AbstractPlaceCommandRequestBase{
     @NotNull(message = "placeId is required")
     private Long placeId;

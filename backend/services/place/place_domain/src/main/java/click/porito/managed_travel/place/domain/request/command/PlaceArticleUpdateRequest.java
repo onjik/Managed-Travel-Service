@@ -1,12 +1,9 @@
 package click.porito.managed_travel.place.domain.request.command;
 
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
+@Getter @Setter
 public class PlaceArticleUpdateRequest extends PlaceArticleCreateRequest {
     private Long id;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }
