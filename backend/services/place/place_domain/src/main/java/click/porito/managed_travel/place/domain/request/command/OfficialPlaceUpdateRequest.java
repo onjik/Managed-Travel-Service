@@ -1,6 +1,5 @@
 package click.porito.managed_travel.place.domain.request.command;
 
-import click.porito.managed_travel.place.domain.OperationTime;
 import click.porito.managed_travel.place.domain.PlaceCategory;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -19,8 +18,8 @@ public class OfficialPlaceUpdateRequest extends AbstractPlaceCommandRequestBase{
     private String googlePlaceId;
 
     @Builder
-    public OfficialPlaceUpdateRequest(String name, List<String> keywords, String address, String postalCode, String phoneNumber, String website, String summary, Point location, Polygon boundary, Instant createdAt, Instant updatedAt, List<PlaceCategory> categories, List<OperationTime> operationTimes, Long placeId, String googlePlaceId) {
-        super(name, keywords, address, postalCode, phoneNumber, website, summary, location, boundary, createdAt, updatedAt, categories, operationTimes);
+    public OfficialPlaceUpdateRequest(String name, List<String> keywords, String address, String postalCode, String phoneNumber, String website, String summary, Point location, Polygon boundary, Instant createdAt, Instant updatedAt, List<PlaceCategory> categories, Long placeId, String googlePlaceId) {
+        super(name, keywords, address, postalCode, phoneNumber, website, summary, location, boundary, createdAt, updatedAt, categories);
         this.placeId = placeId;
         this.googlePlaceId = googlePlaceId;
     }

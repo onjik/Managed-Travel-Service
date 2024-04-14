@@ -4,12 +4,10 @@ import click.porito.common.exception.common.AccessDeniedException;
 import click.porito.common.exception.common.DataIntegrityViolationException;
 import click.porito.common.exception.common.InvalidInputValueException;
 import click.porito.common.exception.common.ResourceNotFoundException;
-import click.porito.managed_travel.place.domain.request.command.OfficialPlaceCreateRequest;
-import click.porito.managed_travel.place.domain.request.command.OfficialPlaceUpdateRequest;
-import click.porito.managed_travel.place.domain.request.command.UserPlaceCreateRequest;
-import click.porito.managed_travel.place.domain.request.command.UserPlaceUpdateRequest;
+import click.porito.managed_travel.place.domain.request.command.*;
 import click.porito.managed_travel.place.domain.view.OfficialPlaceView;
 import click.porito.managed_travel.place.domain.exception.PlaceServerException;
+import click.porito.managed_travel.place.domain.view.OperationTimeView;
 import click.porito.managed_travel.place.domain.view.UserPlaceView;
 
 public interface PlaceCommandApi {
@@ -71,6 +69,31 @@ public interface PlaceCommandApi {
      * @throws AccessDeniedException 권한이 없는 경우
      */
     void deletePlace(Long placeId);
+
+    /**
+     * 장소의 운영시간 정보를 등록합니다.
+     * @param request 운영시간 정보 등록 요청
+     * @return 등록된 운영시간 정보
+     * @throws PlaceServerException 장소 API 호출 중 서버측 에러 발생
+     * @throws DataIntegrityViolationException 무결성 제약조건 위반(장소명 중복 등)
+     * @throws InvalidInputValueException 잘못된 인자가 주어진 경우
+     * @throws ResourceNotFoundException 장소가 존재하지 않는 경우
+     * @throws AccessDeniedException 권한이 없는 경우
+     */
+    OperationTimeView createOperationTime(OperationTimeCreateRequest request);
+
+    /**
+     * 장소의 운영시간 정보를 수정합니다.
+     * @param request 운영시간 정보 수정 요청
+     * @return 수정된 운영시간 정보
+     * @throws PlaceServerException 장소 API 호출 중 서버측 에러 발생
+     * @throws DataIntegrityViolationException 무결성 제약조건 위반(장소명 중복 등)
+     * @throws InvalidInputValueException 잘못된 인자가 주어진 경우
+     * @throws ResourceNotFoundException 장소가 존재하지 않는 경우
+     * @throws AccessDeniedException 권한이 없는 경우
+     */
+    OperationTimeView updateOperationTime(OperationTimeUpdateRequest request);
+
 
 
 

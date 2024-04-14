@@ -1,4 +1,4 @@
-package click.porito.managed_travel.place.domain;
+package click.porito.managed_travel.place.domain.view;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Data
-public class OperationTime {
+public class OperationTimeView {
     private Long operationTimeId;
     private LocalDate startDate;
     private LocalDate endDate;

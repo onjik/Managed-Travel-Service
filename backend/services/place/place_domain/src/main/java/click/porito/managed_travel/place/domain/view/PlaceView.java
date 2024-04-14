@@ -1,8 +1,6 @@
 package click.porito.managed_travel.place.domain.view;
 
-import click.porito.managed_travel.place.domain.OperationTime;
 import click.porito.managed_travel.place.domain.PlaceCategory;
-import click.porito.managed_travel.place.domain.PlaceDomainConstant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -34,5 +32,5 @@ public abstract class PlaceView {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JACKSON_TIME_FORMAT)
     private Instant updatedAt;
     private List<PlaceCategory> categories;
-    private List<OperationTime> operationTimes;
+    private List<OperationTimeView> operationTimeViews;
 }
