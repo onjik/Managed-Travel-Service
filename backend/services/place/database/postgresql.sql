@@ -84,7 +84,7 @@ CREATE TABLE review (
     updated_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL ,
     account_id BIGINT NOT NULL ,
     place_id BIGINT NOT NULL ,
-    FOREIGN KEY (place_id) REFERENCES place(place_id),
+    FOREIGN KEY (place_id) REFERENCES official_place(place_id),
     FOREIGN KEY (account_id) REFERENCES account_snapshot(account_id),
     CONSTRAINT rate_check CHECK (rate >= 1 AND rate <= 10),
     CONSTRAINT place_id_account_id_unique UNIQUE (place_id, account_id)
@@ -137,7 +137,7 @@ CREATE TABLE place_media (
     place_id BIGINT NOT NULL ,
     account_id BIGINT NOT NULL ,
     FOREIGN KEY (content_type_id) REFERENCES content_type(content_type_id),
-    FOREIGN KEY (place_id) REFERENCES place(place_id),
+    FOREIGN KEY (place_id) REFERENCES official_place(place_id),
     FOREIGN KEY (account_id) REFERENCES account_snapshot(account_id)
 );
 CREATE INDEX place_media_place_id_index ON place_media (place_id);

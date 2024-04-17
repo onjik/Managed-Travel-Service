@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "operation_time")
@@ -28,5 +29,5 @@ public class OperationTimeEntity {
     private PlaceEntity placeEntity;
 
     @OneToMany(mappedBy = "operationTimeEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<DayOperationTimeEntity> dayOperationTimeEntities;
+    private List<DayOperationTimeEntity> dayOperationTimeEntities = new ArrayList<>();
 }

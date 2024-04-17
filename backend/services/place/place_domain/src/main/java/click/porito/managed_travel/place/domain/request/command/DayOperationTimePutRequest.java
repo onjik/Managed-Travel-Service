@@ -5,11 +5,15 @@ import lombok.Data;
 
 import java.time.LocalTime;
 
+/**
+ * 덮어쓰기 방식으로(PUT) 동작하는 운영시간 수정 요청
+ */
 @Data
-public class DayOperationTimeCreateRequest {
+public class DayOperationTimePutRequest {
+    private Long dayOperationTimeId;
     @NotNull
-    private LocalTime startDate;
+    private LocalTime startTime;
     @NotNull
-    private LocalTime endDate;
+    private LocalTime endTime;
     private Boolean nextDayLinked = false;
 }
