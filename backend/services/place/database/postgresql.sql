@@ -4,6 +4,9 @@ CREATE TABLE category (
     CONSTRAINT category_name_unique UNIQUE (category_name)
 );
 CREATE INDEX category_name_index ON category (category_name);
+INSERT INTO category (category_name)
+VALUES ('TOURIST_ATTRACTION'), ('RESTAURANT'), ('ACCOMMODATION'), ('SHOPPING'), ('TRANSPORTATION')
+ON CONFLICT DO NOTHING;
 
 CREATE TABLE account_snapshot (
     account_id BIGINT PRIMARY KEY ,
@@ -34,7 +37,6 @@ CREATE TABLE official_place (
     place_id BIGINT PRIMARY KEY ,
     is_public BOOLEAN default TRUE NOT NULL ,
     google_place_id TEXT default NULL ,
-    embedding DOUBLE PRECISION[] default NULL,
     FOREIGN KEY (place_id) REFERENCES place(place_id),
     CONSTRAINT google_place_id_unique UNIQUE (google_place_id)
 );
@@ -188,5 +190,9 @@ CREATE TABLE place_media_like (
 );
 CREATE INDEX place_media_like_media_id_index ON place_media_like (media_id);
 
-INSERT INTO category (category_name) VALUES ('TOURIST_ATTRACTION'), ('RESTAURANT'), ('ACCOMMODATION'), ('SHOPPING'), ('TRANSPORTATION');
-INSERT INTO content_type (content_type_name) VALUES ('image/jpeg'), ('image/png'), ('image/gif'), ('video/mp4'), ('video/webm'), ('video/quicktime');
+INSERT INTO category (category_name)
+VALUES ('TOURIST_ATTRACTION'), ('RESTAURANT'), ('ACCOMMODATION'), ('SHOPPING'), ('TRANSPORTATION')
+ON CONFLICT DO NOTHING;
+INSERT INTO content_type (content_type_name)
+VALUES ('image/jpeg'), ('image/png'), ('image/gif'), ('video/mp4'), ('video/webm'), ('video/quicktime')
+ON CONFLICT DO NOTHING;
