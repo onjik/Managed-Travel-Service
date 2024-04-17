@@ -5,9 +5,11 @@ import click.porito.managed_travel.place.domain.util.SingleChunkPolygonConstrain
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.Instant;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,8 +28,6 @@ public abstract class AbstractPlaceCommandRequestBase {
     private org.geojson.Point location;
     @SingleChunkPolygonConstraint
     private org.geojson.Polygon boundary;
-    private Instant createdAt;
-    private Instant updatedAt;
     @NotEmpty(message = "categories is required")
     private List<PlaceCategory> categories;
 }

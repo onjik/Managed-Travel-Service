@@ -1,8 +1,7 @@
 package click.porito.managed_travel.place.domain.util;
 
 import click.porito.managed_travel.place.domain.PlaceCategory;
-import click.porito.managed_travel.place.domain.request.command.UserPlaceCreateRequest;
-import jakarta.validation.ConstraintViolation;
+import click.porito.managed_travel.place.domain.request.command.UserPlacePutRequest;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 import org.geojson.LngLatAlt;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +35,7 @@ class SingleChunkPolygonValidatorTest {
     void testInvalid() {
 
         // given
-        UserPlaceCreateRequest request = new UserPlaceCreateRequest();
+        UserPlacePutRequest request = new UserPlacePutRequest();
         request.setName("test");
         request.setLocation(new Point(0, 0));
         Polygon polygon = new Polygon();
@@ -61,7 +59,7 @@ class SingleChunkPolygonValidatorTest {
     void testValid() {
 
         // given
-        UserPlaceCreateRequest request = new UserPlaceCreateRequest();
+        UserPlacePutRequest request = new UserPlacePutRequest();
         request.setName("test");
         request.setLocation(new Point(0, 0));
         Polygon polygon = new Polygon();
