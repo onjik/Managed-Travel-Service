@@ -1,8 +1,10 @@
 package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
+import click.porito.managed_travel.place.domain.view.OperationTimeView;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,4 +32,18 @@ public class OperationTimeEntity {
 
     @OneToMany(mappedBy = "operationTimeEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DayOperationTimeEntity> dayOperationTimeEntities = new ArrayList<>();
+
+    public static OperationTimeView toView(OperationTimeEntity operationTimeEntity) {
+        Assert.notNull(operationTimeEntity, "operationTimeEntity must not be null");
+        List<OperationTimeView.DayOperationTime> dayOperationTimes = operationTimeEntity.getDayOperationTimeEntities()
+                .stream()
+                .map(DayOperationTimeEntity::toView)
+                .toList();
+        return OperationTimeView.builder()
+                .operationTimeId(operationTimeEntity.getOperationTimeId())
+                .startDate(operationTimeEntity.getStartDate())
+                .endDate(operationTimeEntity.getEndDate())
+                .dayOperationTimes(dayOperationTimes)
+                .build();
+    }
 }

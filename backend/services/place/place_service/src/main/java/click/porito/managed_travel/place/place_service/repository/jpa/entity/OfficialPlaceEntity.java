@@ -1,5 +1,9 @@
 package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
+import click.porito.managed_travel.place.domain.PlaceCategory;
+import click.porito.managed_travel.place.domain.view.OfficialPlaceView;
+import click.porito.managed_travel.place.domain.view.OperationTimeView;
+import click.porito.managed_travel.place.place_service.util.GeoUtils;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +27,34 @@ public class OfficialPlaceEntity extends PlaceEntity {
             cascade = CascadeType.ALL, orphanRemoval = true
     )
     private List<ReviewEntity> reviews;
+
+    public static OfficialPlaceView toView(OfficialPlaceEntity officialPlaceEntity) {
+        List<PlaceCategory> placeCategories = officialPlaceEntity.getCategories()
+                .stream()
+                .map(CategoryEntity::getCategory)
+                .toList();
+        List<OperationTimeView> operationTimeViews = officialPlaceEntity.getOperationTimes()
+                .stream()
+                .map(OperationTimeEntity::toView)
+                .toList();
+        return OfficialPlaceView.builder()
+                .placeId(officialPlaceEntity.getPlaceId())
+                .name(officialPlaceEntity.getName())
+                .keywords(officialPlaceEntity.getKeywords())
+                .address(officialPlaceEntity.getAddress())
+                .postalCode(officialPlaceEntity.getPostalCode())
+                .phoneNumber(officialPlaceEntity.getPhoneNumber())
+                .website(officialPlaceEntity.getWebsite())
+                .summary(officialPlaceEntity.getSummary())
+                .location(GeoUtils.jtsPointToGeoJsonPointMapper().map(officialPlaceEntity.getLocation()))
+                .boundary(GeoUtils.jtsPolygonToGeoJsonPolygonMapper().map(officialPlaceEntity.getBoundary()))
+                .createdAt(officialPlaceEntity.getCreatedAt())
+                .updatedAt(officialPlaceEntity.getUpdatedAt())
+                .categories(placeCategories)
+                .operationTimeViews(operationTimeViews)
+                .googlePlaceId(officialPlaceEntity.getGooglePlaceId())
+                .isPublic(officialPlaceEntity.getIsPublic())
+                .build();
+    }
 
 }

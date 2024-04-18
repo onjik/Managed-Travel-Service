@@ -1,6 +1,5 @@
 package click.porito.managed_travel.place.place_service.service.command;
 
-import click.porito.common.util.Mapper;
 import click.porito.managed_travel.place.domain.api.command.PlaceCommandApi;
 import click.porito.managed_travel.place.domain.request.command.DayOperationTimePutRequest;
 import click.porito.managed_travel.place.domain.request.command.OfficialPlacePutRequest;
@@ -26,16 +25,14 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
+import static click.porito.managed_travel.place.place_service.util.GeoUtils.geoJsonPointToJtsPointMapper;
+import static click.porito.managed_travel.place.place_service.util.GeoUtils.geoJsonPolygonToJtsPolygonMapper;
+
 @Service
 @Slf4j
 @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
 @RequiredArgsConstructor
 public class PlaceCommandApiImpl implements PlaceCommandApi {
-    private final Mapper<org.geojson.Point, Point> geoJsonPointToJtsPointMapper;
-    private final Mapper<org.geojson.Polygon,Polygon> geoJsonPolygonToJtsPolygonMapper;
-    private final Mapper<Point, org.geojson.Point> jtsPointToGeoJsonPointMapper;
-    private final Mapper<Polygon, org.geojson.Polygon> jtsPolygonToGeoJsonPolygonMapper;
-    private final Mapper<OperationTimeEntity, OperationTimeView> operationTimeEntityToOperationTimeViewMapper;
     private final AccountContextStrategy accountContextStrategy;
 
     private final PlaceCategoryRepository placeCategoryRepository;
@@ -53,8 +50,8 @@ public class PlaceCommandApiImpl implements PlaceCommandApi {
         final Point location;
         final Polygon boundary;
         try {
-            location = geoJsonPointToJtsPointMapper.map(request.getLocation());
-            boundary = geoJsonPolygonToJtsPolygonMapper.map(request.getBoundary());
+            location = geoJsonPointToJtsPointMapper().map(request.getLocation());
+            boundary = geoJsonPolygonToJtsPolygonMapper().map(request.getBoundary());
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid location or boundary");
         }
@@ -92,24 +89,9 @@ public class PlaceCommandApiImpl implements PlaceCommandApi {
         userPlaceEntity.setAccountSnapshotEntity(account);
 
         // UserPlaceEntity 저장
-        userPlaceRepository.save(userPlaceEntity);
-
+        UserPlaceEntity saved = userPlaceRepository.save(userPlaceEntity);
         // UserPlaceView 생성
-        return UserPlaceView.builder()
-                .placeId(userPlaceEntity.getPlaceId())
-                .name(userPlaceEntity.getName())
-                .keywords(userPlaceEntity.getKeywords())
-                .address(userPlaceEntity.getAddress())
-                .postalCode(userPlaceEntity.getPostalCode())
-                .phoneNumber(userPlaceEntity.getPhoneNumber())
-                .website(userPlaceEntity.getWebsite())
-                .summary(userPlaceEntity.getSummary())
-                .location(jtsPointToGeoJsonPointMapper.map(userPlaceEntity.getLocation()))
-                .boundary(jtsPolygonToGeoJsonPolygonMapper.map(userPlaceEntity.getBoundary()))
-                .createdAt(userPlaceEntity.getCreatedAt())
-                .updatedAt(userPlaceEntity.getUpdatedAt())
-                .categories(request.getCategories())
-                .build();
+        return UserPlaceEntity.toView(saved);
     }
 
     @Override
@@ -120,14 +102,11 @@ public class PlaceCommandApiImpl implements PlaceCommandApi {
         final Point location;
         final Polygon boundary;
         try {
-            location = geoJsonPointToJtsPointMapper.map(request.getLocation());
-            boundary = geoJsonPolygonToJtsPolygonMapper.map(request.getBoundary());
+            location = geoJsonPointToJtsPointMapper().map(request.getLocation());
+            boundary = geoJsonPolygonToJtsPolygonMapper().map(request.getBoundary());
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid location or boundary");
         }
-        AccountSnapshotEntity account = accountContextStrategy.getAccountId()
-                .flatMap(accountSnapshotRepository::findAccountSnapshotEntitiesByAccountId)
-                .orElseThrow(() -> new IllegalArgumentException("AccountSnapshot not found"));
 
         List<CategoryEntity> categoryEntities = placeCategoryRepository.findByCategoryIn(request.getCategories());
         if (categoryEntities.size() != request.getCategories().size()) {
@@ -158,27 +137,8 @@ public class PlaceCommandApiImpl implements PlaceCommandApi {
         officialPlaceEntity.setGooglePlaceId(request.getGooglePlaceId());
 
         // OfficialPlaceEntity 저장
-        officialPlaceRepository.save(officialPlaceEntity);
-
-        // OfficialPlaceView 생성
-        return OfficialPlaceView.builder()
-                .placeId(officialPlaceEntity.getPlaceId())
-                .name(officialPlaceEntity.getName())
-                .keywords(officialPlaceEntity.getKeywords())
-                .address(officialPlaceEntity.getAddress())
-                .postalCode(officialPlaceEntity.getPostalCode())
-                .phoneNumber(officialPlaceEntity.getPhoneNumber())
-                .website(officialPlaceEntity.getWebsite())
-                .summary(officialPlaceEntity.getSummary())
-                .location(jtsPointToGeoJsonPointMapper.map(officialPlaceEntity.getLocation()))
-                .boundary(jtsPolygonToGeoJsonPolygonMapper.map(officialPlaceEntity.getBoundary()))
-                .createdAt(officialPlaceEntity.getCreatedAt())
-                .updatedAt(officialPlaceEntity.getUpdatedAt())
-                .categories(request.getCategories())
-                .operationTimeViews(operationTimeEntityToOperationTimeViewMapper.map(officialPlaceEntity.getOperationTimes()))
-                .googlePlaceId(officialPlaceEntity.getGooglePlaceId())
-                .isPublic(officialPlaceEntity.getIsPublic())
-                .build();
+        OfficialPlaceEntity saved = officialPlaceRepository.save(officialPlaceEntity);
+        return OfficialPlaceEntity.toView(saved);
     }
 
     @Override
@@ -254,7 +214,8 @@ public class PlaceCommandApiImpl implements PlaceCommandApi {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("OperationTime not found"));
 
-        return operationTimeEntityToOperationTimeViewMapper.map(savedOperationTimeEntity);
+
+        return OperationTimeEntity.toView(savedOperationTimeEntity);
     }
 
 

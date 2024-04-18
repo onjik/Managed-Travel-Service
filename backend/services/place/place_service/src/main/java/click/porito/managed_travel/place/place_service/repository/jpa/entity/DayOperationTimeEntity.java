@@ -1,5 +1,6 @@
 package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
+import click.porito.managed_travel.place.domain.view.OperationTimeView;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,4 +42,13 @@ public class DayOperationTimeEntity {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "operation_time_id")
     private OperationTimeEntity operationTimeEntity;
+
+    public static OperationTimeView.DayOperationTime toView(DayOperationTimeEntity dayOperationTimeEntity) {
+        return OperationTimeView.DayOperationTime.builder()
+                .dayOperationTimeId(dayOperationTimeEntity.getDayOperationTimeId())
+                .startTime(dayOperationTimeEntity.getStartTime())
+                .endTime(dayOperationTimeEntity.getEndTime())
+                .nextDayLinked(dayOperationTimeEntity.getNextDayLinked())
+                .build();
+    }
 }
