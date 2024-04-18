@@ -28,6 +28,10 @@ public class OfficialPlaceEntity extends PlaceEntity {
     )
     private List<ReviewEntity> reviews;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "publisher_id")
+    private AccountSnapshotEntity publisher;
+
     public static OfficialPlaceView toView(OfficialPlaceEntity officialPlaceEntity) {
         List<PlaceCategory> placeCategories = officialPlaceEntity.getCategories()
                 .stream()
@@ -54,6 +58,7 @@ public class OfficialPlaceEntity extends PlaceEntity {
                 .operationTimeViews(operationTimeViews)
                 .googlePlaceId(officialPlaceEntity.getGooglePlaceId())
                 .isPublic(officialPlaceEntity.getIsPublic())
+                .publisherId(officialPlaceEntity.getPublisher().getAccountId())
                 .build();
     }
 

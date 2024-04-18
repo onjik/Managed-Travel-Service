@@ -37,7 +37,9 @@ CREATE TABLE official_place (
     place_id BIGINT PRIMARY KEY ,
     is_public BOOLEAN default TRUE NOT NULL ,
     google_place_id TEXT default NULL ,
+    publisher_id BIGINT NOT NULL ,
     FOREIGN KEY (place_id) REFERENCES place(place_id),
+    FOREIGN KEY (publisher_id) REFERENCES account_snapshot(account_id),
     CONSTRAINT google_place_id_unique UNIQUE (google_place_id)
 );
 CREATE INDEX official_place_place_id_index ON official_place (place_id);

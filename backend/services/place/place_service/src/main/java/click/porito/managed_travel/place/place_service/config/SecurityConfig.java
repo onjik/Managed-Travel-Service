@@ -18,14 +18,21 @@ public class SecurityConfig {
         //{domain}:{action}:{scope}
         //domain : place, plan
         //action : read, create, update, delete
-        //scope : owned, belonged, all, new(only for *:create)
+        //scope : owned, all, new(only for *:create)
         String hierarchyString = """
                 ROLE_ADMIN > ROLE_STAFF
-                ROLE_ADMIN > official_place:delete
+                ROLE_ADMIN > official_place:delete:all
                 ROLE_STAFF > ROLE_USER
-                ROLE_STAFF > official_place:put
-                ROLE_USER > user_place:put
-                ROLE_USER > user_place:delete
+                ROLE_STAFF > user_place:read:all
+                ROLE_STAFF > official_place:read:all
+                ROLE_STAFF > official_place:update:all
+                ROLE_STAFF > official_place:create:new
+                ROLE_STAFF > official_place:delete:owned
+                ROLE_USER > user_place:read:owned
+                ROLE_USER > user_place:update:owned
+                ROLE_USER > user_place:delete:owned
+                ROLE_USER > user_place:create:new
+                ROLE_USER > official_place:read:all
                 """;
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy(hierarchyString);
