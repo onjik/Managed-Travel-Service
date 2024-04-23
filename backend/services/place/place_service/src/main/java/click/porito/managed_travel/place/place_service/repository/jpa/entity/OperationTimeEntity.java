@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Table(name = "operation_time")
 @Entity
@@ -45,5 +46,19 @@ public class OperationTimeEntity {
                 .endDate(operationTimeEntity.getEndDate())
                 .dayOperationTimes(dayOperationTimes)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (this.getOperationTimeId() == null) return false;
+        OperationTimeEntity that = (OperationTimeEntity) o;
+        return Objects.equals(getOperationTimeId(), that.getOperationTimeId()) && Objects.equals(getStartDate(), that.getStartDate()) && Objects.equals(getEndDate(), that.getEndDate()) && Objects.equals(getPlaceEntity(), that.getPlaceEntity()) && Objects.equals(getDayOperationTimeEntities(), that.getDayOperationTimeEntities());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOperationTimeId(), getStartDate(), getEndDate(), getPlaceEntity(), getDayOperationTimeEntities());
     }
 }

@@ -12,17 +12,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "place_type")
 @Table(name = "place")
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class PlaceEntity {
+public class PlaceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +31,7 @@ public abstract class PlaceEntity {
 
     @Column(name = "keywords")
     @Type(StringArrayType.class)
-    private List<String> keywords;
+    private List<String> keywords = new ArrayList<>();
 
     @Column(name = "address")
     private String address;
@@ -53,19 +50,25 @@ public abstract class PlaceEntity {
     private Point location;
     @Column(name = "boundary")
     private Polygon boundary;
+    @Column(name = "google_place_id")
+    private String googlePlaceId;
+    @Column(name = "is_public")
+    private Boolean isPublic;
+    @Column(name = "is_official")
+    private Boolean isOfficial;
     @CreatedDate
     @Column(name = "created_at")
     private Instant createdAt;
     @LastModifiedDate
     @Column(name = "updated_at")
     private Instant updatedAt;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "place_category",
             joinColumns = @JoinColumn(name = "place_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<CategoryEntity> categories;
+    private Set<CategoryEntity> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "placeEntity", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true
@@ -78,6 +81,10 @@ public abstract class PlaceEntity {
             cascade = CascadeType.ALL, orphanRemoval = true
     )
     private List<OperationTimeEntity> operationTimes;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id", nullable = false)
+    private AccountSnapshotEntity publisher;
 
     @Override
     public boolean equals(Object o) {

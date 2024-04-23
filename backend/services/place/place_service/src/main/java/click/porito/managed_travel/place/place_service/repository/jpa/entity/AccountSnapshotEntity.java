@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,11 +34,11 @@ public class AccountSnapshotEntity {
     @Column(name = "is_temp", nullable = false)
     private Boolean isTemp;
 
-    @OneToMany(mappedBy = "accountSnapshotEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<UserPlaceEntity> userPlaceEntities;
+    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PlaceEntity> userPlaceEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "accountSnapshotEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PlaceMediaEntity> placeMediaEntities;
+    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MediaReferenceEntity> placeMediaEntities = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
@@ -44,7 +46,7 @@ public class AccountSnapshotEntity {
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "place_article_id")
     )
-    private Set<PlaceArticleEntity> likedPlaceArticleEntities;
+    private Set<PlaceArticleEntity> likedPlaceArticleEntities = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
@@ -52,7 +54,7 @@ public class AccountSnapshotEntity {
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "place_id")
     )
-    private Set<OfficialPlaceEntity> likedPlaceEntities;
+    private Set<PlaceEntity> likedPlaceEntities = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
@@ -60,14 +62,6 @@ public class AccountSnapshotEntity {
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "review_id")
     )
-    private Set<ReviewEntity> likedReviewEntities;
-
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(
-            name = "place_media_like",
-            joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "media_id")
-    )
-    private Set<PlaceMediaEntity> likedPlaceMediaEntities;
+    private Set<ReviewEntity> likedReviewEntities = new HashSet<>();
 
 }

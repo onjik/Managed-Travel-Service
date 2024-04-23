@@ -26,33 +26,17 @@ CREATE TABLE place (
     summary TEXT default NULL ,
     location GEOMETRY(POINT, 4326) NOT NULL ,
     boundary GEOMETRY(POLYGON, 4326) default NULL ,
-    place_type VARCHAR(20) NOT NULL ,
+    account_id BIGINT NOT NULL ,
+    google_place_id TEXT default NULL ,
+    is_public BOOLEAN default TRUE NOT NULL ,
+    is_official BOOLEAN default FALSE NOT NULL ,
+    FOREIGN KEY (account_id) REFERENCES account_snapshot(account_id),
     created_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL ,
     updated_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL
 );
 CREATE INDEX place_location_index ON place USING GIST (location);
 CREATE INDEX place_boundary_index ON place USING GIST (boundary);
 
-CREATE TABLE official_place (
-    place_id BIGINT PRIMARY KEY ,
-    is_public BOOLEAN default TRUE NOT NULL ,
-    google_place_id TEXT default NULL ,
-    publisher_id BIGINT NOT NULL ,
-    FOREIGN KEY (place_id) REFERENCES place(place_id),
-    FOREIGN KEY (publisher_id) REFERENCES account_snapshot(account_id),
-    CONSTRAINT google_place_id_unique UNIQUE (google_place_id)
-);
-CREATE INDEX official_place_place_id_index ON official_place (place_id);
-
-CREATE TABLE user_place
-(
-    place_id   BIGINT PRIMARY KEY,
-    account_id BIGINT NOT NULL,
-    FOREIGN KEY (place_id) REFERENCES place (place_id),
-    FOREIGN KEY (account_id) REFERENCES account_snapshot (account_id)
-);
-CREATE INDEX user_place_account_id_index ON user_place (account_id);
-CREATE INDEX user_place_place_id_index ON user_place (place_id);
 
 CREATE TABLE place_category (
     place_id BIGINT NOT NULL ,
@@ -86,7 +70,7 @@ CREATE TABLE review (
     updated_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL ,
     account_id BIGINT NOT NULL ,
     place_id BIGINT NOT NULL ,
-    FOREIGN KEY (place_id) REFERENCES official_place(place_id),
+    FOREIGN KEY (place_id) REFERENCES place(place_id),
     FOREIGN KEY (account_id) REFERENCES account_snapshot(account_id),
     CONSTRAINT rate_check CHECK (rate >= 1 AND rate <= 10),
     CONSTRAINT place_id_account_id_unique UNIQUE (place_id, account_id)
@@ -129,31 +113,39 @@ CREATE TABLE content_type (
 );
 CREATE INDEX content_type_name_index ON content_type (content_type_name);
 
-CREATE TABLE place_media (
+CREATE TABLE media_reference (
     media_id UUID PRIMARY KEY DEFAULT gen_random_uuid() ,
     width_px INTEGER default NULL ,
     height_px INTEGER default NULL ,
     source_ref JSON NOT NULL ,
     created_at TIMESTAMP default CURRENT_TIMESTAMP NOT NULL ,
     content_type_id INT NOT NULL ,
-    place_id BIGINT NOT NULL ,
     account_id BIGINT NOT NULL ,
+    url TEXT NOT NULL ,
     FOREIGN KEY (content_type_id) REFERENCES content_type(content_type_id),
-    FOREIGN KEY (place_id) REFERENCES official_place(place_id),
     FOREIGN KEY (account_id) REFERENCES account_snapshot(account_id)
 );
-CREATE INDEX place_media_place_id_index ON place_media (place_id);
-CREATE INDEX place_media_account_id_index ON place_media (account_id);
+CREATE INDEX media_reference_account_id_index ON media_reference (account_id);
 
-CREATE TABLE review_place_media (
+CREATE TABLE place_media (
+    place_id BIGINT NOT NULL ,
+    media_id UUID NOT NULL ,
+    FOREIGN KEY (place_id) REFERENCES place(place_id),
+    FOREIGN KEY (media_id) REFERENCES media_reference(media_id),
+    PRIMARY KEY (place_id, media_id)
+);
+CREATE INDEX place_media_media_id_index ON place_media (media_id);
+CREATE INDEX place_media_place_id_index ON place_media (place_id);
+
+CREATE TABLE review_media_reference (
     media_id UUID NOT NULL ,
     review_id BIGINT NOT NULL ,
-    FOREIGN KEY (media_id) REFERENCES place_media(media_id),
+    FOREIGN KEY (media_id) REFERENCES media_reference(media_id),
     FOREIGN KEY (review_id) REFERENCES review(review_id),
     PRIMARY KEY (media_id, review_id)
 );
-CREATE INDEX review_place_media_media_id_index ON review_place_media (media_id);
-CREATE INDEX review_place_media_review_id_index ON review_place_media (review_id);
+CREATE INDEX review_media_reference_media_id_index ON review_media_reference (media_id);
+CREATE INDEX review_media_reference_review_id_index ON review_media_reference (review_id);
 
 CREATE TABLE place_article_like (
     account_id BIGINT NOT NULL ,
@@ -183,14 +175,6 @@ CREATE TABLE review_like (
 );
 CREATE INDEX review_like_review_id_index ON review_like (review_id);
 
-CREATE TABLE place_media_like (
-    account_id BIGINT NOT NULL ,
-    media_id UUID NOT NULL ,
-    FOREIGN KEY (account_id) REFERENCES account_snapshot(account_id),
-    FOREIGN KEY (media_id) REFERENCES place_media(media_id),
-    PRIMARY KEY (account_id, media_id)
-);
-CREATE INDEX place_media_like_media_id_index ON place_media_like (media_id);
 
 INSERT INTO category (category_name)
 VALUES ('TOURIST_ATTRACTION'), ('RESTAURANT'), ('ACCOMMODATION'), ('SHOPPING'), ('TRANSPORTATION')

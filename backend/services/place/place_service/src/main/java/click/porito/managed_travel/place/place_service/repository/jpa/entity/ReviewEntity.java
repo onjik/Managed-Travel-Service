@@ -9,8 +9,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Table(name = "review",
         uniqueConstraints = {
@@ -41,18 +42,18 @@ public class ReviewEntity {
     private Instant updatedAt;
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "place_id")
-    private OfficialPlaceEntity placeEntity;
+    private PlaceEntity placeEntity;
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private AccountSnapshotEntity accountSnapshotEntity;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "review_place_media",
+            name = "review_media_reference",
             joinColumns = @JoinColumn(name = "review_id"),
             inverseJoinColumns = @JoinColumn(name = "media_id")
     )
-    private List<PlaceMediaEntity> placeMediaList;
+    private Set<MediaReferenceEntity> placeMediaList = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
