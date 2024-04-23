@@ -10,15 +10,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
-public abstract class AbstractPlaceCommandRequestBase {
+public class PlaceUpsertRequest implements UpsertRequest{
+    private Long placeId;
     @NotBlank(message = "name is required")
     private String name;
-    private List<String> keywords;
+    private List<String> keywords = new ArrayList<>();
     private String address;
     private String postalCode;
     private String phoneNumber;
@@ -29,5 +31,19 @@ public abstract class AbstractPlaceCommandRequestBase {
     @SingleChunkPolygonConstraint
     private org.geojson.Polygon boundary;
     @NotEmpty(message = "categories is required")
-    private List<PlaceCategory> categories;
+    private List<PlaceCategory> categories = new ArrayList<>();
+    private List<OperationTimePutRequest> operationTimes = new ArrayList<>();
+    private String googlePlaceId;
+    private Boolean isPublic;
+    private Boolean isOfficial;
+
+    @Override
+    public boolean isCreateRequest() {
+        return placeId == null;
+    }
+
+    @Override
+    public boolean isUpdateRequest() {
+        return placeId != null;
+    }
 }

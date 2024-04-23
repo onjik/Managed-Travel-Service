@@ -10,8 +10,6 @@ import java.util.List;
 
 @Data
 public class OperationTimePutRequest {
-    @NotNull
-    private Long placeId;
     private Long operationTimeId; // creat if null
     @NotNull
     private LocalDate startDate;

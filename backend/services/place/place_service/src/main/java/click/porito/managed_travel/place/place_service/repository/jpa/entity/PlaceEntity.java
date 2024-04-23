@@ -1,5 +1,7 @@
 package click.porito.managed_travel.place.place_service.repository.jpa.entity;
 
+import click.porito.managed_travel.place.domain.view.PlaceView;
+import click.porito.managed_travel.place.place_service.util.GeoUtils;
 import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.util.Assert;
 
 import java.time.Instant;
 import java.util.*;
@@ -86,6 +89,27 @@ public class PlaceEntity {
     @JoinColumn(name = "account_id", nullable = false)
     private AccountSnapshotEntity publisher;
 
+    public void setLocationByGeoJson(org.geojson.Point location) {
+        Assert.notNull(location, "location must not be null");
+        this.location = GeoUtils.geoJsonPointToJtsPointMapper().map(location);
+    }
+
+
+    public void setBoundaryByGeoJson(org.geojson.Polygon boundary) {
+        Assert.notNull(boundary, "boundary must not be null");
+        this.boundary = GeoUtils.geoJsonPolygonToJtsPolygonMapper().map(boundary);
+    }
+
+    public org.geojson.Point getLocationByGeoJson() {
+        return GeoUtils.jtsPointToGeoJsonPointMapper().map(location);
+    }
+
+    public org.geojson.Polygon getBoundaryByGeoJson() {
+        return GeoUtils.jtsPolygonToGeoJsonPolygonMapper().map(boundary);
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,5 +123,28 @@ public class PlaceEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getPlaceId());
+    }
+
+    public static PlaceView toView(PlaceEntity placeEntity) {
+        return PlaceView.builder()
+                .placeId(placeEntity.getPlaceId())
+                .name(placeEntity.getName())
+                .keywords(placeEntity.getKeywords())
+                .address(placeEntity.getAddress())
+                .postalCode(placeEntity.getPostalCode())
+                .phoneNumber(placeEntity.getPhoneNumber())
+                .website(placeEntity.getWebsite())
+                .summary(placeEntity.getSummary())
+                .location(placeEntity.getLocationByGeoJson())
+                .boundary(placeEntity.getBoundaryByGeoJson())
+                .publisherId(placeEntity.getPublisher().getAccountId())
+                .createdAt(placeEntity.getCreatedAt())
+                .updatedAt(placeEntity.getUpdatedAt())
+                .categories(placeEntity.getCategories().stream().map(CategoryEntity::getCategory).toList())
+                .operationTimeViews(placeEntity.getOperationTimes().stream().map(OperationTimeEntity::toView).toList())
+                .googlePlaceId(placeEntity.getGooglePlaceId())
+                .isPublic(placeEntity.getIsPublic())
+                .isOfficial(placeEntity.getIsOfficial())
+                .build();
     }
 }

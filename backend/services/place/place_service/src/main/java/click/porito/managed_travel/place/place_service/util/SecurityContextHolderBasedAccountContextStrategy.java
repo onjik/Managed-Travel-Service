@@ -1,5 +1,8 @@
 package click.porito.managed_travel.place.place_service.util;
 
+import click.porito.managed_travel.place.place_service.repository.jpa.entity.AccountSnapshotEntity;
+import click.porito.managed_travel.place.place_service.repository.jpa.repository.AccountSnapshotRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -10,7 +13,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class SecurityContextHolderBasedAccountContextStrategy implements AccountContextStrategy {
+    private final AccountSnapshotRepository accountSnapshotRepository;
     @Override
     public Optional<Long> getAccountId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -32,6 +37,11 @@ public class SecurityContextHolderBasedAccountContextStrategy implements Account
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<AccountSnapshotEntity> getAccountSnapshot() {
+        return this.getAccountId().flatMap(accountSnapshotRepository::findAccountSnapshotEntitiesByAccountId);
     }
 
     @Override
