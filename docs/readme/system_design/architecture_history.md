@@ -13,7 +13,7 @@
 
 따라서 Spring Monolith 기반의 서버로 설계를 하였습니다. 그리고 추후의 MSA로의 전환을 고려하며 모듈을 설계하였습니다.
 
-[System Design Detail - Modular Monolith](docs/readme/system_design/modular_design_detail.md)
+[System Design Detail - Modular Monolith](/docs/readme/system_design/modular_design_detail.md)
 
 ### 3. MSA (Micro Service Architecture) + Event Driven Architecture
 모듈러 모놀리스 아키텍쳐의 경우 몇가지 문제점이 있었습니다.
@@ -25,7 +25,7 @@
 이에 따라 해당 아키텍쳐가 가지는 장단점과 MSA가 가지는 장단점을 비교했을 때 전환이 필요하다고 생각하였습니다.
 또한 이벤트 드리븐 아키텍쳐를 도입하여 각 서비스간 과도한 의존성이 생기지 않도록 설계하였습니다.
 
-### [Modular Monolith To MSA](docs/readme/system_design/modular_monolith_to_msa.md)
+### [Modular Monolith To MSA](/docs/readme/system_design/modular_monolith_to_msa.md)
 
 ### 4. 헥사고날 아키텍쳐의 엔티티 독립성 부분 차용
 헥사고날 아키텍쳐, 클린 아키텍쳐에 일부분(엔티티를 도메인으로 매핑하여 의존성을 없애는 부분) 을 차용하여 조금더 개선시켰습니다.
@@ -45,10 +45,10 @@
 - 보안이나, 공통된 설정 코드는 Spring Boot의 AutoConfiguration 기능을 활용하여 SpringBoot-Starter 라이브러리를 만들었습니다.
 - 각 도메인 별로 도메인, 커넥터(호출 SDK), 서비스(서버) 코드의 책임을 부과하여, API 의 변경이 다른 서비스의 코드를 변경시키는 문제를 막았습니다.
 
-![](docs/readme/system_design/multi_module_overview.excalidraw.png)
+![](/docs/readme/system_design/multi_module_overview.excalidraw.png)
 
 ## Detail
 
-### [System Design Detail - Modular Monolith](docs/readme/system_design/modular_design_detail.md)
+### [System Design Detail - Modular Monolith](/docs/readme/system_design/modular_design_detail.md)
 
-### [Modular Monolith To MSA](docs/readme/system_design/modular_monolith_to_msa.md)
+### [Modular Monolith To MSA](/docs/readme/system_design/modular_monolith_to_msa.md)
