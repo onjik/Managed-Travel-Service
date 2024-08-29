@@ -3,18 +3,14 @@
 # ✏️ 서비스 소개
 이 서비스는 추천 기반 여행 서비스 입니다.
 
-- 실시간 여행지 추천
-- 선택한 여행지 기반 최적 경로 제공
-- 여행 정보 제공
-- 여행 계획 시각화
+## 주요 기능
 
 ![주요 내부 서비스 개요](./docs/readme/service_intro/service_overview.drawio.png)
 일단 개발의 우선도를 나눴습니다. 빨간색으로 표시된 블럭은 서비스의 핵심기능으로, 최우선적으로 개발될 기능입니다.
 
-비어있는 블럭은 향후 서비스의 확장을 고려하기 위해 그려놓았으며, 향후 서비스의 성장 방향성을 보여줍니다.
+## ERD
 
-# ✏️ System Design
-이 파트에서는 이 서비스를 구현을 위한 소프트웨어적 설계를 다룹니다.
+![DB ERD](./docs/readme/database/erd.jpg)
 
 ## 현재 아키텍쳐
 ![](./docs/readme/system_design/msa/msa_system_overview.excalidraw.png)
